@@ -1,12 +1,57 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from '@/components/penelope/Header';
+import { AccessibleTabs } from '@/components/penelope/AccessibleTabs';
+import { useLanguage } from '@/hooks/useLanguage';
+import {
+  PanelDemoInteractiva,
+  PanelArquitectura,
+  PanelBorradores,
+  PanelTrazabilidad,
+  PanelMetricas,
+} from '@/components/penelope/panels';
+
+const tabs = [
+  { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
+  { id: 'arquitectura', label: 'Arquitectura', i18nKey: 'tabs.arquitectura' },
+  { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
+  { id: 'trazabilidad', label: 'Trazabilidad', i18nKey: 'tabs.trazabilidad' },
+  { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
+];
 
 const Index = () => {
+  const { language, toggleLanguage, t } = useLanguage();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header language={language} onToggleLanguage={toggleLanguage} t={t} />
+
+      <main className="container mx-auto px-4 py-6 md:py-8" role="main">
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Main column */}
+          <section 
+            className="flex-1 min-w-0" 
+            aria-label="Secciones principales de la demo"
+          >
+            <AccessibleTabs tabs={tabs} t={t}>
+              <PanelDemoInteractiva />
+              <PanelArquitectura />
+              <PanelBorradores />
+              <PanelTrazabilidad />
+              <PanelMetricas />
+            </AccessibleTabs>
+          </section>
+
+          {/* Side column - empty for now */}
+          <aside 
+            className="hidden lg:block w-72 flex-shrink-0"
+            aria-label="Información complementaria"
+          >
+            {/* Space for future complementary panels */}
+            <div className="card-institutional p-4 text-center text-muted-foreground text-sm">
+              <p>Espacio reservado para información complementaria</p>
+            </div>
+          </aside>
+        </div>
+      </main>
     </div>
   );
 };
