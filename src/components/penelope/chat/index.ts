@@ -5,3 +5,6 @@ export { RupecoEvaluation, type RupecoEvaluationData } from './RupecoEvaluation'
 export { RupecoProgressIndicator, type RupecoStep } from './RupecoProgressIndicator';
 export { ProvidenciaIntimacion, type ExpedienteData, type DocumentoFaltante } from './ProvidenciaIntimacion';
 export { ClasificacionConfirmacion, type ClasificacionPendiente, type NivelConfianzaCualitativo } from './ClasificacionConfirmacion';
+export { RequisitoVerificacion, type RequisitoItem, type EstadoDeteccion } from './RequisitoVerificacion';
+export { HistorialAcciones, type AccionAgente, type TipoAccion } from './HistorialAcciones';
+export { AsistenteRupecoTAD, type CategoriaErrorRupeco } from './AsistenteRupecoTAD';

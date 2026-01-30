@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { AlertTriangle, CheckCircle2, Clock, FileText, HelpCircle, Info } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { AlertTriangle, CheckCircle2, Bot, HelpCircle, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type TramiteENAC, TRAMITES_ENAC } from '@/lib/nucleoRupeco';
 
@@ -27,9 +28,9 @@ interface ClasificacionConfirmacionProps {
   onRechazar: () => void;
 }
 
-// Categorías permitidas según normativa del proyecto
+// Categorías permitidas según normativa del proyecto (enunciativo y limitado a esta demo)
 const CATEGORIAS_PERMITIDAS = [
-  { codigo: 'ENAC00062', nombre: 'Licencia TIC nueva' },
+  { codigo: 'ENAC00062', nombre: 'Licencia TIC – Alta nueva' },
   { codigo: 'ENAC00025', nombre: 'Autorización de servicios audiovisuales' },
   { codigo: 'ENAC00063', nombre: 'Modificación societaria TIC' },
   { codigo: 'ENAC00064', nombre: 'Renovación de licencia TIC' },
@@ -64,33 +65,28 @@ export function ClasificacionConfirmacion({
   };
 
   return (
-    <Card className="border-amber-200 bg-amber-50/30">
+    <Card className="border-primary/30 bg-primary/5">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-full bg-amber-100">
-            <HelpCircle className="h-5 w-5 text-amber-600" />
+          <div className="p-2 rounded-full bg-primary/20">
+            <Bot className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <CardTitle className="text-lg text-amber-900">
-              Clasificación Asistida del Trámite
+            <CardTitle className="text-lg">
+              🤖 Clasificación Asistida del Trámite
             </CardTitle>
-            <p className="text-xs text-amber-700 mt-1">
-              Requiere confirmación del operador antes de continuar
-            </p>
           </div>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Resumen de clasificación IA */}
+        {/* Resumen de clasificación IA - Formato tabla según especificación */}
         {!clasificacion.ambiguo ? (
-          <div className="bg-white rounded-lg border p-4 space-y-3">
-            <div className="flex items-start justify-between gap-4">
+          <div className="space-y-4">
+            {/* Trámite probable con confianza */}
+            <div className="flex items-start justify-between gap-4 p-3 bg-background rounded-lg border">
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Trámite probable:</span>
-                </div>
+                <div className="text-sm text-muted-foreground mb-1">Trámite probable:</div>
                 <p className="text-base font-semibold text-foreground">
                   {clasificacion.tramite.nombre}
                 </p>
@@ -103,60 +99,94 @@ export function ClasificacionConfirmacion({
               </Badge>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                {clasificacion.alcanzadoPorSilencioPositivo ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                ) : (
-                  <Info className="h-4 w-4 text-muted-foreground" />
-                )}
-                <span>
-                  {clasificacion.alcanzadoPorSilencioPositivo 
-                    ? 'Alcanzado por silencio positivo' 
-                    : 'No alcanzado por silencio positivo'}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>Plazo estimado: {clasificacion.plazoEstimado} días</span>
-              </div>
+            {/* Tabla de parámetros - Según especificación del documento */}
+            <div className="rounded-md border overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="font-semibold">Parámetro</TableHead>
+                    <TableHead className="font-semibold">Valor</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">Alcanzado por régimen de silencio positivo (demo)</TableCell>
+                    <TableCell>
+                      {clasificacion.alcanzadoPorSilencioPositivo ? (
+                        <span className="flex items-center gap-1 text-success">
+                          <CheckCircle2 className="h-4 w-4" /> Sí
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">No</span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Plazo estimado (solo a efectos de la demo)</TableCell>
+                    <TableCell>{clasificacion.plazoEstimado} días</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">Vencimiento tentativo (demo)</TableCell>
+                    <TableCell>{clasificacion.fechaVencimientoEstimado.toLocaleDateString('es-AR')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
 
-            <div className="text-sm text-muted-foreground border-t pt-2">
-              <strong>Vencimiento tentativo:</strong>{' '}
-              {clasificacion.fechaVencimientoEstimado.toLocaleDateString('es-AR')}
+            {/* Nota explicativa de confianza técnica */}
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+                <div className="text-xs text-blue-800 space-y-1">
+                  <p className="font-semibold">ℹ️ ¿Qué significa "confianza técnica"?</p>
+                  <p>
+                    Es una medida interna de la IA sobre cuán probable considera que su clasificación 
+                    técnica sea correcta (por ejemplo, que se trate efectivamente de "{clasificacion.tramite.nombre}").
+                  </p>
+                  <p>
+                    No es una validación jurídica ni reemplaza el análisis del operador. 
+                    <strong> Aunque la confianza sea "Alta", el operador debe confirmar siempre antes de continuar.</strong>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         ) : (
-          <div className="bg-red-50 rounded-lg border border-red-200 p-4">
+          <div className="bg-amber-50 rounded-lg border border-amber-200 p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+              <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-red-800">
-                  Clasificación ambigua
+                <p className="text-sm font-medium text-amber-800">
+                  ⚠️ No fue posible clasificar el trámite con suficiente claridad
                 </p>
-                <p className="text-sm text-red-700 mt-1">
-                  La evidencia documental es insuficiente para determinar el tipo de trámite 
-                  con claridad. El operador debe seleccionar la categoría correspondiente.
+                <p className="text-sm text-amber-700 mt-1">
+                  La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.
                 </p>
               </div>
             </div>
           </div>
         )}
 
-        {/* Aviso de asistencia */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+        {/* Aviso de confirmación obligatoria */}
+        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
           <div className="flex items-start gap-2">
-            <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
-            <p className="text-xs text-blue-800">
-              <strong>Nota:</strong> Esta clasificación es una asistencia automatizada. 
-              La categoría definitiva del trámite la determina el operador humano.
-            </p>
+            <HelpCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+            <div className="text-xs text-amber-800">
+              <p className="font-semibold">📌 Requiere confirmación del operador antes de continuar con la verificación documental.</p>
+            </div>
           </div>
         </div>
 
+        {/* Nota final sobre asistencia */}
+        <div className="p-3 bg-muted/50 border border-muted-foreground/20 rounded-lg">
+          <p className="text-xs text-muted-foreground italic">
+            <strong>Nota:</strong> Esta clasificación es una asistencia automatizada. 
+            La categoría definitiva del trámite la determina el operador humano.
+          </p>
+        </div>
+
         {/* Selección de categoría */}
-        <div className="space-y-3">
+        <div className="space-y-3 pt-2">
           <Label className="text-sm font-medium">
             {clasificacion.ambiguo 
               ? 'Seleccione el tipo de trámite:' 
@@ -173,7 +203,7 @@ export function ClasificacionConfirmacion({
                 <div
                   key={cat.codigo}
                   className={cn(
-                    "flex items-center space-x-3 rounded-lg border p-3 transition-colors",
+                    "flex items-center space-x-3 rounded-lg border p-3 transition-colors bg-background",
                     seleccionManual === cat.codigo && "border-primary bg-primary/5",
                     esDetectado && !clasificacion.ambiguo && "border-green-300 bg-green-50/50"
                   )}
