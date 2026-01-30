@@ -48,7 +48,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
             {/* Language toggle - optional, hidden by default */}
             <button
               onClick={onToggleLanguage}
-              className="hidden items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
               aria-label={`Cambiar idioma a ${language === 'es' ? 'inglés' : 'español'}`}
             >
               <Globe className="w-4 h-4" />
