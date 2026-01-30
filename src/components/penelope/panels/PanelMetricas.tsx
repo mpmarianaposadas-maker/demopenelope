@@ -29,20 +29,20 @@ export function PanelMetricas() {
         <CardText>{t('metr.intro')}</CardText>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-          <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">{t('metr.kpi1.value')}</div>
+          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
+            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi1.value')}</div>
             <div className="text-sm text-muted-foreground">{t('metr.kpi1.label')}</div>
           </div>
-          <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">{t('metr.kpi2.value')}</div>
+          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
+            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi2.value')}</div>
             <div className="text-sm text-muted-foreground">{t('metr.kpi2.label')}</div>
           </div>
-          <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">{t('metr.kpi3.value')}</div>
+          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
+            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi3.value')}</div>
             <div className="text-sm text-muted-foreground">{t('metr.kpi3.label')}</div>
           </div>
-          <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">{t('metr.kpi4.value')}</div>
+          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
+            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi4.value')}</div>
             <div className="text-sm text-muted-foreground">{t('metr.kpi4.label')}</div>
           </div>
         </div>
