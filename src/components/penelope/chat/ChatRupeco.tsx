@@ -7,18 +7,29 @@ import { RotateCcw, Bot, AlertTriangle } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { RupecoEvaluation } from './RupecoEvaluation';
+import { RupecoProgressIndicator } from './RupecoProgressIndicator';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const QUICK_ACTIONS = [
-  { label: 'Licencia TIC (Alto riesgo)', message: 'Verificar expediente EX-2024-89234512-APN-ENACOM' },
-  { label: 'Audiovisual (Medio)', message: 'Verificar expediente EX-2024-91456789-APN-ENACOM' },
-  { label: 'TIC Crítico (Vencido)', message: 'Verificar expediente EX-2024-78123456-APN-ENACOM' },
+  { label: '📡 TIC', message: 'TIC' },
+  { label: '📺 Audiovisual', message: 'Audiovisual' },
+  { label: '📮 Postal', message: 'Postal' },
+  { label: '📋 RUPECO', message: 'RUPECO' },
 ];
 
 export function ChatRupeco() {
   const { t } = useLanguage();
-  const { messages, isLoading, sendMessage, resetChat, evaluation, isSystemActive } = useChatRupecoSimulado();
+  const { 
+    messages, 
+    isLoading, 
+    sendMessage, 
+    resetChat, 
+    evaluation, 
+    isSystemActive,
+    currentStep,
+    esPJ 
+  } = useChatRupecoSimulado();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,6 +39,7 @@ export function ChatRupeco() {
   }, [messages, evaluation]);
 
   const showQuickActions = messages.length === 1;
+  const showProgress = currentStep !== 'tipo_tramite' && currentStep !== 'inicio';
 
   return (
     <Card className="flex flex-col h-[600px] max-h-[70vh]">
@@ -37,7 +49,7 @@ export function ChatRupeco() {
             <Bot className="h-5 w-5 text-primary" />
             <CardTitle className="text-lg">{t('chat.title')}</CardTitle>
             <Badge variant="secondary" className="text-xs">
-              {t('chat.badge.simulado')}
+              RUPECO
             </Badge>
           </div>
           <Button
@@ -61,6 +73,12 @@ export function ChatRupeco() {
         </div>
       )}
 
+      {showProgress && (
+        <div className="flex-shrink-0 px-4 pt-3">
+          <RupecoProgressIndicator currentStep={currentStep} esPJ={esPJ} />
+        </div>
+      )}
+
       <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="space-y-4">
           {messages.map((message) => (
@@ -70,7 +88,7 @@ export function ChatRupeco() {
           {showQuickActions && isSystemActive && (
             <div className="flex flex-wrap gap-2 mt-4">
               <span className="text-xs text-muted-foreground w-full mb-1">
-                {t('chat.quickActions')}
+                Seleccioná el tipo de trámite:
               </span>
               {QUICK_ACTIONS.map((action) => (
                 <Button
