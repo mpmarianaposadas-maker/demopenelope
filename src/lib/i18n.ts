@@ -201,6 +201,33 @@ export const translations: Record<Language, Translations> = {
     'metr.internacional.col4': 'Estado',
     'metr.estadoOperativo': 'Operativo',
     'metr.estadoDesarrollo': 'En desarrollo',
+    
+    // Kill Switch
+    'killSwitch.title': 'Kill Switch de Seguridad',
+    'killSwitch.status.active': 'Sistema Activo',
+    'killSwitch.status.triggered': 'Sistema Detenido',
+    'killSwitch.status.cooldown': 'Reactivando...',
+    'killSwitch.statusDesc.active': 'Todos los módulos operativos',
+    'killSwitch.statusDesc.triggered': 'Sistema detenido por seguridad',
+    'killSwitch.statusDesc.cooldown': 'Período de enfriamiento',
+    'killSwitch.triggeredAt': 'Detenido a las',
+    'killSwitch.reason': 'Motivo',
+    'killSwitch.triggerButton': 'Detener Sistema',
+    'killSwitch.reactivateButton': 'Reactivar Sistema',
+    'killSwitch.confirmTitle': '¿Confirmar detención del sistema?',
+    'killSwitch.confirmDesc': 'Esta acción detendrá inmediatamente todos los módulos de IA del sistema Penélope. Los expedientes en procesamiento serán pausados y requerirán revisión manual.',
+    'killSwitch.cancel': 'Cancelar',
+    'killSwitch.confirm': 'Sí, detener sistema',
+    'killSwitch.reactivateTitle': 'Reactivar sistema',
+    'killSwitch.reactivateDesc': 'El sistema entrará en período de enfriamiento de 3 segundos antes de reactivarse completamente. Verifique que el riesgo haya sido mitigado.',
+    'killSwitch.confirmReactivate': 'Confirmar reactivación',
+    'killSwitch.cooldownMessage': 'Verificando sistemas...',
+    'killSwitch.securityNote': 'El kill switch es un mecanismo de seguridad para detener el sistema ante riesgos inminentes. Todas las activaciones quedan registradas en el Prompt Net Ledger.',
+    
+    // Security
+    'security.injectionDetected': 'Se detectó contenido potencialmente peligroso',
+    'security.inputSanitized': 'El contenido ha sido sanitizado',
+    'security.validationError': 'Error de validación',
   },
   en: {
     // Header
@@ -395,6 +422,33 @@ export const translations: Record<Language, Translations> = {
     'metr.internacional.col4': 'Status',
     'metr.estadoOperativo': 'Operational',
     'metr.estadoDesarrollo': 'In development',
+    
+    // Kill Switch
+    'killSwitch.title': 'Security Kill Switch',
+    'killSwitch.status.active': 'System Active',
+    'killSwitch.status.triggered': 'System Stopped',
+    'killSwitch.status.cooldown': 'Reactivating...',
+    'killSwitch.statusDesc.active': 'All modules operational',
+    'killSwitch.statusDesc.triggered': 'System stopped for security',
+    'killSwitch.statusDesc.cooldown': 'Cooldown period',
+    'killSwitch.triggeredAt': 'Stopped at',
+    'killSwitch.reason': 'Reason',
+    'killSwitch.triggerButton': 'Stop System',
+    'killSwitch.reactivateButton': 'Reactivate System',
+    'killSwitch.confirmTitle': 'Confirm system shutdown?',
+    'killSwitch.confirmDesc': 'This action will immediately stop all AI modules of the Penélope system. Case files being processed will be paused and require manual review.',
+    'killSwitch.cancel': 'Cancel',
+    'killSwitch.confirm': 'Yes, stop system',
+    'killSwitch.reactivateTitle': 'Reactivate system',
+    'killSwitch.reactivateDesc': 'The system will enter a 3-second cooldown period before fully reactivating. Verify that the risk has been mitigated.',
+    'killSwitch.confirmReactivate': 'Confirm reactivation',
+    'killSwitch.cooldownMessage': 'Verifying systems...',
+    'killSwitch.securityNote': 'The kill switch is a safety mechanism to stop the system in case of imminent risks. All activations are recorded in the Prompt Net Ledger.',
+    
+    // Security
+    'security.injectionDetected': 'Potentially dangerous content detected',
+    'security.inputSanitized': 'Content has been sanitized',
+    'security.validationError': 'Validation error',
   },
 };
 
