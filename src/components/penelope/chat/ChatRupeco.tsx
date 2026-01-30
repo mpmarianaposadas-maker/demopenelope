@@ -11,6 +11,7 @@ import { RupecoProgressIndicator } from './RupecoProgressIndicator';
 import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { HistorialAcciones } from './HistorialAcciones';
+import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -18,7 +19,8 @@ const QUICK_ACTIONS = [
   { label: '📡 Licencia TIC nueva', message: 'Licencia TIC nueva para persona jurídica' },
   { label: '📺 Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
   { label: '📮 Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
-  { label: '📋 Inscripción RUPECO', message: 'Inscripción RUPECO persona jurídica' },
+  { label: '🔄 Modificación societaria TIC', message: 'Modificación societaria TIC para empresa' },
+  { label: '📋 Renovación TIC', message: 'Renovación de licencia TIC persona jurídica' },
 ];
 
 export function ChatRupeco() {
@@ -44,13 +46,17 @@ export function ChatRupeco() {
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero,
+    // Nuevas funciones para clasificación
+    clasificacionPendiente,
+    confirmarClasificacion,
+    cancelarClasificacion,
   } = useChatRupecoSimulado();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, evaluation, requisitosData, historialAcciones]);
+  }, [messages, evaluation, requisitosData, historialAcciones, clasificacionPendiente]);
 
   const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
@@ -118,6 +124,17 @@ export function ChatRupeco() {
             </div>
           )}
 
+          {/* Panel de confirmación de clasificación */}
+          {clasificacionPendiente && (
+            <div className="mt-4">
+              <ClasificacionConfirmacion
+                clasificacion={clasificacionPendiente}
+                onConfirmar={confirmarClasificacion}
+                onRechazar={cancelarClasificacion}
+              />
+            </div>
+          )}
+
           {/* Panel de verificación de requisitos */}
           {requisitosData && (
             <div className="mt-4">
@@ -165,7 +182,7 @@ export function ChatRupeco() {
       <ChatInput
         onSend={sendMessage}
         isLoading={isLoading}
-        disabled={!isSystemActive}
+        disabled={!isSystemActive || !!clasificacionPendiente}
       />
     </Card>
   );

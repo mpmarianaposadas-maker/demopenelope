@@ -25,7 +25,8 @@ export type TipoAccion =
   | 'aprobar_expediente'
   | 'rechazar_expediente'
   | 'revertir_decision'
-  | 'inicio_verificacion';
+  | 'inicio_verificacion'
+  | 'clasificacion_confirmada';
 
 export interface AccionAgente {
   id: string;
@@ -59,6 +60,8 @@ const getIconoAccion = (tipo: TipoAccion) => {
       return <RotateCcw className="h-4 w-4 text-cream-foreground" />;
     case 'inicio_verificacion':
       return <Eye className="h-4 w-4 text-primary" />;
+    case 'clasificacion_confirmada':
+      return <UserCheck className="h-4 w-4 text-primary" />;
     default:
       return <Clock className="h-4 w-4 text-muted-foreground" />;
   }
@@ -77,6 +80,7 @@ const getColorAccion = (tipo: TipoAccion) => {
     case 'revertir_decision':
       return 'border-l-cream-dark bg-cream/50';
     case 'inicio_verificacion':
+    case 'clasificacion_confirmada':
       return 'border-l-primary bg-primary/5';
     default:
       return 'border-l-muted bg-muted/5';
@@ -99,6 +103,8 @@ const getBadgeAccion = (tipo: TipoAccion) => {
       return { label: 'Reversión', className: 'bg-cream text-cream-foreground border-cream-dark' };
     case 'inicio_verificacion':
       return { label: 'Sistema', className: 'bg-muted text-muted-foreground border-muted-foreground/30' };
+    case 'clasificacion_confirmada':
+      return { label: 'Clasificación', className: 'bg-primary/10 text-primary border-primary/30' };
     default:
       return { label: 'Acción', className: 'bg-muted text-muted-foreground border-muted-foreground/30' };
   }
@@ -110,7 +116,7 @@ const FILTROS: { valor: FiltroTipo; label: string; tipos: TipoAccion[] | null }[
   { valor: 'todos', label: 'Todos', tipos: null },
   { valor: 'validaciones', label: 'Validaciones', tipos: ['validar_requisito', 'rechazar_requisito', 'subsanar_requisito'] },
   { valor: 'decisiones', label: 'Decisiones', tipos: ['aprobar_expediente', 'rechazar_expediente', 'revertir_decision'] },
-  { valor: 'sistema', label: 'Sistema', tipos: ['inicio_verificacion'] },
+  { valor: 'sistema', label: 'Sistema', tipos: ['inicio_verificacion', 'clasificacion_confirmada'] },
 ];
 
 export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccionesProps) {

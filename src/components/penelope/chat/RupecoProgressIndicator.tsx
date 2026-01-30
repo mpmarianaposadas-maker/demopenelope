@@ -1,11 +1,12 @@
-import { CheckCircle2, Circle, Loader2 } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, UserCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Importar el tipo desde el hook
+// Tipos sincronizados con el hook
 export type RupecoStep = 
   | 'inicio'
   | 'ingreso_recepcion'
   | 'clasificacion_ia'
+  | 'confirmacion_clasificacion'
   | 'validacion_documental'
   | 'resultado'
   | 'evaluacion';
@@ -21,6 +22,7 @@ interface StepConfig {
 const STEPS: StepConfig[] = [
   { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: '📥' },
   { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: '🤖' },
+  { id: 'confirmacion_clasificacion', label: 'Confirmación Operador', shortLabel: 'Confirm.', icon: '👤' },
   { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: '🔍' },
   { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: '📋' },
   { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: '✅' },
@@ -72,6 +74,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
         {STEPS.map((step, index) => {
           const isActive = currentIndex === index;
           const isDone = currentIndex > index || isComplete;
+          const isConfirmStep = step.id === 'confirmacion_clasificacion';
           
           return (
             <div 
@@ -86,11 +89,14 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
                   "w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all",
                   isDone && "bg-green-500 text-white",
                   isActive && !isDone && "bg-primary text-primary-foreground ring-2 ring-primary/30",
+                  isActive && isConfirmStep && "bg-amber-500 text-white ring-2 ring-amber-300",
                   !isDone && !isActive && "bg-muted text-muted-foreground"
                 )}
               >
                 {isDone ? (
                   <CheckCircle2 className="h-4 w-4" />
+                ) : isActive && isConfirmStep ? (
+                  <UserCheck className="h-3 w-3" />
                 ) : isActive ? (
                   <Loader2 className="h-3 w-3 animate-spin" />
                 ) : (
@@ -101,7 +107,8 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
                 className={cn(
                   "text-[10px] text-center truncate w-full",
                   isDone && "text-green-600 font-medium",
-                  isActive && !isDone && "text-primary font-medium",
+                  isActive && !isDone && !isConfirmStep && "text-primary font-medium",
+                  isActive && isConfirmStep && "text-amber-600 font-medium",
                   !isDone && !isActive && "text-muted-foreground"
                 )}
               >
@@ -119,6 +126,9 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
             <span className="text-lg">{STEPS[currentIndex]?.icon || '📋'}</span>
             <span className="text-muted-foreground">
               <strong className="text-foreground">{STEPS[currentIndex]?.label}</strong>
+              {STEPS[currentIndex]?.id === 'confirmacion_clasificacion' && (
+                <span className="ml-2 text-amber-600">— Requiere confirmación del operador</span>
+              )}
             </span>
           </div>
         </div>
