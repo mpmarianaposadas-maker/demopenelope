@@ -12,10 +12,10 @@ import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const QUICK_ACTIONS = [
-  { label: '📡 TIC', message: 'TIC' },
-  { label: '📺 Audiovisual', message: 'Audiovisual' },
-  { label: '📮 Postal', message: 'Postal' },
-  { label: '📋 RUPECO', message: 'RUPECO' },
+  { label: '📡 Licencia TIC nueva', message: 'Licencia TIC nueva para persona jurídica' },
+  { label: '📺 Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
+  { label: '📮 Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
+  { label: '📋 Inscripción RUPECO', message: 'Inscripción RUPECO persona jurídica' },
 ];
 
 export function ChatRupeco() {
@@ -39,7 +39,7 @@ export function ChatRupeco() {
   }, [messages, evaluation]);
 
   const showQuickActions = messages.length === 1;
-  const showProgress = currentStep !== 'tipo_tramite' && currentStep !== 'inicio';
+  const showProgress = currentStep !== 'inicio';
 
   return (
     <Card className="flex flex-col h-[600px] max-h-[70vh]">

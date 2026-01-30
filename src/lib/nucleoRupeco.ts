@@ -1,0 +1,397 @@
+/**
+ * Definición del Núcleo Documental RUPECO
+ * Basado en Res. ENACOM 3731/2019 y Decreto 971/2024
+ */
+
+export interface DocumentoRequerido {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  obligatorio: boolean;
+  aplicaA: ('humana' | 'juridica')[];
+  normativa: string;
+}
+
+export interface BloqueDocumental {
+  id: string;
+  nombre: string;
+  descripcion: string;
+  documentos: DocumentoRequerido[];
+}
+
+// Núcleo Documental Común según Tabla 1 del documento
+export const NUCLEO_RUPECO: BloqueDocumental[] = [
+  {
+    id: 'identificacion',
+    nombre: 'Identificación del Responsable',
+    descripcion: 'Datos de identificación del titular del trámite',
+    documentos: [
+      {
+        id: 'tipo_persona',
+        nombre: 'Declaración de tipo de persona',
+        descripcion: 'Persona humana o jurídica',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 3',
+      },
+      {
+        id: 'dni_titular',
+        nombre: 'DNI del titular',
+        descripcion: 'Documento Nacional de Identidad vigente',
+        obligatorio: true,
+        aplicaA: ['humana'],
+        normativa: 'Res. ENACOM 3731/19, Art. 4',
+      },
+      {
+        id: 'cuit_cuil',
+        nombre: 'Constancia CUIT/CUIL',
+        descripcion: 'Constancia de inscripción AFIP vigente',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 4',
+      },
+      {
+        id: 'estatuto_contrato',
+        nombre: 'Estatuto o Contrato Social',
+        descripcion: 'Instrumento constitutivo con última modificación',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 5',
+      },
+      {
+        id: 'acta_autoridades',
+        nombre: 'Acta de designación de autoridades',
+        descripcion: 'Acta de asamblea/directorio vigente',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 5',
+      },
+    ],
+  },
+  {
+    id: 'domicilios',
+    nombre: 'Domicilios y Contacto',
+    descripcion: 'Información de localización y contacto',
+    documentos: [
+      {
+        id: 'domicilio_legal',
+        nombre: 'Constitución de domicilio legal',
+        descripcion: 'Domicilio legal/real constituido',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 6',
+      },
+      {
+        id: 'domicilio_servicios',
+        nombre: 'Domicilio de prestación de servicios',
+        descripcion: 'Ubicación donde se prestan los servicios',
+        obligatorio: false,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Ley 27.078, Art. 8',
+      },
+      {
+        id: 'telefono_contacto',
+        nombre: 'Teléfono de contacto',
+        descripcion: 'Número telefónico de contacto',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 6',
+      },
+      {
+        id: 'email_contacto',
+        nombre: 'Correo electrónico',
+        descripcion: 'Dirección de correo electrónico válida',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 6',
+      },
+    ],
+  },
+  {
+    id: 'representacion',
+    nombre: 'Representación',
+    descripcion: 'Datos del representante si no actúa el titular',
+    documentos: [
+      {
+        id: 'poder_representacion',
+        nombre: 'Poder de representación',
+        descripcion: 'Instrumento que acredita la representación',
+        obligatorio: false,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 7',
+      },
+      {
+        id: 'dni_representante',
+        nombre: 'DNI del representante',
+        descripcion: 'Documento del apoderado/representante',
+        obligatorio: false,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 7',
+      },
+    ],
+  },
+  {
+    id: 'societarios',
+    nombre: 'Datos Societarios',
+    descripcion: 'Información societaria para personas jurídicas',
+    documentos: [
+      {
+        id: 'inscripcion_igj',
+        nombre: 'Inscripción IGJ/DPPJ',
+        descripcion: 'Constancia de inscripción registral',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 5',
+      },
+      {
+        id: 'certificado_vigencia',
+        nombre: 'Certificado de vigencia',
+        descripcion: 'Certificado de vigencia de la sociedad',
+        obligatorio: false,
+        aplicaA: ['juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 5',
+      },
+    ],
+  },
+  {
+    id: 'fiscales',
+    nombre: 'Obligaciones Fiscales y Previsionales',
+    descripcion: 'Cumplimiento de obligaciones tributarias',
+    documentos: [
+      {
+        id: 'constancia_afip',
+        nombre: 'Constancia de inscripción AFIP',
+        descripcion: 'Constancia de inscripción vigente',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Ley 27.078, Art. 12',
+      },
+      {
+        id: 'libre_deuda_afip',
+        nombre: 'Libre deuda AFIP',
+        descripcion: 'Certificado de cumplimiento fiscal',
+        obligatorio: false,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Decreto 971/2024, Anexo II',
+      },
+      {
+        id: 'constancia_iibb',
+        nombre: 'Constancia Ingresos Brutos',
+        descripcion: 'Inscripción en IIBB provincial',
+        obligatorio: false,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Ley 27.078, Art. 12',
+      },
+    ],
+  },
+];
+
+// Requisitos específicos por tipo de trámite (Tabla 1 del documento)
+export interface TramiteENAC {
+  codigo: string;
+  nombre: string;
+  categoria: 'TIC' | 'audiovisual' | 'postal' | 'rupeco';
+  normativa: string;
+  documentosObligatorios: number;
+  overlapRupeco: number; // Porcentaje de coincidencia con RUPECO
+  documentosAdicionales: DocumentoRequerido[];
+  plazoSilencioPositivo: number; // días
+}
+
+export const TRAMITES_ENAC: TramiteENAC[] = [
+  {
+    codigo: 'ENAC00062',
+    nombre: 'Licencia TIC - Alta nueva',
+    categoria: 'TIC',
+    normativa: 'Ley 27.078, Res. ENACOM 40/2020',
+    documentosObligatorios: 12,
+    overlapRupeco: 75,
+    plazoSilencioPositivo: 60,
+    documentosAdicionales: [
+      {
+        id: 'plan_tecnico',
+        nombre: 'Plan Técnico de Red',
+        descripcion: 'Descripción técnica de la infraestructura',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 40/2020, Art. 8',
+      },
+      {
+        id: 'factibilidad_economica',
+        nombre: 'Estudio de factibilidad económica',
+        descripcion: 'Análisis de viabilidad del proyecto',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Res. ENACOM 40/2020, Art. 9',
+      },
+      {
+        id: 'tasa_administrativa',
+        nombre: 'Comprobante de pago de tasa',
+        descripcion: 'Pago de tasa administrativa',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 40/2020, Art. 15',
+      },
+    ],
+  },
+  {
+    codigo: 'ENAC00063',
+    nombre: 'Licencia TIC - Modificación',
+    categoria: 'TIC',
+    normativa: 'Ley 27.078, Res. ENACOM 3731/19',
+    documentosObligatorios: 8,
+    overlapRupeco: 88,
+    plazoSilencioPositivo: 60,
+    documentosAdicionales: [
+      {
+        id: 'justificacion_modificacion',
+        nombre: 'Nota justificando la modificación',
+        descripcion: 'Fundamentación del cambio solicitado',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Res. ENACOM 3731/19, Art. 12',
+      },
+    ],
+  },
+  {
+    codigo: 'ENAC00025',
+    nombre: 'Autorización Audiovisual',
+    categoria: 'audiovisual',
+    normativa: 'Ley 26.522, DNU 267/15',
+    documentosObligatorios: 14,
+    overlapRupeco: 71,
+    plazoSilencioPositivo: 90,
+    documentosAdicionales: [
+      {
+        id: 'grilla_programacion',
+        nombre: 'Grilla de programación',
+        descripcion: 'Propuesta de programación',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Ley 26.522, Art. 25',
+      },
+      {
+        id: 'declaracion_programacion',
+        nombre: 'Declaración jurada de programación',
+        descripcion: 'Compromiso de contenidos',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Ley 26.522, Art. 25',
+      },
+      {
+        id: 'estudio_tecnico_audiovisual',
+        nombre: 'Estudio técnico de cobertura',
+        descripcion: 'Análisis de área de cobertura',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'DNU 267/15, Art. 8',
+      },
+    ],
+  },
+  {
+    codigo: 'ENAC00013',
+    nombre: 'Habilitación Servicio Postal',
+    categoria: 'postal',
+    normativa: 'Ley 20.216, Decreto 1187/93',
+    documentosObligatorios: 11,
+    overlapRupeco: 82,
+    plazoSilencioPositivo: 60,
+    documentosAdicionales: [
+      {
+        id: 'seguro_rc',
+        nombre: 'Seguro de responsabilidad civil',
+        descripcion: 'Póliza de seguro vigente',
+        obligatorio: true,
+        aplicaA: ['humana', 'juridica'],
+        normativa: 'Decreto 1187/93, Art. 15',
+      },
+      {
+        id: 'detalle_sucursales',
+        nombre: 'Detalle de sucursales',
+        descripcion: 'Listado de puntos de atención',
+        obligatorio: true,
+        aplicaA: ['juridica'],
+        normativa: 'Decreto 1187/93, Art. 18',
+      },
+    ],
+  },
+  {
+    codigo: 'ENAC00078',
+    nombre: 'Inscripción RUPECO',
+    categoria: 'rupeco',
+    normativa: 'Res. ENACOM 3731/19',
+    documentosObligatorios: 9,
+    overlapRupeco: 100,
+    plazoSilencioPositivo: 30,
+    documentosAdicionales: [],
+  },
+];
+
+// Función para obtener documentos requeridos según tipo de persona y trámite
+export function getDocumentosRequeridos(
+  tipoPersona: 'humana' | 'juridica',
+  codigoTramite?: string
+): { rupeco: DocumentoRequerido[]; adicionales: DocumentoRequerido[] } {
+  const docsRupeco: DocumentoRequerido[] = [];
+  
+  NUCLEO_RUPECO.forEach(bloque => {
+    bloque.documentos.forEach(doc => {
+      if (doc.aplicaA.includes(tipoPersona) && doc.obligatorio) {
+        docsRupeco.push(doc);
+      }
+    });
+  });
+
+  let docsAdicionales: DocumentoRequerido[] = [];
+  
+  if (codigoTramite) {
+    const tramite = TRAMITES_ENAC.find(t => t.codigo === codigoTramite);
+    if (tramite) {
+      docsAdicionales = tramite.documentosAdicionales.filter(
+        doc => doc.aplicaA.includes(tipoPersona) && doc.obligatorio
+      );
+    }
+  }
+
+  return { rupeco: docsRupeco, adicionales: docsAdicionales };
+}
+
+// Función para calcular nivel de confianza simulado
+export function calcularNivelConfianza(datosExtraidos: Record<string, boolean>): number {
+  const totalCampos = Object.keys(datosExtraidos).length;
+  if (totalCampos === 0) return 0;
+  
+  const camposCompletos = Object.values(datosExtraidos).filter(v => v).length;
+  const baseConfianza = (camposCompletos / totalCampos) * 100;
+  
+  // Agregar variación simulada para demo
+  const variacion = (Math.random() * 10) - 5;
+  return Math.min(100, Math.max(0, baseConfianza + variacion));
+}
+
+// Función para determinar acción según nivel de confianza (diagrama del documento)
+export function determinarAccionPorConfianza(nivelConfianza: number): {
+  accion: 'automatico' | 'revision_humana' | 'manual_obligatorio';
+  descripcion: string;
+  color: string;
+} {
+  if (nivelConfianza >= 85) {
+    return {
+      accion: 'automatico',
+      descripcion: 'Clasificación aceptada automáticamente',
+      color: 'green',
+    };
+  } else if (nivelConfianza >= 60) {
+    return {
+      accion: 'revision_humana',
+      descripcion: 'Requiere revisión humana (Cola de Revisión)',
+      color: 'yellow',
+    };
+  } else {
+    return {
+      accion: 'manual_obligatorio',
+      descripcion: 'Clasificación manual obligatoria',
+      color: 'red',
+    };
+  }
+}
