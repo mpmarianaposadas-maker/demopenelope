@@ -20,6 +20,8 @@ const QUICK_ACTIONS = [
 
 export function ChatRupeco() {
   const { t } = useLanguage();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
   const { 
     messages, 
     isLoading, 
@@ -30,7 +32,6 @@ export function ChatRupeco() {
     currentStep,
     esPJ 
   } = useChatRupecoSimulado();
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (scrollRef.current) {
