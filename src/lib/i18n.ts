@@ -25,7 +25,34 @@ export const translations: Record<Language, Translations> = {
     'lang.toggle': 'EN',
     'lang.current': 'ES',
 
-    // Aside
+    // Aside - Panel Estado Expediente
+    'aside.estado.title': 'Estado del Expediente',
+    'aside.estado.expediente': 'N° Expediente',
+    'aside.estado.tramite': 'Tipo de Trámite',
+    'aside.estado.tramiteTipo': 'Licencia TIC - Alta',
+    'aside.estado.step.ingreso': 'Ingreso y caratulación',
+    'aside.estado.step.verificacion': 'Verificación documental',
+    'aside.estado.step.analisis': 'Análisis técnico',
+    'aside.estado.step.decision': 'Decisión',
+    'aside.estado.step.notificacion': 'Notificación',
+    'aside.estado.enProceso': 'En proceso...',
+    'aside.estado.progreso': 'Progreso general',
+    
+    // Aside - Panel Métricas Prompts
+    'aside.prompts.title': 'Prompt Net Ledger',
+    'aside.prompts.totalPrompts': 'Prompts ejecutados',
+    'aside.prompts.hoy': 'hoy',
+    'aside.prompts.tokens': 'Tokens totales',
+    'aside.prompts.consumidos': 'consumidos',
+    'aside.prompts.latencia': 'Latencia promedio',
+    'aside.prompts.promedio': 'promedio',
+    'aside.prompts.confianza': 'Confianza LLM',
+    'aside.prompts.ultimaActividad': 'Última actividad',
+    'aside.prompts.modulo.verificacion': 'Módulo Verificación',
+    'aside.prompts.modulo.redactor': 'Módulo Redactor PV',
+    'aside.prompts.modulo.clasificador': 'Módulo Clasificador',
+    'aside.prompts.ledgerActivo': 'Ledger activo · Registro inmutable',
+    
     'aside.placeholder': 'Espacio reservado para información complementaria',
 
     // Panel Demo Interactiva
@@ -188,7 +215,34 @@ export const translations: Record<Language, Translations> = {
     'lang.toggle': 'ES',
     'lang.current': 'EN',
 
-    // Aside
+    // Aside - Panel Estado Expediente
+    'aside.estado.title': 'Case File Status',
+    'aside.estado.expediente': 'Case File #',
+    'aside.estado.tramite': 'Procedure Type',
+    'aside.estado.tramiteTipo': 'TIC License - New',
+    'aside.estado.step.ingreso': 'Entry and indexing',
+    'aside.estado.step.verificacion': 'Document verification',
+    'aside.estado.step.analisis': 'Technical analysis',
+    'aside.estado.step.decision': 'Decision',
+    'aside.estado.step.notificacion': 'Notification',
+    'aside.estado.enProceso': 'In progress...',
+    'aside.estado.progreso': 'Overall progress',
+    
+    // Aside - Panel Métricas Prompts
+    'aside.prompts.title': 'Prompt Net Ledger',
+    'aside.prompts.totalPrompts': 'Prompts executed',
+    'aside.prompts.hoy': 'today',
+    'aside.prompts.tokens': 'Total tokens',
+    'aside.prompts.consumidos': 'consumed',
+    'aside.prompts.latencia': 'Average latency',
+    'aside.prompts.promedio': 'average',
+    'aside.prompts.confianza': 'LLM Confidence',
+    'aside.prompts.ultimaActividad': 'Recent activity',
+    'aside.prompts.modulo.verificacion': 'Verification Module',
+    'aside.prompts.modulo.redactor': 'PV Writer Module',
+    'aside.prompts.modulo.clasificador': 'Classifier Module',
+    'aside.prompts.ledgerActivo': 'Ledger active · Immutable record',
+    
     'aside.placeholder': 'Reserved space for complementary information',
 
     // Panel Demo Interactiva
