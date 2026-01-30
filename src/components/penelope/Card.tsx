@@ -5,11 +5,18 @@ interface CardProps {
   children: ReactNode;
   className?: string;
   as?: 'div' | 'article';
+  interactive?: boolean;
 }
 
-export function Card({ children, className, as: Component = 'div' }: CardProps) {
+export function Card({ children, className, as: Component = 'div', interactive = true }: CardProps) {
   return (
-    <Component className={cn('card-institutional p-5 md:p-6 mb-4 last:mb-0', className)}>
+    <Component 
+      className={cn(
+        'card-institutional p-5 md:p-6 mb-4 last:mb-0',
+        interactive && 'transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 hover:border-primary/30',
+        className
+      )}
+    >
       {children}
     </Component>
   );
