@@ -20,6 +20,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.borradores': 'Borradores Generados',
     'tabs.trazabilidad': 'Trazabilidad',
     'tabs.metricas': 'Métricas',
+    'tabs.seguridad': 'Seguridad',
     
     // Language toggle
     'lang.toggle': 'EN',
@@ -228,6 +229,33 @@ export const translations: Record<Language, Translations> = {
     'security.injectionDetected': 'Se detectó contenido potencialmente peligroso',
     'security.inputSanitized': 'El contenido ha sido sanitizado',
     'security.validationError': 'Error de validación',
+    'security.alert.high.title': '🚫 Contenido Bloqueado',
+    'security.alert.high.description': 'Se detectó un intento de inyección de prompts. La entrada ha sido rechazada por seguridad.',
+    'security.alert.medium.title': '⚠️ Contenido Sospechoso',
+    'security.alert.medium.description': 'Se detectaron patrones inusuales. El contenido ha sido sanitizado automáticamente.',
+    'security.alert.low.title': '🔍 Verificación de Seguridad',
+    'security.alert.low.description': 'Se detectó contenido inusual que está siendo revisado.',
+    'security.alert.patternsDetected': 'Patrones detectados',
+    'security.alert.dismiss': 'Cerrar alerta',
+    'security.indicator.safe': 'Seguro',
+    'security.indicator.high': 'Riesgo alto',
+    'security.indicator.medium': 'Riesgo medio',
+    'security.indicator.low': 'Riesgo bajo',
+    
+    // Security Demo Panel
+    'security.demo.title': 'Demo de Seguridad Anti-Injection',
+    'security.demo.description': 'Esta demo muestra cómo el sistema detecta y previene intentos de inyección de prompts maliciosos en tiempo real.',
+    'security.demo.realtime.title': 'Validación en Tiempo Real',
+    'security.demo.realtime.description': 'Escriba texto en el área de abajo para ver cómo el sistema analiza y valida el contenido automáticamente.',
+    'security.demo.input.label': 'Texto de prueba',
+    'security.demo.input.placeholder': 'Escriba aquí para probar la detección de inyección...',
+    'security.demo.quickTest': 'Pruebas rápidas',
+    'security.demo.reset': 'Reiniciar',
+    'security.demo.propagation.title': 'Propagación Segura de Tipo de Trámite',
+    'security.demo.propagation.description': 'El valor ingresado se propaga a todos los componentes del sistema después de pasar la validación de seguridad.',
+    'security.demo.propagation.placeholder': 'Ingrese tipo de trámite...',
+    'security.demo.propagation.apply': 'Aplicar',
+    'security.demo.propagation.current': 'Valor actual en el sistema:',
   },
   en: {
     // Header
@@ -241,6 +269,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.borradores': 'Generated Drafts',
     'tabs.trazabilidad': 'Traceability',
     'tabs.metricas': 'Metrics',
+    'tabs.seguridad': 'Security',
     
     // Language toggle
     'lang.toggle': 'ES',
@@ -449,6 +478,33 @@ export const translations: Record<Language, Translations> = {
     'security.injectionDetected': 'Potentially dangerous content detected',
     'security.inputSanitized': 'Content has been sanitized',
     'security.validationError': 'Validation error',
+    'security.alert.high.title': '🚫 Content Blocked',
+    'security.alert.high.description': 'A prompt injection attempt was detected. The input has been rejected for security.',
+    'security.alert.medium.title': '⚠️ Suspicious Content',
+    'security.alert.medium.description': 'Unusual patterns detected. Content has been automatically sanitized.',
+    'security.alert.low.title': '🔍 Security Check',
+    'security.alert.low.description': 'Unusual content detected and being reviewed.',
+    'security.alert.patternsDetected': 'Patterns detected',
+    'security.alert.dismiss': 'Dismiss alert',
+    'security.indicator.safe': 'Safe',
+    'security.indicator.high': 'High risk',
+    'security.indicator.medium': 'Medium risk',
+    'security.indicator.low': 'Low risk',
+    
+    // Security Demo Panel
+    'security.demo.title': 'Anti-Injection Security Demo',
+    'security.demo.description': 'This demo shows how the system detects and prevents malicious prompt injection attempts in real time.',
+    'security.demo.realtime.title': 'Real-Time Validation',
+    'security.demo.realtime.description': 'Type text in the area below to see how the system automatically analyzes and validates the content.',
+    'security.demo.input.label': 'Test text',
+    'security.demo.input.placeholder': 'Type here to test injection detection...',
+    'security.demo.quickTest': 'Quick tests',
+    'security.demo.reset': 'Reset',
+    'security.demo.propagation.title': 'Secure Procedure Type Propagation',
+    'security.demo.propagation.description': 'The entered value propagates to all system components after passing security validation.',
+    'security.demo.propagation.placeholder': 'Enter procedure type...',
+    'security.demo.propagation.apply': 'Apply',
+    'security.demo.propagation.current': 'Current system value:',
   },
 };
 

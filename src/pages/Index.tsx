@@ -8,6 +8,7 @@ import {
   PanelBorradores,
   PanelTrazabilidad,
   PanelMetricas,
+  SecurityDemoPanel,
 } from '@/components/penelope/panels';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
 
@@ -17,6 +18,7 @@ const tabs = [
   { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
   { id: 'trazabilidad', label: 'Trazabilidad', i18nKey: 'tabs.trazabilidad' },
   { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
+  { id: 'seguridad', label: 'Seguridad', i18nKey: 'tabs.seguridad' },
 ];
 
 const Index = () => {
@@ -39,6 +41,7 @@ const Index = () => {
               <PanelBorradores />
               <PanelTrazabilidad />
               <PanelMetricas />
+              <SecurityDemoPanel />
             </AccessibleTabs>
           </section>
 
