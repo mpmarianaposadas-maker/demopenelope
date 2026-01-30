@@ -8,6 +8,7 @@ import {
   PanelTrazabilidad,
   PanelMetricas,
 } from '@/components/penelope/panels';
+import { PanelEstadoExpediente, PanelMetricasPrompts } from '@/components/penelope/aside';
 
 const tabs = [
   { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
@@ -40,15 +41,13 @@ const Index = () => {
             </AccessibleTabs>
           </section>
 
-          {/* Side column - empty for now */}
+          {/* Side column with interactive panels */}
           <aside 
-            className="hidden lg:block w-72 flex-shrink-0"
+            className="hidden lg:flex lg:flex-col w-72 flex-shrink-0 gap-4"
             aria-label="Información complementaria"
           >
-            {/* Space for future complementary panels */}
-            <div className="card-institutional p-4 text-center text-muted-foreground text-sm">
-              <p>{t('aside.placeholder')}</p>
-            </div>
+            <PanelEstadoExpediente />
+            <PanelMetricasPrompts />
           </aside>
         </div>
       </main>
