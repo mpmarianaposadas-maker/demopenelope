@@ -1,64 +1,57 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function PanelTrazabilidad() {
+  const { t } = useLanguage();
+
   const complianceData = [
     {
-      pilar: 'Transparencia',
-      solucion: 'Marca de agua "Generado por IA" + notificación en expediente',
-      sustento: 'Ley 25.326 / Ética Pública',
+      pilar: t('traz.pilar1'),
+      solucion: t('traz.sol1'),
+      sustento: t('traz.norm1'),
     },
     {
-      pilar: 'Supervisión Humana',
-      solucion: 'Flujo Human-in-the-Loop obligatorio antes de firma',
-      sustento: 'AI Act (Art. 14) / LNPA',
+      pilar: t('traz.pilar2'),
+      solucion: t('traz.sol2'),
+      sustento: t('traz.norm2'),
     },
     {
-      pilar: 'No Discrecionalidad',
-      solucion: 'Opera solo sobre reglas binarias (Cumple/No Cumple) predefinidas',
-      sustento: 'Doctrina del Acto Administrativo',
+      pilar: t('traz.pilar3'),
+      solucion: t('traz.sol3'),
+      sustento: t('traz.norm3'),
     },
     {
-      pilar: 'Seguridad de Datos',
-      solucion: 'Arquitectura Secure Overlay: Lee pero no escribe en BBDD sin validación',
-      sustento: 'ISO/IEC 27001',
+      pilar: t('traz.pilar4'),
+      solucion: t('traz.sol4'),
+      sustento: t('traz.norm4'),
     },
     {
-      pilar: 'Explicabilidad',
-      solucion: 'Prompt Net Ledger registra cada decisión algorítmica',
-      sustento: 'ISO/IEC 42001 / AI Act',
+      pilar: t('traz.pilar5'),
+      solucion: t('traz.sol5'),
+      sustento: t('traz.norm5'),
     },
   ];
 
   return (
     <>
       <Card>
-        <CardTitle>Trazabilidad y Compliance</CardTitle>
-        <CardText>
-          Todo procesamiento automatizado queda registrado con timestamp certificado. El administrado puede solicitar acceso al log de su expediente conforme Ley de Acceso a la Información Pública N° 27.275.
-        </CardText>
-        <CardText>
-          Ninguna acción con efectos jurídicos (notificaciones, intimaciones, decisiones) se ejecuta sin validación expresa del agente humano. El sistema asiste, no decide.
-        </CardText>
-        <CardText>
-          Temperatura 0.0 en prompts críticos garantiza determinismo. Sistema de validación cruzada con bases normativas actualizadas (RAG). Métricas de confianza transparentes.
-        </CardText>
-        <CardText>
-          El sistema NO realiza evaluaciones subjetivas (solvencia, idoneidad, perfil de riesgo). Solo verifica cumplimiento formal de requisitos objetivos establecidos por normativa.
-        </CardText>
+        <CardTitle>{t('traz.title')}</CardTitle>
+        <CardText>{t('traz.intro1')}</CardText>
+        <CardText>{t('traz.intro2')}</CardText>
+        <CardText>{t('traz.intro3')}</CardText>
+        <CardText>{t('traz.intro4')}</CardText>
       </Card>
 
       <Card>
-        <CardTitle as="h3">Pilares de cumplimiento</CardTitle>
-        <CardText>
-          El sistema Penélope fue diseñado siguiendo los requisitos de la norma internacional ISO/IEC 42001:2023 (Sistemas de Gestión de Inteligencia Artificial).
-        </CardText>
+        <CardTitle as="h3">{t('traz.pilares.title')}</CardTitle>
+        <CardText>{t('traz.pilares.intro')}</CardText>
 
         <Table
           columns={[
-            { key: 'pilar', header: 'Pilar de Compliance' },
-            { key: 'solucion', header: 'Solución en Penélope' },
-            { key: 'sustento', header: 'Sustento Normativo' },
+            { key: 'pilar', header: t('traz.tabla.col1') },
+            { key: 'solucion', header: t('traz.tabla.col2') },
+            { key: 'sustento', header: t('traz.tabla.col3') },
           ]}
         >
           {complianceData.map((row, index) => (
@@ -71,12 +64,8 @@ export function PanelTrazabilidad() {
         </Table>
 
         <div className="mt-4 space-y-2">
-          <CardText>
-            Registro inmutable de todas las acciones del sistema para garantizar explicabilidad y defensa jurídica.
-          </CardText>
-          <CardText>
-            Mecanismo de seguridad para detener el sistema ante riesgos inminentes.
-          </CardText>
+          <CardText>{t('traz.footer1')}</CardText>
+          <CardText>{t('traz.footer2')}</CardText>
         </div>
       </Card>
     </>

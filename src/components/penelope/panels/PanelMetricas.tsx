@@ -1,69 +1,66 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function PanelMetricas() {
+  const { t } = useLanguage();
+
   const tiemposData = [
-    { fase: '1. Ingreso y caratulación', actual: '1-2 días', penelope: '5 minutos', reduccion: '-95%' },
-    { fase: '2. Verificación documental inicial', actual: '3-5 días', penelope: '2-4 horas', reduccion: '-90%' },
-    { fase: '3. Primera subsanación (si aplica)', actual: '10-15 días', penelope: '1 día', reduccion: '-85%' },
-    { fase: '4. Clasificación y derivación', actual: '2-3 días', penelope: 'Inmediato', reduccion: '-100%' },
-    { fase: '5. Análisis técnico-jurídico', actual: '15-25 días', penelope: '15-25 días', reduccion: '0% (inalterado)' },
-    { fase: 'TOTAL (sin subsanación)', actual: '28-46 días', penelope: '18-27 días', reduccion: '-35 a -40%' },
+    { fase: t('metr.fase1'), actual: '1-2 días', penelope: '5 minutos', reduccion: '-95%' },
+    { fase: t('metr.fase2'), actual: '3-5 días', penelope: '2-4 horas', reduccion: '-90%' },
+    { fase: t('metr.fase3'), actual: '10-15 días', penelope: '1 día', reduccion: '-85%' },
+    { fase: t('metr.fase4'), actual: '2-3 días', penelope: t('metr.inmediato'), reduccion: '-100%' },
+    { fase: t('metr.fase5'), actual: '15-25 días', penelope: '15-25 días', reduccion: t('metr.inalterado') },
+    { fase: t('metr.faseTotal'), actual: '28-46 días', penelope: '18-27 días', reduccion: '-35 a -40%' },
   ];
 
   const internacionalData = [
-    { pais: 'Estonia', sistema: 'X-Road (interoperabilidad)', reduccion: '844 años ahorrados/año', estado: 'Operativo' },
-    { pais: 'Reino Unido', sistema: 'GOV.UK Notify (notificaciones)', reduccion: '75% en comunicaciones', estado: 'Operativo' },
-    { pais: 'Dinamarca', sistema: 'MitID + Once-Only', reduccion: '80% en documentación', estado: 'Operativo' },
-    { pais: 'Colombia', sistema: 'SUIT (Trámites digitales)', reduccion: '60% en tiempos administrativos', estado: 'Operativo' },
-    { pais: 'Argentina - ENACOM', sistema: 'Sistema Penélope', reduccion: '85% proyectado', estado: 'En desarrollo' },
+    { pais: 'Estonia', sistema: 'X-Road (interoperabilidad)', reduccion: '844 años ahorrados/año', estado: t('metr.estadoOperativo') },
+    { pais: 'Reino Unido', sistema: 'GOV.UK Notify (notificaciones)', reduccion: '75% en comunicaciones', estado: t('metr.estadoOperativo') },
+    { pais: 'Dinamarca', sistema: 'MitID + Once-Only', reduccion: '80% en documentación', estado: t('metr.estadoOperativo') },
+    { pais: 'Colombia', sistema: 'SUIT (Trámites digitales)', reduccion: '60% en tiempos administrativos', estado: t('metr.estadoOperativo') },
+    { pais: 'Argentina - ENACOM', sistema: 'Sistema Penélope', reduccion: '85% proyectado', estado: t('metr.estadoDesarrollo') },
   ];
 
   return (
     <>
       <Card>
-        <CardTitle>Métricas y Beneficios Proyectados</CardTitle>
-        <CardText>
-          Métricas proyectadas basadas en datos de ENACOM 2024-2025 y benchmarks internacionales.
-        </CardText>
+        <CardTitle>{t('metr.title')}</CardTitle>
+        <CardText>{t('metr.intro')}</CardText>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
           <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">21 → 3</div>
-            <div className="text-sm text-muted-foreground">días promedio</div>
+            <div className="text-3xl font-bold text-primary">{t('metr.kpi1.value')}</div>
+            <div className="text-sm text-muted-foreground">{t('metr.kpi1.label')}</div>
           </div>
           <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">-85%</div>
-            <div className="text-sm text-muted-foreground">documentación</div>
+            <div className="text-3xl font-bold text-primary">{t('metr.kpi2.value')}</div>
+            <div className="text-sm text-muted-foreground">{t('metr.kpi2.label')}</div>
           </div>
           <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">97%</div>
-            <div className="text-sm text-muted-foreground">confianza LLM</div>
+            <div className="text-3xl font-bold text-primary">{t('metr.kpi3.value')}</div>
+            <div className="text-sm text-muted-foreground">{t('metr.kpi3.label')}</div>
           </div>
           <div className="p-4 bg-secondary rounded-lg text-center">
-            <div className="text-3xl font-bold text-primary">100%</div>
-            <div className="text-sm text-muted-foreground">decisión expresa</div>
+            <div className="text-3xl font-bold text-primary">{t('metr.kpi4.value')}</div>
+            <div className="text-sm text-muted-foreground">{t('metr.kpi4.label')}</div>
           </div>
         </div>
 
-        <CardText>De 21 días (promedio actual) a 3 días con Penélope.</CardText>
-        <CardText>Gracias a interoperabilidad con RUPECO (Once-Only).</CardText>
-        <CardText>
-          Confianza promedio del modelo LLM (validado con 500 expedientes históricos).
-        </CardText>
-        <CardText>
-          Sistema de alertas garantiza decisión expresa en 100% de los casos.
-        </CardText>
+        <CardText>{t('metr.desc1')}</CardText>
+        <CardText>{t('metr.desc2')}</CardText>
+        <CardText>{t('metr.desc3')}</CardText>
+        <CardText>{t('metr.desc4')}</CardText>
       </Card>
 
       <Card>
-        <CardTitle as="h3">Impacto en tiempos del procedimiento</CardTitle>
+        <CardTitle as="h3">{t('metr.tiempos.title')}</CardTitle>
         <Table
           columns={[
-            { key: 'fase', header: 'Fase del Procedimiento' },
-            { key: 'actual', header: 'Tiempo Actual' },
-            { key: 'penelope', header: 'Tiempo con Penélope' },
-            { key: 'reduccion', header: 'Reducción' },
+            { key: 'fase', header: t('metr.tiempos.col1') },
+            { key: 'actual', header: t('metr.tiempos.col2') },
+            { key: 'penelope', header: t('metr.tiempos.col3') },
+            { key: 'reduccion', header: t('metr.tiempos.col4') },
           ]}
         >
           {tiemposData.map((row, index) => (
@@ -78,23 +75,22 @@ export function PanelMetricas() {
 
         <div className="mt-4">
           <CardText>
-            Con una reducción del 35-40% en etapas preliminares, el organismo gana{' '}
-            <strong className="text-highlight">12-18 días adicionales</strong> para el análisis sustantivo antes del vencimiento del plazo legal.
+            {t('metr.tiempos.conclusion1')}{' '}
+            <strong className="text-highlight">{t('metr.tiempos.diasAdicionales')}</strong>{' '}
+            {t('metr.tiempos.conclusion2')}
           </CardText>
-          <CardText>
-            Las proyecciones se basan en evidencia comparada (ANATEL, OFCOM) y estudios del BID. De 1-2 días a 5 minutos, de 3-5 días a 2-4 horas, de 10-15 días a 1 día. Principio Once-Only.
-          </CardText>
+          <CardText>{t('metr.tiempos.nota')}</CardText>
         </div>
       </Card>
 
       <Card>
-        <CardTitle as="h3">Comparación internacional</CardTitle>
+        <CardTitle as="h3">{t('metr.internacional.title')}</CardTitle>
         <Table
           columns={[
-            { key: 'pais', header: 'País/Organismo' },
-            { key: 'sistema', header: 'Sistema' },
-            { key: 'reduccion', header: 'Reducción Tiempos' },
-            { key: 'estado', header: 'Estado' },
+            { key: 'pais', header: t('metr.internacional.col1') },
+            { key: 'sistema', header: t('metr.internacional.col2') },
+            { key: 'reduccion', header: t('metr.internacional.col3') },
+            { key: 'estado', header: t('metr.internacional.col4') },
           ]}
         >
           {internacionalData.map((row, index) => (
@@ -105,7 +101,7 @@ export function PanelMetricas() {
               <TableCell>
                 <span
                   className={
-                    row.estado === 'Operativo'
+                    row.estado === t('metr.estadoOperativo')
                       ? 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800'
                       : 'status-pending'
                   }

@@ -47,7 +47,7 @@ const Index = () => {
           >
             {/* Space for future complementary panels */}
             <div className="card-institutional p-4 text-center text-muted-foreground text-sm">
-              <p>Espacio reservado para información complementaria</p>
+              <p>{t('aside.placeholder')}</p>
             </div>
           </aside>
         </div>
