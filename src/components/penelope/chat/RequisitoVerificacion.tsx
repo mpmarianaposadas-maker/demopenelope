@@ -35,6 +35,7 @@ interface RequisitoVerificacionProps {
   tipoPersona: 'humana' | 'juridica';
   tramiteNombre: string;
   onAprobarExpediente?: (agenteNombre: string, observaciones?: string) => void;
+  onRechazarExpediente?: (agenteNombre: string, motivoRechazo: string) => void;
   aprobacion?: AprobacionExpediente | null;
   todosValidados?: boolean;
 }
@@ -45,13 +46,16 @@ export function RequisitoVerificacion({
   tipoPersona,
   tramiteNombre,
   onAprobarExpediente,
+  onRechazarExpediente,
   aprobacion,
   todosValidados = false
 }: RequisitoVerificacionProps) {
   const [expandido, setExpandido] = useState(true);
   const [agenteNombre, setAgenteNombre] = useState('');
   const [observaciones, setObservaciones] = useState('');
+  const [motivoRechazo, setMotivoRechazo] = useState('');
   const [mostrarFormAprobacion, setMostrarFormAprobacion] = useState(false);
+  const [mostrarFormRechazo, setMostrarFormRechazo] = useState(false);
   
   const cumplidos = requisitos.filter(r => r.detectado);
   const faltantes = requisitos.filter(r => !r.detectado);
@@ -59,6 +63,7 @@ export function RequisitoVerificacion({
   const rechazadosManualmente = requisitos.filter(r => r.validadoPorAgente === false).length;
   const totalRevisados = requisitos.filter(r => r.validadoPorAgente !== undefined).length;
   const puedeAprobar = todosValidados && !aprobacion;
+  const expedienteResuelto = aprobacion?.aprobado || aprobacion?.rechazado;
 
   const getConfianzaColor = (nivel: number) => {
     if (nivel >= 85) return 'text-success';
@@ -290,7 +295,7 @@ export function RequisitoVerificacion({
           )}
 
           {/* Panel de aprobación ya realizada */}
-          {aprobacion && (
+          {aprobacion?.aprobado && (
             <div className="p-4 bg-success/10 rounded-lg border-2 border-success">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-success/20 rounded-full">
@@ -320,33 +325,77 @@ export function RequisitoVerificacion({
             </div>
           )}
 
-          {/* Botón y formulario de aprobación */}
-          {!aprobacion && onAprobarExpediente && (
+          {/* Panel de rechazo ya realizado */}
+          {aprobacion?.rechazado && (
+            <div className="p-4 bg-destructive/10 rounded-lg border-2 border-destructive">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-destructive/20 rounded-full">
+                  <XCircle className="h-5 w-5 text-destructive" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold text-destructive flex items-center gap-2">
+                    ❌ Expediente Rechazado
+                  </div>
+                  <div className="mt-2 space-y-1 text-sm">
+                    <div className="flex items-center gap-2">
+                      <UserCheck className="h-4 w-4 text-muted-foreground" />
+                      <span><strong>Agente:</strong> {aprobacion.agenteNombre}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span><strong>Fecha:</strong> {aprobacion.timestamp.toLocaleString('es-AR')}</span>
+                    </div>
+                    {aprobacion.motivoRechazo && (
+                      <div className="mt-2 p-2 bg-destructive/5 rounded text-xs border border-destructive/20">
+                        <strong>Motivo de rechazo:</strong> {aprobacion.motivoRechazo}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Botones y formularios de aprobación/rechazo */}
+          {!expedienteResuelto && (onAprobarExpediente || onRechazarExpediente) && (
             <div className="border-t border-border pt-4">
-              {!mostrarFormAprobacion ? (
-                <div className="flex flex-col gap-2">
-                  <Button
-                    onClick={() => setMostrarFormAprobacion(true)}
-                    disabled={!puedeAprobar}
-                    className="w-full"
-                    size="lg"
-                  >
-                    <UserCheck className="h-4 w-4 mr-2" />
-                    {puedeAprobar 
-                      ? 'Aprobar Expediente' 
-                      : `Revisar todos los requisitos (${totalRevisados}/${requisitos.length})`
-                    }
-                  </Button>
+              {!mostrarFormAprobacion && !mostrarFormRechazo ? (
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-2">
+                    {onAprobarExpediente && (
+                      <Button
+                        onClick={() => setMostrarFormAprobacion(true)}
+                        disabled={!puedeAprobar}
+                        className="flex-1"
+                        size="lg"
+                      >
+                        <UserCheck className="h-4 w-4 mr-2" />
+                        Aprobar
+                      </Button>
+                    )}
+                    {onRechazarExpediente && (
+                      <Button
+                        onClick={() => setMostrarFormRechazo(true)}
+                        disabled={!puedeAprobar}
+                        variant="destructive"
+                        className="flex-1"
+                        size="lg"
+                      >
+                        <XCircle className="h-4 w-4 mr-2" />
+                        Rechazar
+                      </Button>
+                    )}
+                  </div>
                   {!puedeAprobar && (
                     <p className="text-xs text-muted-foreground text-center">
-                      Debe revisar todos los requisitos antes de aprobar el expediente
+                      Debe revisar todos los requisitos antes de resolver el expediente ({totalRevisados}/{requisitos.length})
                     </p>
                   )}
                 </div>
-              ) : (
-                <div className="space-y-3 p-4 bg-muted/30 rounded-lg border border-border">
-                  <div className="flex items-center gap-2 text-sm font-medium">
-                    <UserCheck className="h-4 w-4 text-primary" />
+              ) : mostrarFormAprobacion ? (
+                <div className="space-y-3 p-4 bg-success/5 rounded-lg border border-success/30">
+                  <div className="flex items-center gap-2 text-sm font-medium text-success">
+                    <UserCheck className="h-4 w-4" />
                     Registro de Aprobación
                   </div>
                   
@@ -378,14 +427,18 @@ export function RequisitoVerificacion({
                   <div className="flex gap-2 pt-2">
                     <Button
                       variant="outline"
-                      onClick={() => setMostrarFormAprobacion(false)}
+                      onClick={() => {
+                        setMostrarFormAprobacion(false);
+                        setAgenteNombre('');
+                        setObservaciones('');
+                      }}
                       className="flex-1"
                     >
                       Cancelar
                     </Button>
                     <Button
                       onClick={() => {
-                        if (agenteNombre.trim()) {
+                        if (agenteNombre.trim() && onAprobarExpediente) {
                           onAprobarExpediente(agenteNombre.trim(), observaciones.trim() || undefined);
                           setMostrarFormAprobacion(false);
                         }
@@ -395,6 +448,66 @@ export function RequisitoVerificacion({
                     >
                       <CheckCircle2 className="h-4 w-4 mr-2" />
                       Confirmar Aprobación
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3 p-4 bg-destructive/5 rounded-lg border border-destructive/30">
+                  <div className="flex items-center gap-2 text-sm font-medium text-destructive">
+                    <XCircle className="h-4 w-4" />
+                    Registro de Rechazo
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">
+                      Nombre del Agente <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      placeholder="Ingrese su nombre completo"
+                      value={agenteNombre}
+                      onChange={(e) => setAgenteNombre(e.target.value)}
+                      className="bg-background"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">
+                      Motivo de Rechazo <span className="text-destructive">*</span>
+                    </label>
+                    <Textarea
+                      placeholder="Indique el motivo del rechazo (obligatorio)..."
+                      value={motivoRechazo}
+                      onChange={(e) => setMotivoRechazo(e.target.value)}
+                      className="bg-background resize-none border-destructive/30"
+                      rows={3}
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setMostrarFormRechazo(false);
+                        setAgenteNombre('');
+                        setMotivoRechazo('');
+                      }}
+                      className="flex-1"
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        if (agenteNombre.trim() && motivoRechazo.trim() && onRechazarExpediente) {
+                          onRechazarExpediente(agenteNombre.trim(), motivoRechazo.trim());
+                          setMostrarFormRechazo(false);
+                        }
+                      }}
+                      disabled={!agenteNombre.trim() || !motivoRechazo.trim()}
+                      className="flex-1"
+                    >
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Confirmar Rechazo
                     </Button>
                   </div>
                 </div>

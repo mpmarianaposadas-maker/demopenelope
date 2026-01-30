@@ -34,10 +34,12 @@ interface DocumentoDetectado {
 
 export interface AprobacionExpediente {
   aprobado: boolean;
+  rechazado?: boolean;
   agenteNombre: string;
   agenteId?: string;
   timestamp: Date;
   observaciones?: string;
+  motivoRechazo?: string;
 }
 
 interface ExpedienteSimulado {
@@ -380,6 +382,7 @@ export function useChatRupecoSimulado() {
     
     const nuevaAprobacion: AprobacionExpediente = {
       aprobado: true,
+      rechazado: false,
       agenteNombre,
       timestamp: new Date(),
       observaciones,
@@ -407,6 +410,45 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
 ---
 
 > El expediente ha sido verificado y aprobado para continuar a la etapa de **análisis técnico-jurídico**.`,
+        timestamp: new Date(),
+      },
+    ]);
+  }, [expediente]);
+
+  // Función para rechazar el expediente completo
+  const rechazarExpediente = useCallback((agenteNombre: string, motivoRechazo: string) => {
+    if (!expediente) return;
+    
+    const nuevoRechazo: AprobacionExpediente = {
+      aprobado: false,
+      rechazado: true,
+      agenteNombre,
+      timestamp: new Date(),
+      motivoRechazo,
+    };
+    
+    setAprobacion(nuevoRechazo);
+    
+    // Agregar mensaje de confirmación
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        role: 'assistant',
+        content: `## ❌ EXPEDIENTE RECHAZADO
+
+---
+
+| Campo | Valor |
+|:------|:------|
+| **Expediente** | ${expediente.numero} |
+| **Agente** | ${agenteNombre} |
+| **Fecha y hora** | ${nuevoRechazo.timestamp.toLocaleString('es-AR')} |
+| **Motivo de rechazo** | ${motivoRechazo} |
+
+---
+
+> El expediente ha sido **rechazado** y no puede continuar al análisis técnico-jurídico. Se debe notificar al administrado el motivo del rechazo.`,
         timestamp: new Date(),
       },
     ]);
@@ -487,6 +529,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     requisitosData,
     validarRequisito,
     aprobarExpediente,
+    rechazarExpediente,
     aprobacion,
     todosRequisitosValidados,
   };
