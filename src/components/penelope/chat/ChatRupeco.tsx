@@ -36,6 +36,9 @@ export function ChatRupeco() {
     providenciaData,
     requisitosData,
     validarRequisito,
+    aprobarExpediente,
+    aprobacion,
+    todosRequisitosValidados,
   } = useChatRupecoSimulado();
 
   useEffect(() => {
@@ -118,6 +121,9 @@ export function ChatRupeco() {
                 onValidarRequisito={validarRequisito}
                 tipoPersona={requisitosData.tipoPersona}
                 tramiteNombre={requisitosData.tramiteNombre}
+                onAprobarExpediente={aprobarExpediente}
+                aprobacion={aprobacion}
+                todosValidados={todosRequisitosValidados}
               />
             </div>
           )}
