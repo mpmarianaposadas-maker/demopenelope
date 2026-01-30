@@ -472,6 +472,31 @@ Podés consultar:
     setEvaluation(null);
   }, []);
 
+  // Datos para la providencia de intimación
+  const providenciaData = expediente && expediente.documentosDetectados.some(d => !d.detectado) ? {
+    expediente: {
+      numero: expediente.numero,
+      caratula: expediente.caratula,
+      tipoPersona: expediente.tipoPersona,
+      tramiteNombre: expediente.tramite?.nombre || 'Trámite ENACOM',
+      tramiteCodigo: expediente.tramite?.codigo || 'N/A',
+      tramiteNormativa: expediente.tramite?.normativa || 'Normativa aplicable',
+      plazoSilencioPositivo: expediente.tramite?.plazoSilencioPositivo || 60,
+      fechaIngreso: expediente.fechaIngreso,
+    },
+    documentosFaltantes: expediente.documentosDetectados
+      .filter(d => !d.detectado)
+      .map(d => {
+        // Buscar la normativa del documento
+        const docInfo = NUCLEO_RUPECO.flatMap(b => b.documentos).find(doc => doc.id === d.id);
+        const adicionalInfo = expediente.tramite?.documentosAdicionales.find(doc => doc.id === d.id);
+        return {
+          nombre: d.nombre,
+          normativa: docInfo?.normativa || adicionalInfo?.normativa || 'Normativa vigente',
+        };
+      }),
+  } : null;
+
   return {
     messages,
     isLoading,
@@ -481,5 +506,6 @@ Podés consultar:
     isSystemActive,
     currentStep,
     esPJ: expediente?.tipoPersona === 'juridica',
+    providenciaData,
   };
 }

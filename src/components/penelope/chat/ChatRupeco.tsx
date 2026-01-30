@@ -8,6 +8,7 @@ import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { RupecoEvaluation } from './RupecoEvaluation';
 import { RupecoProgressIndicator } from './RupecoProgressIndicator';
+import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -30,7 +31,8 @@ export function ChatRupeco() {
     evaluation, 
     isSystemActive,
     currentStep,
-    esPJ 
+    esPJ,
+    providenciaData,
   } = useChatRupecoSimulado();
 
   useEffect(() => {
@@ -102,6 +104,15 @@ export function ChatRupeco() {
                   {action.label}
                 </Button>
               ))}
+            </div>
+          )}
+
+          {providenciaData && (
+            <div className="mt-4">
+              <ProvidenciaIntimacion 
+                expediente={providenciaData.expediente}
+                documentosFaltantes={providenciaData.documentosFaltantes}
+              />
             </div>
           )}
 
