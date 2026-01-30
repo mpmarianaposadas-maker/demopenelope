@@ -10,6 +10,7 @@ import { RupecoEvaluation } from './RupecoEvaluation';
 import { RupecoProgressIndicator } from './RupecoProgressIndicator';
 import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
+import { HistorialAcciones } from './HistorialAcciones';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -41,13 +42,15 @@ export function ChatRupeco() {
     revertirDecision,
     aprobacion,
     todosRequisitosValidados,
+    historialAcciones,
+    expedienteNumero,
   } = useChatRupecoSimulado();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, evaluation, requisitosData]);
+  }, [messages, evaluation, requisitosData, historialAcciones]);
 
   const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
@@ -144,6 +147,16 @@ export function ChatRupeco() {
           {evaluation && (
             <div className="mt-4">
               <RupecoEvaluation data={evaluation} />
+            </div>
+          )}
+
+          {/* Historial de acciones del agente */}
+          {historialAcciones.length > 0 && (
+            <div className="mt-4">
+              <HistorialAcciones 
+                acciones={historialAcciones}
+                expedienteNumero={expedienteNumero}
+              />
             </div>
           )}
         </div>

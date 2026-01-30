@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Message } from '@/components/penelope/chat/ChatMessage';
 import { RupecoEvaluationData } from '@/components/penelope/chat/RupecoEvaluation';
+import { AccionAgente, TipoAccion } from '@/components/penelope/chat/HistorialAcciones';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useSecurityValidation } from '@/hooks/useSecurityValidation';
@@ -85,6 +86,29 @@ export function useChatRupecoSimulado() {
   const [expediente, setExpediente] = useState<ExpedienteSimulado | null>(null);
   const [evaluation, setEvaluation] = useState<RupecoEvaluationData | null>(null);
   const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
+  const [historialAcciones, setHistorialAcciones] = useState<AccionAgente[]>([]);
+
+  // Función para agregar una acción al historial
+  const agregarAccion = useCallback((
+    tipo: TipoAccion,
+    descripcion: string,
+    agenteNombre?: string,
+    detalles?: string,
+    requisitoId?: string,
+    requisitoNombre?: string
+  ) => {
+    const nuevaAccion: AccionAgente = {
+      id: generateId(),
+      tipo,
+      timestamp: new Date(),
+      agenteNombre,
+      descripcion,
+      detalles,
+      requisitoId,
+      requisitoNombre,
+    };
+    setHistorialAcciones(prev => [...prev, nuevaAccion]);
+  }, []);
 
   const detectarTramite = (input: string): TramiteENAC | null => {
     const lower = input.toLowerCase();
@@ -217,6 +241,14 @@ export function useChatRupecoSimulado() {
       ? `EMPRESA DEMO S.A. s/ ${tramite.nombre}`
       : `PERSONA DEMO s/ ${tramite.nombre}`;
 
+    // Registrar inicio de verificación en historial
+    agregarAccion(
+      'inicio_verificacion',
+      `Verificación automática iniciada para ${tramite.nombre}`,
+      undefined,
+      `Expediente: ${numExp} | Tipo: ${tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'}`,
+    );
+
     // Simular procesamiento en etapas
     setTimeout(() => {
       setCurrentStep('clasificacion_ia');
@@ -341,7 +373,7 @@ export function useChatRupecoSimulado() {
         }, 600);
       }, 600);
     }, 400);
-  }, [setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON]);
+  }, [setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion]);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {
@@ -380,6 +412,7 @@ export function useChatRupecoSimulado() {
     setExpediente(null);
     setEvaluation(null);
     setAprobacion(null);
+    setHistorialAcciones([]);
   }, []);
 
   // Función para aprobar el expediente completo
@@ -394,6 +427,13 @@ export function useChatRupecoSimulado() {
       observaciones,
     };
     
+    // Registrar en historial
+    agregarAccion(
+      'aprobar_expediente',
+      `Expediente ${expediente.numero} aprobado`,
+      agenteNombre,
+      observaciones,
+    );
     setAprobacion(nuevaAprobacion);
     
     // Agregar mensaje de confirmación
@@ -419,7 +459,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente]);
+  }, [expediente, agregarAccion]);
 
   // Función para rechazar el expediente completo
   const rechazarExpediente = useCallback((agenteNombre: string, motivoRechazo: string) => {
@@ -432,6 +472,14 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       timestamp: new Date(),
       motivoRechazo,
     };
+    
+    // Registrar en historial
+    agregarAccion(
+      'rechazar_expediente',
+      `Expediente ${expediente.numero} rechazado`,
+      agenteNombre,
+      motivoRechazo,
+    );
     
     setAprobacion(nuevoRechazo);
     
@@ -458,13 +506,21 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente]);
+  }, [expediente, agregarAccion]);
 
   // Función para revertir la decisión
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
     if (!expediente || !aprobacion) return;
     
     const decisionOriginal = aprobacion.aprobado ? 'APROBACIÓN' : 'RECHAZO';
+    
+    // Registrar en historial
+    agregarAccion(
+      'revertir_decision',
+      `Decisión de ${decisionOriginal.toLowerCase()} revertida`,
+      agenteNombre,
+      justificacion,
+    );
     
     // Actualizar la aprobación marcándola como revertida
     setAprobacion(prev => prev ? {
@@ -515,11 +571,28 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     setTimeout(() => {
       setAprobacion(null);
     }, 100);
-  }, [expediente, aprobacion]);
+  }, [expediente, aprobacion, agregarAccion]);
 
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
     if (!expediente) return;
+    
+    const requisito = expediente.documentosDetectados.find(d => d.id === requisitoId);
+    const tipoAccion: TipoAccion = requisito?.detectado 
+      ? (validado ? 'validar_requisito' : 'rechazar_requisito')
+      : 'subsanar_requisito';
+    
+    // Registrar en historial
+    agregarAccion(
+      tipoAccion,
+      validado 
+        ? (requisito?.detectado ? 'Requisito validado por agente' : 'Requisito marcado como subsanado')
+        : 'Requisito rechazado por agente',
+      undefined,
+      observacion,
+      requisitoId,
+      requisito?.nombre,
+    );
     
     setExpediente(prev => {
       if (!prev) return prev;
@@ -532,7 +605,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         ),
       };
     });
-  }, [expediente]);
+  }, [expediente, agregarAccion]);
 
   // Datos de requisitos para verificación
   const requisitosData = expediente ? {
@@ -596,5 +669,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     revertirDecision,
     aprobacion,
     todosRequisitosValidados,
+    historialAcciones,
+    expedienteNumero: expediente?.numero,
   };
 }
