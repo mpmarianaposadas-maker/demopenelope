@@ -33,7 +33,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-xs text-muted-foreground mb-1">
-          {isAssistant ? 'Asistente RUPECO' : 'Tú'}
+          {isAssistant ? 'Penélope' : 'Tú'}
         </div>
         <div className="prose prose-sm dark:prose-invert max-w-none">
           <ReactMarkdown>{message.content}</ReactMarkdown>
