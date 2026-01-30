@@ -9,6 +9,7 @@ import { ChatInput } from './ChatInput';
 import { RupecoEvaluation } from './RupecoEvaluation';
 import { RupecoProgressIndicator } from './RupecoProgressIndicator';
 import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
+import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -33,13 +34,15 @@ export function ChatRupeco() {
     currentStep,
     esPJ,
     providenciaData,
+    requisitosData,
+    validarRequisito,
   } = useChatRupecoSimulado();
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, evaluation]);
+  }, [messages, evaluation, requisitosData]);
 
   const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
@@ -104,6 +107,18 @@ export function ChatRupeco() {
                   {action.label}
                 </Button>
               ))}
+            </div>
+          )}
+
+          {/* Panel de verificación de requisitos */}
+          {requisitosData && (
+            <div className="mt-4">
+              <RequisitoVerificacion
+                requisitos={requisitosData.requisitos}
+                onValidarRequisito={validarRequisito}
+                tipoPersona={requisitosData.tipoPersona}
+                tramiteNombre={requisitosData.tramiteNombre}
+              />
             </div>
           )}
 

@@ -28,6 +28,8 @@ interface DocumentoDetectado {
   nivelConfianza: number;
   normativa: string;
   articuloEspecifico?: string;
+  validadoPorAgente?: boolean;
+  observacionAgente?: string;
 }
 
 interface ExpedienteSimulado {
@@ -362,6 +364,39 @@ export function useChatRupecoSimulado() {
     setEvaluation(null);
   }, []);
 
+  // Función para validar un requisito individual
+  const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
+    if (!expediente) return;
+    
+    setExpediente(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        documentosDetectados: prev.documentosDetectados.map(doc => 
+          doc.id === requisitoId 
+            ? { ...doc, validadoPorAgente: validado, observacionAgente: observacion }
+            : doc
+        ),
+      };
+    });
+  }, [expediente]);
+
+  // Datos de requisitos para verificación
+  const requisitosData = expediente ? {
+    requisitos: expediente.documentosDetectados.map(d => ({
+      id: d.id,
+      nombre: d.nombre,
+      normativa: d.normativa,
+      articuloEspecifico: d.articuloEspecifico,
+      detectado: d.detectado,
+      nivelConfianza: d.nivelConfianza,
+      validadoPorAgente: d.validadoPorAgente,
+      observacionAgente: d.observacionAgente,
+    })),
+    tipoPersona: expediente.tipoPersona,
+    tramiteNombre: expediente.tramite?.nombre || 'Trámite ENACOM',
+  } : null;
+
   // Datos para la providencia de intimación
   const providenciaData = expediente && expediente.documentosDetectados.some(d => !d.detectado) ? {
     expediente: {
@@ -394,5 +429,7 @@ export function useChatRupecoSimulado() {
     currentStep,
     esPJ: expediente?.tipoPersona === 'juridica',
     providenciaData,
+    requisitosData,
+    validarRequisito,
   };
 }

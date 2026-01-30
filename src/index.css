@@ -35,17 +35,22 @@
     --muted: 210 15% 94%;
     --muted-foreground: 215 15% 45%;
 
-    /* Accent - Amber for badges/highlights */
-    --accent: 38 92% 50%;
-    --accent-foreground: 30 80% 15%;
+    /* Accent - Cream for badges/highlights */
+    --accent: 40 40% 90%;
+    --accent-foreground: 220 30% 20%;
+
+    /* Cream color palette */
+    --cream: 45 40% 94%;
+    --cream-dark: 40 35% 85%;
+    --cream-foreground: 30 30% 25%;
 
     /* Status colors */
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     --success: 142 72% 29%;
     --success-foreground: 0 0% 100%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 30 80% 15%;
+    --warning: 35 60% 75%;
+    --warning-foreground: 30 40% 25%;
 
     /* Borders and inputs */
     --border: 214 20% 85%;
@@ -70,9 +75,9 @@
     --table-border: 214 20% 88%;
     --table-row-alt: 210 20% 97%;
 
-    /* Badge specific */
-    --badge-demo: 38 92% 50%;
-    --badge-demo-text: 30 80% 15%;
+    /* Badge specific - Cream */
+    --badge-demo: 45 40% 94%;
+    --badge-demo-text: 220 30% 20%;
 
     /* Sidebar (keeping for compatibility) */
     --sidebar-background: 0 0% 98%;
@@ -167,12 +172,13 @@
     background: hsl(var(--card));
   }
 
-  /* Badge demo style */
+  /* Badge demo style - Cream */
   .badge-demo {
     background: hsl(var(--badge-demo));
     color: hsl(var(--badge-demo-text));
     @apply px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wide;
-    box-shadow: 0 2px 4px hsl(38 92% 50% / 0.3);
+    box-shadow: 0 2px 4px hsl(40 35% 50% / 0.2);
+    border: 1px solid hsl(40 30% 80%);
   }
 
   /* Table institutional */

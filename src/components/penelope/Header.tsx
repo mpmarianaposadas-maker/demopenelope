@@ -1,4 +1,5 @@
 import { Globe } from 'lucide-react';
+import penelopeImage from '@/assets/penelope-art-nouveau.png';
 
 interface HeaderProps {
   language: 'es' | 'en';
@@ -14,10 +15,14 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
           {/* Left side - Logo and text */}
           <div className="flex items-center gap-4">
             <div 
-              className="logo-placeholder" 
+              className="w-14 h-14 rounded-lg overflow-hidden bg-cream/20 border-2 border-cream/40 flex items-center justify-center" 
               aria-label="Logo ENACOM Sistema Penélope"
             >
-              <span className="text-xl font-bold">P</span>
+              <img 
+                src={penelopeImage} 
+                alt="Penélope - Sistema de Verificación Documental"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="flex-1">
               <h1 
