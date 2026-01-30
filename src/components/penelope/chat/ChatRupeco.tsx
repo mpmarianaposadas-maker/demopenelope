@@ -11,9 +11,9 @@ import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const QUICK_ACTIONS = [
-  { label: 'Trámite TIC', message: 'Quiero iniciar un trámite de Licencia TIC' },
-  { label: 'Audiovisual', message: 'Necesito registrar un servicio audiovisual' },
-  { label: 'Consulta RUPECO', message: 'Quiero hacer una consulta sobre RUPECO' },
+  { label: 'Licencia TIC (Alto riesgo)', message: 'Verificar expediente EX-2024-89234512-APN-ENACOM' },
+  { label: 'Audiovisual (Medio)', message: 'Verificar expediente EX-2024-91456789-APN-ENACOM' },
+  { label: 'TIC Crítico (Vencido)', message: 'Verificar expediente EX-2024-78123456-APN-ENACOM' },
 ];
 
 export function ChatRupeco() {
