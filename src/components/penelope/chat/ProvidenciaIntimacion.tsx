@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Download, Copy, Check } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { FileText, Download, Copy, Check, AlertTriangle, Clock } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -44,110 +45,68 @@ function generarTextoProvidencia(
   documentosFaltantes: DocumentoFaltante[]
 ): string {
   const fechaActual = formatearFecha(new Date());
-  const fechaLimite = formatearFecha(
-    calcularFechaLimite(expediente.fechaIngreso, 10) // 10 días hábiles para subsanar
+  const fechaLimiteSilencio = formatearFecha(
+    calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo)
   );
   const tipoPersonaTexto = expediente.tipoPersona === 'juridica' 
     ? 'la persona jurídica' 
     : 'el/la administrado/a';
 
-  const listaDocumentos = documentosFaltantes
-    .map((doc, idx) => `   ${idx + 1}. ${doc.nombre}\n      → Base normativa: ${doc.normativa}`)
+  const tablaDocumentos = documentosFaltantes
+    .map((doc, idx) => `| ${idx + 1} | ${doc.nombre} | ${doc.normativa} |`)
     .join('\n');
 
   return `
-═══════════════════════════════════════════════════════════════════════════════
-                          ENTE NACIONAL DE COMUNICACIONES
-                                     ENACOM
-═══════════════════════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════════
+                ENTE NACIONAL DE COMUNICACIONES - ENACOM
+               PROVIDENCIA DE INTIMACIÓN (BORRADOR)
+══════════════════════════════════════════════════════════════════
 
-                      *** BORRADOR - REQUIERE VALIDACIÓN ***
+┌─────────────────────────────────────────────────────────────────┐
+│ EXPEDIENTE: ${expediente.numero.padEnd(45)}│
+│ CARÁTULA:   ${expediente.caratula.substring(0, 45).padEnd(45)}│
+│ FECHA:      ${fechaActual.padEnd(45)}│
+└─────────────────────────────────────────────────────────────────┘
 
-                          PROVIDENCIA DE INTIMACIÓN
-                          
-Expediente N°: ${expediente.numero}
-Carátula: ${expediente.caratula}
-Trámite: ${expediente.tramiteNombre} (${expediente.tramiteCodigo})
-Normativa aplicable: ${expediente.tramiteNormativa}
-Fecha: ${fechaActual}
+VISTO: El expediente de referencia, por el cual ${tipoPersonaTexto}
+"${expediente.caratula.split(' s/')[0]}" solicita ${expediente.tramiteNombre.toLowerCase()}.
 
-───────────────────────────────────────────────────────────────────────────────
+CONSIDERANDO: Que de la verificación documental surge la falta de
+documentación obligatoria conforme Res. ENACOM N° 3731/2019 (RUPECO)
+y el Decreto N° 971/2024 (Silencio Administrativo Positivo - PEHAR).
 
-                                 VISTO:
+══════════════════════════════════════════════════════════════════
+                    DOCUMENTACIÓN FALTANTE
+══════════════════════════════════════════════════════════════════
 
-El expediente de la referencia, mediante el cual ${tipoPersonaTexto} 
-"${expediente.caratula.split(' s/')[0]}" solicita ${expediente.tramiteNombre.toLowerCase()};
+| N° | Documento Requerido                      | Base Normativa          |
+|----|------------------------------------------|-------------------------|
+${tablaDocumentos}
 
-                               CONSIDERANDO:
+══════════════════════════════════════════════════════════════════
+                         RESUELVE
+══════════════════════════════════════════════════════════════════
 
-Que de la verificación documental automatizada efectuada por el sistema 
-"PENÉLOPE" surge la falta de presentación de documentación obligatoria 
-requerida por la normativa vigente;
+ARTÍCULO 1°.- INTIMAR a subsanar dentro de DIEZ (10) DÍAS HÁBILES
+desde la notificación, bajo apercibimiento de archivo (Art. 5°,
+Decreto N° 1759/72 T.O. 2017).
 
-Que conforme lo establecido en el Decreto N° 971/2024 (Reglamento General 
-del Silencio Administrativo Positivo - PEHAR), la documentación exigida 
-resulta de cumplimiento obligatorio para la procedencia del trámite;
+ARTÍCULO 2°.- Presentar documentación vía TAD citando el expediente.
 
-Que la Resolución ENACOM N° 3731/2019 (RUPECO - Registro Único de Personas 
-de Comunicaciones) establece los requisitos documentales mínimos que deben 
-cumplir los administrados ante este Organismo;
+══════════════════════════════════════════════════════════════════
+⚠️  CONTROL SILENCIO POSITIVO (Decreto 971/2024)
+    Plazo máximo: ${expediente.plazoSilencioPositivo} días | Vence: ${fechaLimiteSilencio}
+══════════════════════════════════════════════════════════════════
 
-Que el Art. 5° del Reglamento de Procedimientos Administrativos (Decreto 
-N° 1759/72 T.O. 2017) dispone que la Administración intimará al interesado 
-para que subsane los defectos formales de la presentación dentro del plazo 
-que se fije, bajo apercibimiento de tenerla por desistida;
+┌─────────────────────────────────────────────────────────────────┐
+│  ⚠️ BORRADOR - REQUIERE VALIDACIÓN Y FIRMA DEL AGENTE         │
+│                                                                 │
+│  Validado por: _________________________  Fecha: ___________   │
+│                                                                 │
+│  Firma: ____________________________                           │
+└─────────────────────────────────────────────────────────────────┘
 
-───────────────────────────────────────────────────────────────────────────────
-
-                        POR ELLO, SE RESUELVE:
-
-ARTÍCULO 1°.- INTIMAR a ${tipoPersonaTexto} "${expediente.caratula.split(' s/')[0]}" 
-a que dentro del plazo de DIEZ (10) días hábiles administrativos contados 
-desde la notificación de la presente, acompañe la siguiente documentación 
-faltante:
-
-${listaDocumentos}
-
-ARTÍCULO 2°.- HACER SABER que el incumplimiento de lo dispuesto en el 
-artículo anterior dará lugar a que se tenga por desistido el trámite, 
-procediendo al archivo de las actuaciones conforme lo dispuesto por el 
-Art. 5° del Decreto N° 1759/72 (T.O. 2017).
-
-ARTÍCULO 3°.- NOTIFICAR al interesado conforme los medios previstos en el 
-Art. 41 del Decreto N° 1759/72 (T.O. 2017).
-
-ARTÍCULO 4°.- Registrar, comunicar y cumplido, archivar.
-
-───────────────────────────────────────────────────────────────────────────────
-
-                          ⚠️ CONTROL DE PLAZOS (Decreto 971/2024)
-
-Plazo de silencio administrativo positivo aplicable: ${expediente.plazoSilencioPositivo} días
-Fecha límite absoluta para resolución: ${formatearFecha(calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo))}
-
-───────────────────────────────────────────────────────────────────────────────
-
-                      *** SECCIÓN PARA USO INTERNO ***
-
-[ ] Validado por agente: _________________________
-
-[ ] Revisión jurídica: _________________________
-
-Firma: _________________________
-
-Aclaración: _________________________
-
-Cargo: _________________________
-
-Fecha de firma: _________________________
-
-═══════════════════════════════════════════════════════════════════════════════
-            BORRADOR GENERADO AUTOMÁTICAMENTE POR PENÉLOPE v1.0
-         Sistema de Verificación Documental - ENACOM
-         
-         ⚠️ ESTE DOCUMENTO REQUIERE REVISIÓN Y VALIDACIÓN HUMANA
-            ANTES DE SU FIRMA Y NOTIFICACIÓN AL ADMINISTRADO
-═══════════════════════════════════════════════════════════════════════════════
+         Sistema Penélope v1.0 - Generación automática
 `.trim();
 }
 
@@ -158,6 +117,7 @@ export function ProvidenciaIntimacion({
   const [copied, setCopied] = useState(false);
   
   const textoProvidencia = generarTextoProvidencia(expediente, documentosFaltantes);
+  const fechaLimiteSilencio = calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo);
 
   const handleCopy = async () => {
     try {
@@ -190,27 +150,96 @@ export function ProvidenciaIntimacion({
   return (
     <Card className="border-amber-200 bg-amber-50/50 dark:border-amber-900 dark:bg-amber-950/20">
       <CardHeader className="pb-3">
-        <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-amber-600" />
-          <CardTitle className="text-base text-amber-800 dark:text-amber-200">
-            📋 Borrador de Providencia de Intimación
-          </CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileText className="h-5 w-5 text-amber-600" />
+            <CardTitle className="text-base text-amber-800 dark:text-amber-200">
+              Borrador de Providencia de Intimación
+            </CardTitle>
+          </div>
+          <div className="flex items-center gap-1.5 text-xs bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">
+            <AlertTriangle className="h-3 w-3 text-amber-600" />
+            <span className="text-amber-700 dark:text-amber-300 font-medium">Requiere validación</span>
+          </div>
         </div>
-        <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-          Se detectaron <strong>{documentosFaltantes.length} documento(s) faltante(s)</strong>. 
-          El borrador ha sido generado automáticamente según la normativa vigente.
-        </p>
-        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-medium">
-          ⚠️ Requiere validación del agente antes de su firma y cursado al administrado.
-        </p>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="bg-white dark:bg-background rounded-md border p-3 max-h-[200px] overflow-y-auto">
-          <pre className="text-[10px] font-mono text-muted-foreground whitespace-pre-wrap leading-relaxed">
-            {textoProvidencia}
-          </pre>
+      
+      <CardContent className="space-y-4">
+        {/* Resumen destacado */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white dark:bg-background rounded-lg border p-3">
+            <div className="text-xs text-muted-foreground mb-1">Expediente</div>
+            <div className="font-mono text-sm font-medium truncate">{expediente.numero}</div>
+          </div>
+          <div className="bg-white dark:bg-background rounded-lg border p-3">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+              <Clock className="h-3 w-3" />
+              Plazo subsanación
+            </div>
+            <div className="font-medium text-sm">10 días hábiles</div>
+          </div>
         </div>
+
+        {/* Tabla de documentos faltantes */}
+        <div className="rounded-lg border bg-white dark:bg-background overflow-hidden">
+          <div className="bg-amber-100 dark:bg-amber-900/30 px-3 py-2 border-b">
+            <span className="text-xs font-semibold text-amber-800 dark:text-amber-200">
+              {documentosFaltantes.length} documento(s) faltante(s)
+            </span>
+          </div>
+          <Table>
+            <TableHeader>
+              <TableRow className="text-xs">
+                <TableHead className="w-[50%] py-2">Documento</TableHead>
+                <TableHead className="py-2">Base Normativa</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {documentosFaltantes.map((doc, idx) => (
+                <TableRow key={idx} className="text-xs">
+                  <TableCell className="py-2 font-medium">{doc.nombre}</TableCell>
+                  <TableCell className="py-2 text-muted-foreground">{doc.normativa}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Control de plazos */}
+        <div className="flex items-center justify-between bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-900 p-3">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-red-600" />
+            <div>
+              <div className="text-xs text-red-600 dark:text-red-400 font-medium">
+                Control Silencio Positivo (Decreto 971/2024)
+              </div>
+              <div className="text-xs text-red-700 dark:text-red-300">
+                Plazo máximo: {expediente.plazoSilencioPositivo} días
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs text-muted-foreground">Vence</div>
+            <div className="text-sm font-bold text-red-700 dark:text-red-300">
+              {fechaLimiteSilencio.toLocaleDateString('es-AR')}
+            </div>
+          </div>
+        </div>
+
+        {/* Vista previa del texto */}
+        <details className="group">
+          <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
+            <span className="group-open:rotate-90 transition-transform">▶</span>
+            Ver texto completo del borrador
+          </summary>
+          <div className="mt-2 bg-white dark:bg-background rounded-md border p-3 max-h-[150px] overflow-y-auto">
+            <pre className="text-[9px] font-mono text-muted-foreground whitespace-pre-wrap leading-relaxed">
+              {textoProvidencia}
+            </pre>
+          </div>
+        </details>
         
+        {/* Acciones */}
         <div className="flex gap-2">
           <Button 
             variant="outline" 
@@ -226,7 +255,7 @@ export function ProvidenciaIntimacion({
             ) : (
               <>
                 <Copy className="h-3 w-3 mr-1" />
-                Copiar texto
+                Copiar
               </>
             )}
           </Button>
@@ -237,12 +266,12 @@ export function ProvidenciaIntimacion({
             className="flex-1"
           >
             <Download className="h-3 w-3 mr-1" />
-            Descargar .txt
+            Descargar
           </Button>
         </div>
         
-        <p className="text-[10px] text-muted-foreground text-center">
-          ⚠️ Este documento es un borrador. Requiere revisión antes de su firma.
+        <p className="text-[10px] text-amber-700 dark:text-amber-400 text-center font-medium">
+          ⚠️ Borrador generado automáticamente · Requiere revisión y firma del agente
         </p>
       </CardContent>
     </Card>
