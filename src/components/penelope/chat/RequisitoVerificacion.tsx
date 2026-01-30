@@ -13,7 +13,8 @@ import {
   Shield,
   Scale,
   UserCheck,
-  Clock
+  Clock,
+  RotateCcw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
@@ -36,6 +37,7 @@ interface RequisitoVerificacionProps {
   tramiteNombre: string;
   onAprobarExpediente?: (agenteNombre: string, observaciones?: string) => void;
   onRechazarExpediente?: (agenteNombre: string, motivoRechazo: string) => void;
+  onRevertirDecision?: (agenteNombre: string, justificacion: string) => void;
   aprobacion?: AprobacionExpediente | null;
   todosValidados?: boolean;
 }
@@ -47,6 +49,7 @@ export function RequisitoVerificacion({
   tramiteNombre,
   onAprobarExpediente,
   onRechazarExpediente,
+  onRevertirDecision,
   aprobacion,
   todosValidados = false
 }: RequisitoVerificacionProps) {
@@ -54,8 +57,10 @@ export function RequisitoVerificacion({
   const [agenteNombre, setAgenteNombre] = useState('');
   const [observaciones, setObservaciones] = useState('');
   const [motivoRechazo, setMotivoRechazo] = useState('');
+  const [justificacionReversion, setJustificacionReversion] = useState('');
   const [mostrarFormAprobacion, setMostrarFormAprobacion] = useState(false);
   const [mostrarFormRechazo, setMostrarFormRechazo] = useState(false);
+  const [mostrarFormReversion, setMostrarFormReversion] = useState(false);
   
   const cumplidos = requisitos.filter(r => r.detectado);
   const faltantes = requisitos.filter(r => !r.detectado);
@@ -295,7 +300,7 @@ export function RequisitoVerificacion({
           )}
 
           {/* Panel de aprobación ya realizada */}
-          {aprobacion?.aprobado && (
+          {aprobacion?.aprobado && !aprobacion?.revertido && (
             <div className="p-4 bg-success/10 rounded-lg border-2 border-success">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-success/20 rounded-full">
@@ -320,13 +325,26 @@ export function RequisitoVerificacion({
                       </div>
                     )}
                   </div>
+                  
+                  {/* Botón de revertir */}
+                  {onRevertirDecision && !mostrarFormReversion && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => setMostrarFormReversion(true)}
+                    >
+                      <RotateCcw className="h-3 w-3 mr-1" />
+                      Revertir decisión
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
           )}
 
           {/* Panel de rechazo ya realizado */}
-          {aprobacion?.rechazado && (
+          {aprobacion?.rechazado && !aprobacion?.revertido && (
             <div className="p-4 bg-destructive/10 rounded-lg border-2 border-destructive">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-destructive/20 rounded-full">
@@ -351,7 +369,91 @@ export function RequisitoVerificacion({
                       </div>
                     )}
                   </div>
+                  
+                  {/* Botón de revertir */}
+                  {onRevertirDecision && !mostrarFormReversion && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => setMostrarFormReversion(true)}
+                    >
+                      <RotateCcw className="h-3 w-3 mr-1" />
+                      Revertir decisión
+                    </Button>
+                  )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Formulario de reversión */}
+          {mostrarFormReversion && onRevertirDecision && (
+            <div className="space-y-3 p-4 bg-cream rounded-lg border border-cream-dark">
+              <div className="flex items-center gap-2 text-sm font-medium text-cream-foreground">
+                <RotateCcw className="h-4 w-4" />
+                Revertir Decisión
+              </div>
+              
+              <div className="p-2 bg-cream-dark/30 rounded text-xs text-cream-foreground">
+                <AlertTriangle className="h-3 w-3 inline mr-1" />
+                Esta acción revertirá la decisión de <strong>{aprobacion?.aprobado ? 'aprobación' : 'rechazo'}</strong> y 
+                permitirá tomar una nueva decisión sobre el expediente.
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Nombre del Agente <span className="text-destructive">*</span>
+                </label>
+                <Input
+                  placeholder="Ingrese su nombre completo"
+                  value={agenteNombre}
+                  onChange={(e) => setAgenteNombre(e.target.value)}
+                  className="bg-background"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  Justificación de la Reversión <span className="text-destructive">*</span>
+                </label>
+                <Textarea
+                  placeholder="Indique el motivo por el cual revierte la decisión (obligatorio)..."
+                  value={justificacionReversion}
+                  onChange={(e) => setJustificacionReversion(e.target.value)}
+                  className="bg-background resize-none"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setMostrarFormReversion(false);
+                    setAgenteNombre('');
+                    setJustificacionReversion('');
+                  }}
+                  className="flex-1"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    if (agenteNombre.trim() && justificacionReversion.trim()) {
+                      onRevertirDecision(agenteNombre.trim(), justificacionReversion.trim());
+                      setMostrarFormReversion(false);
+                      setAgenteNombre('');
+                      setJustificacionReversion('');
+                    }
+                  }}
+                  disabled={!agenteNombre.trim() || !justificacionReversion.trim()}
+                  className="flex-1"
+                >
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Confirmar Reversión
+                </Button>
               </div>
             </div>
           )}

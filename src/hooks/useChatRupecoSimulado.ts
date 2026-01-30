@@ -40,6 +40,12 @@ export interface AprobacionExpediente {
   timestamp: Date;
   observaciones?: string;
   motivoRechazo?: string;
+  revertido?: boolean;
+  reversionData?: {
+    agenteNombre: string;
+    timestamp: Date;
+    justificacion: string;
+  };
 }
 
 interface ExpedienteSimulado {
@@ -454,6 +460,63 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     ]);
   }, [expediente]);
 
+  // Función para revertir la decisión
+  const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
+    if (!expediente || !aprobacion) return;
+    
+    const decisionOriginal = aprobacion.aprobado ? 'APROBACIÓN' : 'RECHAZO';
+    
+    // Actualizar la aprobación marcándola como revertida
+    setAprobacion(prev => prev ? {
+      ...prev,
+      revertido: true,
+      reversionData: {
+        agenteNombre,
+        timestamp: new Date(),
+        justificacion,
+      }
+    } : null);
+    
+    // Agregar mensaje de confirmación
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        role: 'assistant',
+        content: `## ↩️ DECISIÓN REVERTIDA
+
+---
+
+| Campo | Valor |
+|:------|:------|
+| **Expediente** | ${expediente.numero} |
+| **Decisión original** | ${decisionOriginal} |
+| **Agente original** | ${aprobacion.agenteNombre} |
+| **Fecha original** | ${aprobacion.timestamp.toLocaleString('es-AR')} |
+
+---
+
+### Datos de la Reversión
+
+| Campo | Valor |
+|:------|:------|
+| **Agente que revierte** | ${agenteNombre} |
+| **Fecha de reversión** | ${new Date().toLocaleString('es-AR')} |
+| **Justificación** | ${justificacion} |
+
+---
+
+> La decisión anterior ha sido **revertida**. El expediente requiere una nueva evaluación y resolución.`,
+        timestamp: new Date(),
+      },
+    ]);
+    
+    // Después de un breve delay, limpiar la aprobación para permitir nueva decisión
+    setTimeout(() => {
+      setAprobacion(null);
+    }, 100);
+  }, [expediente, aprobacion]);
+
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
     if (!expediente) return;
@@ -530,6 +593,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     validarRequisito,
     aprobarExpediente,
     rechazarExpediente,
+    revertirDecision,
     aprobacion,
     todosRequisitosValidados,
   };
