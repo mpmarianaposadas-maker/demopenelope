@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Message } from '@/components/penelope/chat/ChatMessage';
 import { RupecoEvaluationData } from '@/components/penelope/chat/RupecoEvaluation';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
@@ -8,7 +8,6 @@ import {
   TRAMITES_ENAC, 
   NUCLEO_RUPECO, 
   getDocumentosRequeridos,
-  calcularNivelConfianza,
   determinarAccionPorConfianza,
   type TramiteENAC 
 } from '@/lib/nucleoRupeco';
@@ -27,6 +26,8 @@ interface DocumentoDetectado {
   nombre: string;
   detectado: boolean;
   nivelConfianza: number;
+  normativa: string;
+  articuloEspecifico?: string;
 }
 
 interface ExpedienteSimulado {
@@ -42,23 +43,11 @@ interface ExpedienteSimulado {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 90000000 + 10000000)}-APN-ENACOM`;
 
-const MENSAJE_INICIAL = `¡Hola! 👋 Soy **Penélope**, sistema asistencial de verificación documental para ENACOM.
+const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
 
-Mi función es **asistir en la etapa de admisibilidad formal** mediante:
-- 📋 Clasificación automática de trámites
-- 🔍 Extracción de información de documentos
-- ✅ Validación contra el núcleo documental RUPECO
-- ⏰ Control de plazos para prevenir silencio positivo
+**Penélope** - Módulo de Admisibilidad Formal
 
----
-
-**PASO 1: INGRESO DEL EXPEDIENTE**
-
-Simulá el ingreso de documentación indicando:
-1. **Tipo de trámite** (TIC, Audiovisual, Postal, RUPECO)
-2. **Tipo de persona** (humana o jurídica)
-
-Por ejemplo: *"Licencia TIC nueva para persona jurídica"*`;
+Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
 
 export function useChatRupecoSimulado() {
   const { setTipoTramite } = useTipoTramite();
@@ -77,25 +66,6 @@ export function useChatRupecoSimulado() {
   const [currentStep, setCurrentStep] = useState<RupecoStep>('inicio');
   const [expediente, setExpediente] = useState<ExpedienteSimulado | null>(null);
   const [evaluation, setEvaluation] = useState<RupecoEvaluationData | null>(null);
-
-  const simulateTyping = useCallback((response: string, delay?: number) => {
-    setIsLoading(true);
-    return new Promise<void>(resolve => {
-      setTimeout(() => {
-        setMessages(prev => [
-          ...prev,
-          {
-            id: generateId(),
-            role: 'assistant',
-            content: response,
-            timestamp: new Date(),
-          },
-        ]);
-        setIsLoading(false);
-        resolve();
-      }, delay || 400 + Math.random() * 300);
-    });
-  }, []);
 
   const detectarTramite = (input: string): TramiteENAC | null => {
     const lower = input.toLowerCase();
@@ -147,150 +117,48 @@ export function useChatRupecoSimulado() {
     const { rupeco, adicionales } = getDocumentosRequeridos(tipoPersona, tramite?.codigo);
     const todosDocumentos = [...rupeco, ...adicionales];
     
+    // Obtener info completa del documento
+    const getDocInfo = (docId: string) => {
+      const docRupeco = NUCLEO_RUPECO.flatMap(b => b.documentos).find(d => d.id === docId);
+      if (docRupeco) {
+        return {
+          normativa: docRupeco.normativa,
+          articuloEspecifico: docRupeco.articuloEspecifico,
+        };
+      }
+      const docAdicional = tramite?.documentosAdicionales.find(d => d.id === docId);
+      return {
+        normativa: docAdicional?.normativa || 'Normativa vigente',
+        articuloEspecifico: undefined,
+      };
+    };
+    
     // Simular detección con probabilidades realistas
     return todosDocumentos.map(doc => {
-      // Simular que algunos documentos se detectan y otros no
       const probabilidadDeteccion = Math.random();
       const detectado = probabilidadDeteccion > 0.3; // 70% de probabilidad de detección
       const nivelConfianza = detectado 
         ? 60 + Math.random() * 40 // Entre 60% y 100%
         : 0;
       
+      const docInfo = getDocInfo(doc.id);
+      
       return {
         id: doc.id,
         nombre: doc.nombre,
         detectado,
         nivelConfianza: Math.round(nivelConfianza),
+        normativa: docInfo.normativa,
+        articuloEspecifico: docInfo.articuloEspecifico,
       };
     });
   }, []);
 
-  const generarInformeValidacion = useCallback((exp: ExpedienteSimulado): string => {
-    const detectados = exp.documentosDetectados.filter(d => d.detectado);
-    const faltantes = exp.documentosDetectados.filter(d => !d.detectado);
-    const porcentaje = Math.round((detectados.length / exp.documentosDetectados.length) * 100);
-    const accion = determinarAccionPorConfianza(exp.nivelConfianzaGlobal);
-    
-    const tramiteInfo = exp.tramite 
-      ? `**${exp.tramite.nombre}** (${exp.tramite.codigo})\n*Normativa: ${exp.tramite.normativa}*`
-      : 'No identificado';
-
-    // Obtener normativa específica de cada documento
-    const obtenerNormativaDoc = (docId: string): string => {
-      const docRupeco = NUCLEO_RUPECO.flatMap(b => b.documentos).find(d => d.id === docId);
-      if (docRupeco) {
-        return docRupeco.articuloEspecifico || docRupeco.normativa;
-      }
-      const docAdicional = exp.tramite?.documentosAdicionales.find(d => d.id === docId);
-      return docAdicional?.normativa || 'Normativa vigente';
-    };
-
-    let response = `## 📋 Informe de Validación Documental
-
-**Expediente:** ${exp.numero}
-**Carátula:** ${exp.caratula}
-**Tipo de persona:** ${exp.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'}
-**Trámite:** ${tramiteInfo}
-
----
-
-### 🤖 Resultado de Clasificación IA
-
-| Nivel de Confianza | Acción Sugerida |
-|:------------------:|:------:|
-| **${exp.nivelConfianzaGlobal}%** | ${accion.descripcion} |
-
----
-
-### ✅ Documentos Detectados (${detectados.length}/${exp.documentosDetectados.length})
-
-`;
-
-    if (detectados.length > 0) {
-      detectados.forEach(doc => {
-        const normativa = obtenerNormativaDoc(doc.id);
-        response += `- ✅ **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
-        response += `  → ${normativa}\n`;
-      });
-    } else {
-      response += `*No se detectaron documentos*\n`;
-    }
-
-    response += `\n### ❌ Documentos Faltantes (${faltantes.length})\n\n`;
-
-    if (faltantes.length > 0) {
-      faltantes.forEach(doc => {
-        const normativa = obtenerNormativaDoc(doc.id);
-        response += `- ❌ **${doc.nombre}**\n`;
-        response += `  → Exigido por: ${normativa}\n`;
-      });
-      
-      response += `\n---\n\n### ⚠️ Acción Requerida: INTIMACIÓN\n\n`;
-      response += `Se ha generado un **borrador de Providencia de Intimación** para revisión del agente.\n\n`;
-      response += `> 📝 **El borrador requiere validación humana** antes de su firma y notificación al administrado.\n\n`;
-      
-      if (exp.tramite) {
-        const diasRestantes = exp.tramite.plazoSilencioPositivo;
-        response += `⏰ **Plazo silencio positivo:** ${diasRestantes} días (Decreto N° 971/2024 - PEHAR)\n`;
-        response += `📅 **Fecha límite estimada:** ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
-      }
-    } else {
-      response += `*Todos los documentos requeridos han sido detectados*\n\n`;
-      response += `---\n\n### ✅ Expediente Completo\n\n`;
-      response += `El expediente puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
-      response += `> No se requiere intimación al administrado.\n`;
-    }
-
-    response += `\n---\n\n*Escribí **"ver JSON"** para obtener la evaluación estructurada completa.*`;
-
-    return response;
-  }, []);
-
-  const generarEvaluacionJSON = useCallback((exp: ExpedienteSimulado) => {
+  const generarEvaluacionJSON = useCallback((exp: ExpedienteSimulado): RupecoEvaluationData => {
     const detectados = exp.documentosDetectados.filter(d => d.detectado);
     const faltantes = exp.documentosDetectados.filter(d => !d.detectado);
     const porcentaje = Math.round((detectados.length / exp.documentosDetectados.length) * 100);
 
-    const json = {
-      expediente: {
-        numero: exp.numero,
-        caratula: exp.caratula,
-        fecha_ingreso: exp.fechaIngreso.toISOString(),
-      },
-      tramite_enac: exp.tramite ? {
-        codigo: exp.tramite.codigo,
-        nombre: exp.tramite.nombre,
-        categoria: exp.tramite.categoria,
-        normativa: exp.tramite.normativa,
-        plazo_silencio_positivo: exp.tramite.plazoSilencioPositivo,
-      } : null,
-      clasificacion_ia: {
-        nivel_confianza: exp.nivelConfianzaGlobal,
-        accion: determinarAccionPorConfianza(exp.nivelConfianzaGlobal).accion,
-        requiere_revision_humana: exp.nivelConfianzaGlobal < 85,
-      },
-      nucleo_rupeco: {
-        tipo_persona: exp.tipoPersona,
-        documentos_requeridos: exp.documentosDetectados.length,
-        documentos_detectados: detectados.length,
-        completitud_porcentaje: porcentaje,
-        documentos: exp.documentosDetectados.map(d => ({
-          id: d.id,
-          nombre: d.nombre,
-          estado: d.detectado ? 'detectado' : 'faltante',
-          nivel_confianza: d.nivelConfianza,
-        })),
-      },
-      evaluacion_global: {
-        expediente_completo: faltantes.length === 0,
-        documentos_faltantes: faltantes.map(d => d.nombre),
-        accion_requerida: faltantes.length > 0 ? 'intimacion' : 'derivar_analisis',
-        riesgo_silencio_positivo: faltantes.length > 3 ? 'ALTO' : faltantes.length > 0 ? 'MEDIO' : 'BAJO',
-      },
-      timestamp: new Date().toISOString(),
-    };
-
-    // Actualizar evaluación visual
     const evalData: RupecoEvaluationData = {
       tipoTramite: exp.tramite?.nombre || 'Sin especificar',
       tipoPersona: exp.tipoPersona === 'humana' ? 'HUMANA' : 'JURIDICA',
@@ -308,146 +176,153 @@ export function useChatRupecoSimulado() {
       },
       timestamp: new Date().toLocaleString('es-AR'),
     };
-    setEvaluation(evalData);
 
-    return json;
+    return evalData;
   }, []);
 
-  const processUserInput = useCallback((input: string) => {
-    const lowerInput = input.toLowerCase().trim();
-    let response = '';
-    let nextStep: RupecoStep = currentStep;
-
-    // Comando para ver JSON
-    if (lowerInput.includes('json') || lowerInput.includes('evaluar') || lowerInput.includes('listo')) {
-      if (expediente) {
-        const json = generarEvaluacionJSON(expediente);
-        response = '```json\n' + JSON.stringify(json, null, 2) + '\n```';
-        nextStep = 'evaluacion';
-        return response;
-      } else {
-        return 'Primero necesito que ingreses un expediente para generar la evaluación.';
-      }
+  // Ejecutar verificación automática del expediente
+  const ejecutarVerificacion = useCallback((input: string) => {
+    const tramite = detectarTramite(input);
+    const tipoPersona = detectarTipoPersona(input);
+    
+    if (!tramite) {
+      return;
     }
 
-    switch (currentStep) {
-      case 'inicio':
-      case 'resultado':
-      case 'evaluacion': {
-        const tramite = detectarTramite(input);
-        const tipoPersona = detectarTipoPersona(input);
+    setIsLoading(true);
+    setCurrentStep('ingreso_recepcion');
+
+    // Fase 1: Ingreso
+    const numExp = generateExpedienteNum();
+    const caratula = tipoPersona === 'juridica' 
+      ? `EMPRESA DEMO S.A. s/ ${tramite.nombre}`
+      : `PERSONA DEMO s/ ${tramite.nombre}`;
+
+    // Simular procesamiento en etapas
+    setTimeout(() => {
+      setCurrentStep('clasificacion_ia');
+      
+      setTimeout(() => {
+        setCurrentStep('validacion_documental');
         
-        if (tramite || lowerInput.includes('expediente') || lowerInput.includes('tramite') || lowerInput.includes('licencia')) {
-          // Crear expediente simulado
-          const numExp = generateExpedienteNum();
-          const caratula = tipoPersona === 'juridica' 
-            ? `EMPRESA DEMO S.A. s/ ${tramite?.nombre || 'Trámite TIC'}`
-            : `PERSONA DEMO s/ ${tramite?.nombre || 'Trámite TIC'}`;
-          
-          const documentosDetectados = simularExtraccionDocumental(tipoPersona, tramite);
-          const docsConDeteccion = documentosDetectados.filter(d => d.detectado);
-          const nivelConfianzaGlobal = docsConDeteccion.length > 0
-            ? Math.round(docsConDeteccion.reduce((acc, d) => acc + d.nivelConfianza, 0) / docsConDeteccion.length)
-            : Math.round(30 + Math.random() * 30);
+        const documentosDetectados = simularExtraccionDocumental(tipoPersona, tramite);
+        const docsConDeteccion = documentosDetectados.filter(d => d.detectado);
+        const nivelConfianzaGlobal = docsConDeteccion.length > 0
+          ? Math.round(docsConDeteccion.reduce((acc, d) => acc + d.nivelConfianza, 0) / docsConDeteccion.length)
+          : Math.round(30 + Math.random() * 30);
 
-          const nuevoExpediente: ExpedienteSimulado = {
-            numero: numExp,
-            caratula,
-            tipoPersona,
-            tramite,
-            documentosDetectados,
-            nivelConfianzaGlobal,
-            fechaIngreso: new Date(),
-          };
-          
-          setExpediente(nuevoExpediente);
-          if (tramite) {
-            setTipoTramite(tramite.nombre);
-          }
-          
-          // Simular el flujo del diagrama
-          const acuseRecibo = `## 📥 1. INGRESO Y RECEPCIÓN
+        const nuevoExpediente: ExpedienteSimulado = {
+          numero: numExp,
+          caratula,
+          tipoPersona,
+          tramite,
+          documentosDetectados,
+          nivelConfianzaGlobal,
+          fechaIngreso: new Date(),
+        };
 
-✅ **Validación formal: COMPLETA**
-📄 **Expediente generado:** ${numExp}
-⏱️ **Timestamp:** ${new Date().toLocaleString('es-AR')}
+        setExpediente(nuevoExpediente);
+        setTipoTramite(tramite.nombre);
+
+        setTimeout(() => {
+          setCurrentStep('resultado');
+          
+          // Generar informe de resultado
+          const detectados = documentosDetectados.filter(d => d.detectado);
+          const faltantes = documentosDetectados.filter(d => !d.detectado);
+          const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
+          const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
+
+          let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
 
 ---
 
-## 🤖 2. CLASIFICACIÓN ASISTIDA IA
+### Datos del Expediente
+| Campo | Valor |
+|:------|:------|
+| **Expediente** | ${numExp} |
+| **Carátula** | ${caratula} |
+| **Tipo de persona** | ${tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
+| **Trámite** | ${tramite.nombre} (${tramite.codigo}) |
+| **Normativa aplicable** | ${tramite.normativa} |
 
-*Analizando contenido semántico...*
-*Identificando tipo de trámite...*
-*Extrayendo datos de documentos...*
+---
+
+### Resultado de Clasificación IA
+
+| Parámetro | Valor |
+|:----------|:------|
+| **Nivel de confianza** | ${nivelConfianzaGlobal}% |
+| **Acción sugerida** | ${accion.descripcion} |
+| **Completitud documental** | ${porcentaje}% (${detectados.length}/${documentosDetectados.length}) |
+
+---
+
+### ✅ Requisitos Cumplidos
 
 `;
-          
-          // Primera parte del mensaje
-          simulateTyping(acuseRecibo, 500).then(() => {
-            // Segunda parte con resultado de clasificación
-            const informe = generarInformeValidacion(nuevoExpediente);
-            simulateTyping(`## 🔍 3. VALIDACIÓN DOCUMENTAL\n\n${informe}`, 1500);
-          });
-          
-          nextStep = 'validacion_documental';
-          return null; // No agregar mensaje inmediato, se manejan con simulateTyping
-        } else {
-          response = `No pude identificar el tipo de trámite. Por favor indicá:
 
-- **Licencia TIC nueva** para persona jurídica
-- **Autorización Audiovisual** para empresa
-- **Servicio Postal** 
-- **Inscripción RUPECO**
-
-O directamente el código ENAC (ej: ENAC00062)`;
-        }
-        break;
-      }
-
-      case 'ingreso_recepcion':
-      case 'clasificacion_ia':
-      case 'validacion_documental': {
-        // Si ya hay expediente, permitir consultas
-        if (expediente) {
-          if (lowerInput.includes('faltante') || lowerInput.includes('documento')) {
-            const faltantes = expediente.documentosDetectados.filter(d => !d.detectado);
-            response = `### Documentos Faltantes\n\n`;
-            faltantes.forEach(d => {
-              response += `- ❌ **${d.nombre}**\n`;
+          if (detectados.length > 0) {
+            detectados.forEach(doc => {
+              informe += `- **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
+              if (doc.articuloEspecifico) {
+                informe += `  - Fundamento: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+              } else {
+                informe += `  - Fundamento: ${doc.normativa}\n`;
+              }
             });
-            response += `\nTotal: ${faltantes.length} documento(s) pendiente(s)`;
-          } else if (lowerInput.includes('plazo') || lowerInput.includes('silencio')) {
-            if (expediente.tramite) {
-              response = `### Control de Plazos\n\n`;
-              response += `⏰ **Plazo silencio positivo:** ${expediente.tramite.plazoSilencioPositivo} días\n`;
-              response += `📅 **Fecha ingreso:** ${expediente.fechaIngreso.toLocaleDateString('es-AR')}\n`;
-              response += `📅 **Fecha límite:** ${new Date(expediente.fechaIngreso.getTime() + expediente.tramite.plazoSilencioPositivo * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
-            }
-          } else if (lowerInput.includes('nuevo') || lowerInput.includes('otro') || lowerInput.includes('reiniciar')) {
-            setExpediente(null);
-            nextStep = 'inicio';
-            response = MENSAJE_INICIAL;
           } else {
-            response = `El expediente **${expediente.numero}** está en proceso.
-
-Podés consultar:
-- **"ver JSON"** - Evaluación estructurada
-- **"documentos faltantes"** - Lista de documentos pendientes  
-- **"plazo silencio positivo"** - Control de plazos
-- **"nuevo expediente"** - Iniciar otro trámite`;
+            informe += `*No se detectaron documentos válidos*\n`;
           }
-        }
-        break;
-      }
 
-      default:
-        response = MENSAJE_INICIAL;
-        nextStep = 'inicio';
-    }
+          informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
 
-    setCurrentStep(nextStep);
-    return response;
-  }, [currentStep, expediente, setTipoTramite, simularExtraccionDocumental, generarInformeValidacion, generarEvaluacionJSON, simulateTyping]);
+          if (faltantes.length > 0) {
+            faltantes.forEach(doc => {
+              informe += `- **${doc.nombre}**\n`;
+              if (doc.articuloEspecifico) {
+                informe += `  - Exigido por: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+              } else {
+                informe += `  - Exigido por: ${doc.normativa}\n`;
+              }
+            });
+
+            informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
+            informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
+            informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+            
+            const diasRestantes = tramite.plazoSilencioPositivo;
+            informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
+            informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
+            informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
+          } else {
+            informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
+            informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
+            informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
+            informe += `> No se requiere intimación al administrado.\n`;
+          }
+
+          // Agregar mensaje con el informe
+          setMessages(prev => [
+            ...prev,
+            {
+              id: generateId(),
+              role: 'assistant',
+              content: informe,
+              timestamp: new Date(),
+            },
+          ]);
+
+          // Generar evaluación
+          const evalData = generarEvaluacionJSON(nuevoExpediente);
+          setEvaluation(evalData);
+
+          setCurrentStep('evaluacion');
+          setIsLoading(false);
+        }, 600);
+      }, 600);
+    }, 400);
+  }, [setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON]);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {
@@ -459,6 +334,7 @@ Podés consultar:
       return;
     }
 
+    // Agregar mensaje del usuario (selección de trámite)
     const userMessage: Message = {
       id: generateId(),
       role: 'user',
@@ -467,12 +343,10 @@ Podés consultar:
     };
 
     setMessages(prev => [...prev, userMessage]);
-
-    const response = processUserInput(content);
-    if (response) {
-      simulateTyping(response);
-    }
-  }, [isSystemActive, validateInput, processUserInput, simulateTyping]);
+    
+    // Ejecutar verificación automática
+    ejecutarVerificacion(content);
+  }, [isSystemActive, validateInput, ejecutarVerificacion]);
 
   const resetChat = useCallback(() => {
     setMessages([
@@ -502,15 +376,12 @@ Podés consultar:
     },
     documentosFaltantes: expediente.documentosDetectados
       .filter(d => !d.detectado)
-      .map(d => {
-        // Buscar la normativa del documento
-        const docInfo = NUCLEO_RUPECO.flatMap(b => b.documentos).find(doc => doc.id === d.id);
-        const adicionalInfo = expediente.tramite?.documentosAdicionales.find(doc => doc.id === d.id);
-        return {
-          nombre: d.nombre,
-          normativa: docInfo?.normativa || adicionalInfo?.normativa || 'Normativa vigente',
-        };
-      }),
+      .map(d => ({
+        nombre: d.nombre,
+        normativa: d.articuloEspecifico 
+          ? `${d.normativa} - ${d.articuloEspecifico}`
+          : d.normativa,
+      })),
   } : null;
 
   return {
