@@ -16,11 +16,26 @@ import {
 // Estados del flujo según diagrama del documento
 export type RupecoStep = 
   | 'inicio'
-  | 'ingreso_recepcion'      // 1. INGRESO Y RECEPCIÓN
-  | 'clasificacion_ia'       // 2. CLASIFICACIÓN ASISTIDA IA
-  | 'validacion_documental'  // 3. VALIDACIÓN DOCUMENTAL
+  | 'ingreso_recepcion'           // 1. INGRESO Y RECEPCIÓN
+  | 'clasificacion_ia'            // 2. CLASIFICACIÓN ASISTIDA IA
+  | 'confirmacion_clasificacion'  // 2b. CONFIRMACIÓN DEL OPERADOR
+  | 'validacion_documental'       // 3. VALIDACIÓN DOCUMENTAL
   | 'resultado'
   | 'evaluacion';
+
+// Nivel de confianza cualitativo
+export type NivelConfianzaCualitativo = 'Alto' | 'Medio' | 'Bajo';
+
+export interface ClasificacionPendiente {
+  tramite: TramiteENAC;
+  tipoPersona: 'humana' | 'juridica';
+  nivelConfianza: NivelConfianzaCualitativo;
+  nivelConfianzaNumerico: number;
+  alcanzadoPorSilencioPositivo: boolean;
+  plazoEstimado: number;
+  fechaVencimientoEstimado: Date;
+  ambiguo: boolean;
+}
 
 interface DocumentoDetectado {
   id: string;
@@ -57,6 +72,7 @@ interface ExpedienteSimulado {
   documentosDetectados: DocumentoDetectado[];
   nivelConfianzaGlobal: number;
   fechaIngreso: Date;
+  clasificacionConfirmada: boolean;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
@@ -67,6 +83,16 @@ const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
 **Penélope** - Módulo de Admisibilidad Formal
 
 Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
+
+// Categorías permitidas según normativa del proyecto (enunciativo y limitado a esta demo)
+const CATEGORIAS_PERMITIDAS_CODIGOS = ['ENAC00062', 'ENAC00025', 'ENAC00063', 'ENAC00064', 'ENAC00013'];
+
+// Función para obtener nivel de confianza cualitativo
+function getNivelConfianzaCualitativo(nivelNumerico: number): NivelConfianzaCualitativo {
+  if (nivelNumerico >= 80) return 'Alto';
+  if (nivelNumerico >= 50) return 'Medio';
+  return 'Bajo';
+}
 
 export function useChatRupecoSimulado() {
   const { setTipoTramite } = useTipoTramite();
@@ -87,6 +113,7 @@ export function useChatRupecoSimulado() {
   const [evaluation, setEvaluation] = useState<RupecoEvaluationData | null>(null);
   const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
   const [historialAcciones, setHistorialAcciones] = useState<AccionAgente[]>([]);
+  const [clasificacionPendiente, setClasificacionPendiente] = useState<ClasificacionPendiente | null>(null);
 
   // Función para agregar una acción al historial
   const agregarAccion = useCallback((
@@ -110,39 +137,81 @@ export function useChatRupecoSimulado() {
     setHistorialAcciones(prev => [...prev, nuevaAccion]);
   }, []);
 
-  const detectarTramite = (input: string): TramiteENAC | null => {
+  const detectarTramite = (input: string): { tramite: TramiteENAC | null; ambiguo: boolean; confianza: number } => {
     const lower = input.toLowerCase();
+    let tramiteDetectado: TramiteENAC | null = null;
+    let ambiguo = false;
+    let confianza = 0;
     
     // Buscar por código ENAC
     for (const tramite of TRAMITES_ENAC) {
       if (lower.includes(tramite.codigo.toLowerCase())) {
-        return tramite;
+        tramiteDetectado = tramite;
+        confianza = 95; // Alta confianza si menciona código exacto
+        break;
       }
     }
     
-    // Buscar por palabras clave
-    if (lower.includes('tic') && (lower.includes('nueva') || lower.includes('alta'))) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
-    }
-    if (lower.includes('tic') && lower.includes('modific')) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00063') || null;
-    }
-    if (lower.includes('audiovisual') || lower.includes('televisión') || lower.includes('radio')) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00025') || null;
-    }
-    if (lower.includes('postal') || lower.includes('correo')) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00013') || null;
-    }
-    if (lower.includes('rupeco') || lower.includes('inscripción') || lower.includes('registro')) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00078') || null;
+    // Buscar por palabras clave si no encontramos código
+    if (!tramiteDetectado) {
+      // Licencia TIC nueva
+      if (lower.includes('tic') && (lower.includes('nueva') || lower.includes('alta'))) {
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
+        confianza = 85;
+      }
+      // Modificación TIC
+      else if (lower.includes('tic') && (lower.includes('modific') || lower.includes('societar'))) {
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00063') || null;
+        confianza = 80;
+      }
+      // Renovación TIC
+      else if (lower.includes('tic') && lower.includes('renov')) {
+        // Crear trámite de renovación si no existe
+        tramiteDetectado = {
+          codigo: 'ENAC00064',
+          nombre: 'Renovación de licencia TIC',
+          categoria: 'TIC',
+          normativa: 'Ley 27.078, Res. ENACOM 3731/2019 (RUPECO)',
+          documentosObligatorios: 10,
+          overlapRupeco: 80,
+          plazoSilencioPositivo: 60,
+          documentosAdicionales: [],
+        };
+        confianza = 75;
+      }
+      // Audiovisual
+      else if (lower.includes('audiovisual') || lower.includes('televisión') || lower.includes('radio')) {
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00025') || null;
+        confianza = 80;
+      }
+      // Postal
+      else if (lower.includes('postal') || lower.includes('correo')) {
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00013') || null;
+        confianza = 85;
+      }
+      // Palabras genéricas - baja confianza
+      else if (lower.includes('licencia') || lower.includes('tic')) {
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
+        confianza = 55;
+        ambiguo = true; // Evidencia muy genérica
+      }
+      // RUPECO solo no está en categorías permitidas de esta demo
+      else if (lower.includes('rupeco') || lower.includes('inscripción') || lower.includes('registro')) {
+        // Redirigir a la categoría más cercana o marcar ambiguo
+        tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
+        confianza = 40;
+        ambiguo = true;
+      }
     }
     
-    // Default a TIC nueva
-    if (lower.includes('tic') || lower.includes('licencia')) {
-      return TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
+    // Si no detectamos nada específico, marcar como muy ambiguo
+    if (!tramiteDetectado) {
+      tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
+      confianza = 30;
+      ambiguo = true;
     }
-    
-    return null;
+
+    return { tramite: tramiteDetectado, ambiguo, confianza };
   };
 
   const detectarTipoPersona = (input: string): 'humana' | 'juridica' => {
@@ -223,9 +292,9 @@ export function useChatRupecoSimulado() {
     return evalData;
   }, []);
 
-  // Ejecutar verificación automática del expediente
-  const ejecutarVerificacion = useCallback((input: string) => {
-    const tramite = detectarTramite(input);
+  // Iniciar el proceso de clasificación (antes de confirmar)
+  const iniciarClasificacion = useCallback((input: string) => {
+    const { tramite, ambiguo, confianza } = detectarTramite(input);
     const tipoPersona = detectarTipoPersona(input);
     
     if (!tramite) {
@@ -235,7 +304,6 @@ export function useChatRupecoSimulado() {
     setIsLoading(true);
     setCurrentStep('ingreso_recepcion');
 
-    // Fase 1: Ingreso
     const numExp = generateExpedienteNum();
     const caratula = tipoPersona === 'juridica' 
       ? `EMPRESA DEMO S.A. s/ ${tramite.nombre}`
@@ -244,7 +312,7 @@ export function useChatRupecoSimulado() {
     // Registrar inicio de verificación en historial
     agregarAccion(
       'inicio_verificacion',
-      `Verificación automática iniciada para ${tramite.nombre}`,
+      `Clasificación asistida iniciada`,
       undefined,
       `Expediente: ${numExp} | Tipo: ${tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'}`,
     );
@@ -254,52 +322,147 @@ export function useChatRupecoSimulado() {
       setCurrentStep('clasificacion_ia');
       
       setTimeout(() => {
-        setCurrentStep('validacion_documental');
-        
-        const documentosDetectados = simularExtraccionDocumental(tipoPersona, tramite);
-        const docsConDeteccion = documentosDetectados.filter(d => d.detectado);
-        const nivelConfianzaGlobal = docsConDeteccion.length > 0
-          ? Math.round(docsConDeteccion.reduce((acc, d) => acc + d.nivelConfianza, 0) / docsConDeteccion.length)
-          : Math.round(30 + Math.random() * 30);
+        // Calcular nivel de confianza cualitativo
+        const nivelConfianzaCualitativo = getNivelConfianzaCualitativo(confianza);
+        const alcanzadoPorSilencioPositivo = tramite.plazoSilencioPositivo > 0;
+        const fechaVencimiento = new Date();
+        fechaVencimiento.setDate(fechaVencimiento.getDate() + tramite.plazoSilencioPositivo);
 
-        const nuevoExpediente: ExpedienteSimulado = {
+        // Crear expediente preliminar (sin documentos todavía)
+        const expPreliminar: ExpedienteSimulado = {
           numero: numExp,
           caratula,
           tipoPersona,
           tramite,
-          documentosDetectados,
-          nivelConfianzaGlobal,
+          documentosDetectados: [],
+          nivelConfianzaGlobal: confianza,
           fechaIngreso: new Date(),
+          clasificacionConfirmada: false,
         };
+        setExpediente(expPreliminar);
 
-        setExpediente(nuevoExpediente);
-        setTipoTramite(tramite.nombre);
+        // Crear clasificación pendiente de confirmación
+        const clasificacion: ClasificacionPendiente = {
+          tramite,
+          tipoPersona,
+          nivelConfianza: nivelConfianzaCualitativo,
+          nivelConfianzaNumerico: confianza,
+          alcanzadoPorSilencioPositivo,
+          plazoEstimado: tramite.plazoSilencioPositivo,
+          fechaVencimientoEstimado: fechaVencimiento,
+          ambiguo,
+        };
+        setClasificacionPendiente(clasificacion);
 
-        setTimeout(() => {
-          setCurrentStep('resultado');
-          
-          // Generar informe de resultado
-          const detectados = documentosDetectados.filter(d => d.detectado);
-          const faltantes = documentosDetectados.filter(d => !d.detectado);
-          const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
-          const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
+        // Generar mensaje de clasificación
+        let mensajeClasificacion = `## 🤖 Clasificación Asistida del Trámite\n\n`;
+        
+        if (!ambiguo) {
+          mensajeClasificacion += `**Trámite probable:** ${tramite.nombre} *(confianza: ${nivelConfianzaCualitativo})*\n\n`;
+          mensajeClasificacion += `| Parámetro | Valor |\n|:----------|:------|\n`;
+          mensajeClasificacion += `| Alcanzado por silencio positivo | ${alcanzadoPorSilencioPositivo ? '✅ Sí' : '❌ No'} |\n`;
+          mensajeClasificacion += `| Plazo estimado (demo) | ${tramite.plazoSilencioPositivo} días |\n`;
+          mensajeClasificacion += `| Vencimiento tentativo | ${fechaVencimiento.toLocaleDateString('es-AR')} |\n\n`;
+        } else {
+          mensajeClasificacion += `⚠️ **No fue posible clasificar el trámite con suficiente claridad.**\n\n`;
+          mensajeClasificacion += `La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
+        }
 
-          let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
+        mensajeClasificacion += `> 📌 **Requiere confirmación del operador antes de continuar con la verificación documental.**\n\n`;
+        mensajeClasificacion += `---\n\n`;
+        mensajeClasificacion += `*Nota: Esta clasificación es una asistencia automatizada. La categoría definitiva del trámite la determina el operador humano.*`;
+
+        setMessages(prev => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'assistant',
+            content: mensajeClasificacion,
+            timestamp: new Date(),
+          },
+        ]);
+
+        setCurrentStep('confirmacion_clasificacion');
+        setIsLoading(false);
+      }, 600);
+    }, 400);
+  }, [agregarAccion]);
+
+  // Confirmar la clasificación y continuar con validación documental
+  const confirmarClasificacion = useCallback((tramiteConfirmado: TramiteENAC) => {
+    if (!expediente || !clasificacionPendiente) return;
+
+    setIsLoading(true);
+    setClasificacionPendiente(null);
+
+    // Registrar confirmación en historial
+    agregarAccion(
+      'clasificacion_confirmada' as TipoAccion,
+      `Clasificación confirmada: ${tramiteConfirmado.nombre}`,
+      undefined,
+      `Tipo original detectado: ${clasificacionPendiente.tramite.nombre} | Confianza: ${clasificacionPendiente.nivelConfianza}`,
+    );
+
+    // Agregar mensaje de confirmación
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        role: 'assistant',
+        content: `## ✅ Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
+        timestamp: new Date(),
+      },
+    ]);
+
+    setCurrentStep('validacion_documental');
+    setTipoTramite(tramiteConfirmado.nombre);
+
+    // Continuar con la extracción documental
+    setTimeout(() => {
+      const documentosDetectados = simularExtraccionDocumental(expediente.tipoPersona, tramiteConfirmado);
+      const docsConDeteccion = documentosDetectados.filter(d => d.detectado);
+      const nivelConfianzaGlobal = docsConDeteccion.length > 0
+        ? Math.round(docsConDeteccion.reduce((acc, d) => acc + d.nivelConfianza, 0) / docsConDeteccion.length)
+        : Math.round(30 + Math.random() * 30);
+
+      const expedienteActualizado: ExpedienteSimulado = {
+        ...expediente,
+        tramite: tramiteConfirmado,
+        caratula: expediente.tipoPersona === 'juridica' 
+          ? `EMPRESA DEMO S.A. s/ ${tramiteConfirmado.nombre}`
+          : `PERSONA DEMO s/ ${tramiteConfirmado.nombre}`,
+        documentosDetectados,
+        nivelConfianzaGlobal,
+        clasificacionConfirmada: true,
+      };
+
+      setExpediente(expedienteActualizado);
+
+      setTimeout(() => {
+        setCurrentStep('resultado');
+        
+        // Generar informe de resultado
+        const detectados = documentosDetectados.filter(d => d.detectado);
+        const faltantes = documentosDetectados.filter(d => !d.detectado);
+        const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
+        const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
+
+        let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
 
 ---
 
 ### Datos del Expediente
 | Campo | Valor |
 |:------|:------|
-| **Expediente** | ${numExp} |
-| **Carátula** | ${caratula} |
-| **Tipo de persona** | ${tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
-| **Trámite** | ${tramite.nombre} (${tramite.codigo}) |
-| **Normativa aplicable** | ${tramite.normativa} |
+| **Expediente** | ${expedienteActualizado.numero} |
+| **Carátula** | ${expedienteActualizado.caratula} |
+| **Tipo de persona** | ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
+| **Trámite** | ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo}) |
+| **Normativa aplicable** | ${tramiteConfirmado.normativa} |
 
 ---
 
-### Resultado de Clasificación IA
+### Resultado de Validación Documental
 
 | Parámetro | Valor |
 |:----------|:------|
@@ -313,67 +476,84 @@ export function useChatRupecoSimulado() {
 
 `;
 
-          if (detectados.length > 0) {
-            detectados.forEach(doc => {
-              informe += `- **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
-              if (doc.articuloEspecifico) {
-                informe += `  - Fundamento: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
-              } else {
-                informe += `  - Fundamento: ${doc.normativa}\n`;
-              }
-            });
-          } else {
-            informe += `*No se detectaron documentos válidos*\n`;
-          }
+        if (detectados.length > 0) {
+          detectados.forEach(doc => {
+            informe += `- **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
+            if (doc.articuloEspecifico) {
+              informe += `  - Fundamento: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+            } else {
+              informe += `  - Fundamento: ${doc.normativa}\n`;
+            }
+          });
+        } else {
+          informe += `*No se detectaron documentos válidos*\n`;
+        }
 
-          informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
+        informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
 
-          if (faltantes.length > 0) {
-            faltantes.forEach(doc => {
-              informe += `- **${doc.nombre}**\n`;
-              if (doc.articuloEspecifico) {
-                informe += `  - Exigido por: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
-              } else {
-                informe += `  - Exigido por: ${doc.normativa}\n`;
-              }
-            });
+        if (faltantes.length > 0) {
+          faltantes.forEach(doc => {
+            informe += `- **${doc.nombre}**\n`;
+            if (doc.articuloEspecifico) {
+              informe += `  - Exigido por: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+            } else {
+              informe += `  - Exigido por: ${doc.normativa}\n`;
+            }
+          });
 
-            informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
-            informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
-            informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
-            
-            const diasRestantes = tramite.plazoSilencioPositivo;
-            informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
-            informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
-            informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
-          } else {
-            informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
-            informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
-            informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
-            informe += `> No se requiere intimación al administrado.\n`;
-          }
+          informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
+          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
+          informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+          
+          const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
+          informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
+          informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
+          informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
+        } else {
+          informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
+          informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
+          informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
+          informe += `> No se requiere intimación al administrado.\n`;
+        }
 
-          // Agregar mensaje con el informe
-          setMessages(prev => [
-            ...prev,
-            {
-              id: generateId(),
-              role: 'assistant',
-              content: informe,
-              timestamp: new Date(),
-            },
-          ]);
+        // Agregar mensaje con el informe
+        setMessages(prev => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'assistant',
+            content: informe,
+            timestamp: new Date(),
+          },
+        ]);
 
-          // Generar evaluación
-          const evalData = generarEvaluacionJSON(nuevoExpediente);
-          setEvaluation(evalData);
+        // Generar evaluación
+        const evalData = generarEvaluacionJSON(expedienteActualizado);
+        setEvaluation(evalData);
 
-          setCurrentStep('evaluacion');
-          setIsLoading(false);
-        }, 600);
+        setCurrentStep('evaluacion');
+        setIsLoading(false);
       }, 600);
-    }, 400);
-  }, [setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion]);
+    }, 600);
+  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion]);
+
+  // Cancelar la clasificación
+  const cancelarClasificacion = useCallback(() => {
+    setClasificacionPendiente(null);
+    setExpediente(null);
+    setCurrentStep('inicio');
+    setIsLoading(false);
+    
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        role: 'assistant',
+        content: `## ❌ Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
+        timestamp: new Date(),
+      },
+    ]);
+  }, []);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {
@@ -395,9 +575,9 @@ export function useChatRupecoSimulado() {
 
     setMessages(prev => [...prev, userMessage]);
     
-    // Ejecutar verificación automática
-    ejecutarVerificacion(content);
-  }, [isSystemActive, validateInput, ejecutarVerificacion]);
+    // Iniciar clasificación (ahora requiere confirmación)
+    iniciarClasificacion(content);
+  }, [isSystemActive, validateInput, iniciarClasificacion]);
 
   const resetChat = useCallback(() => {
     setMessages([
@@ -413,6 +593,7 @@ export function useChatRupecoSimulado() {
     setEvaluation(null);
     setAprobacion(null);
     setHistorialAcciones([]);
+    setClasificacionPendiente(null);
   }, []);
 
   // Función para aprobar el expediente completo
@@ -608,7 +789,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
   }, [expediente, agregarAccion]);
 
   // Datos de requisitos para verificación
-  const requisitosData = expediente ? {
+  const requisitosData = expediente && expediente.clasificacionConfirmada ? {
     requisitos: expediente.documentosDetectados.map(d => ({
       id: d.id,
       nombre: d.nombre,
@@ -624,7 +805,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
   } : null;
 
   // Datos para la providencia de intimación
-  const providenciaData = expediente && expediente.documentosDetectados.some(d => !d.detectado) ? {
+  const providenciaData = expediente && expediente.clasificacionConfirmada && expediente.documentosDetectados.some(d => !d.detectado) ? {
     expediente: {
       numero: expediente.numero,
       caratula: expediente.caratula,
@@ -646,7 +827,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
   } : null;
 
   // Verificar si todos los requisitos están validados
-  const todosRequisitosValidados = expediente 
+  const todosRequisitosValidados = expediente && expediente.clasificacionConfirmada
     ? expediente.documentosDetectados.every(d => 
         d.validadoPorAgente !== undefined
       )
@@ -671,5 +852,9 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero: expediente?.numero,
+    // Nuevas funciones para clasificación con confirmación
+    clasificacionPendiente,
+    confirmarClasificacion,
+    cancelarClasificacion,
   };
 }
