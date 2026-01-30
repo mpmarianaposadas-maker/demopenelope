@@ -1,4 +1,5 @@
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { CheckCircle2, Clock, FileText, AlertCircle, User } from 'lucide-react';
 
 const steps = [
@@ -11,6 +12,7 @@ const steps = [
 
 export function PanelEstadoExpediente() {
   const { t } = useLanguage();
+  const { tipoTramite } = useTipoTramite();
 
   const getStatusClasses = (status: 'completed' | 'current' | 'pending') => {
     switch (status) {
@@ -43,7 +45,7 @@ export function PanelEstadoExpediente() {
         <div className="text-xs text-muted-foreground mb-1">{t('aside.estado.expediente')}</div>
         <div className="font-mono text-sm font-medium text-foreground">EX-2026-01234567-APN-DNLTC</div>
         <div className="text-xs text-muted-foreground mt-2">{t('aside.estado.tramite')}</div>
-        <div className="text-sm text-foreground">{t('aside.estado.tramiteTipo')}</div>
+        <div className="text-sm text-foreground font-medium transition-all duration-300">{tipoTramite}</div>
       </div>
 
       {/* Timeline */}
