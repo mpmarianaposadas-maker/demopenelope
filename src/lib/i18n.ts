@@ -53,6 +53,10 @@ export const translations: Record<Language, Translations> = {
     'aside.prompts.modulo.clasificador': 'Módulo Clasificador',
     'aside.prompts.ledgerActivo': 'Ledger activo · Registro inmutable',
     
+    // Aside - Mobile Drawer
+    'aside.title': 'Panel de Información',
+    'aside.openPanel': 'Abrir panel lateral',
+    
     'aside.placeholder': 'Espacio reservado para información complementaria',
 
     // Panel Demo Interactiva
@@ -242,6 +246,10 @@ export const translations: Record<Language, Translations> = {
     'aside.prompts.modulo.redactor': 'PV Writer Module',
     'aside.prompts.modulo.clasificador': 'Classifier Module',
     'aside.prompts.ledgerActivo': 'Ledger active · Immutable record',
+    
+    // Aside - Mobile Drawer
+    'aside.title': 'Information Panel',
+    'aside.openPanel': 'Open side panel',
     
     'aside.placeholder': 'Reserved space for complementary information',
 

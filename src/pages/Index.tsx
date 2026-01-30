@@ -8,7 +8,7 @@ import {
   PanelTrazabilidad,
   PanelMetricas,
 } from '@/components/penelope/panels';
-import { PanelEstadoExpediente, PanelMetricasPrompts } from '@/components/penelope/aside';
+import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
 
 const tabs = [
   { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
@@ -49,6 +49,9 @@ const Index = () => {
             <PanelEstadoExpediente />
             <PanelMetricasPrompts />
           </aside>
+
+          {/* Mobile drawer for side panels */}
+          <MobileAsideDrawer />
         </div>
       </main>
     </div>
