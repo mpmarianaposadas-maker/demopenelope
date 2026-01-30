@@ -32,6 +32,14 @@ interface DocumentoDetectado {
   observacionAgente?: string;
 }
 
+export interface AprobacionExpediente {
+  aprobado: boolean;
+  agenteNombre: string;
+  agenteId?: string;
+  timestamp: Date;
+  observaciones?: string;
+}
+
 interface ExpedienteSimulado {
   numero: string;
   caratula: string;
@@ -68,6 +76,7 @@ export function useChatRupecoSimulado() {
   const [currentStep, setCurrentStep] = useState<RupecoStep>('inicio');
   const [expediente, setExpediente] = useState<ExpedienteSimulado | null>(null);
   const [evaluation, setEvaluation] = useState<RupecoEvaluationData | null>(null);
+  const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
 
   const detectarTramite = (input: string): TramiteENAC | null => {
     const lower = input.toLowerCase();
@@ -362,7 +371,46 @@ export function useChatRupecoSimulado() {
     setCurrentStep('inicio');
     setExpediente(null);
     setEvaluation(null);
+    setAprobacion(null);
   }, []);
+
+  // Función para aprobar el expediente completo
+  const aprobarExpediente = useCallback((agenteNombre: string, observaciones?: string) => {
+    if (!expediente) return;
+    
+    const nuevaAprobacion: AprobacionExpediente = {
+      aprobado: true,
+      agenteNombre,
+      timestamp: new Date(),
+      observaciones,
+    };
+    
+    setAprobacion(nuevaAprobacion);
+    
+    // Agregar mensaje de confirmación
+    setMessages(prev => [
+      ...prev,
+      {
+        id: generateId(),
+        role: 'assistant',
+        content: `## ✅ EXPEDIENTE APROBADO
+
+---
+
+| Campo | Valor |
+|:------|:------|
+| **Expediente** | ${expediente.numero} |
+| **Agente validador** | ${agenteNombre} |
+| **Fecha y hora** | ${nuevaAprobacion.timestamp.toLocaleString('es-AR')} |
+${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
+
+---
+
+> El expediente ha sido verificado y aprobado para continuar a la etapa de **análisis técnico-jurídico**.`,
+        timestamp: new Date(),
+      },
+    ]);
+  }, [expediente]);
 
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
@@ -419,6 +467,13 @@ export function useChatRupecoSimulado() {
       })),
   } : null;
 
+  // Verificar si todos los requisitos están validados
+  const todosRequisitosValidados = expediente 
+    ? expediente.documentosDetectados.every(d => 
+        d.validadoPorAgente !== undefined
+      )
+    : false;
+
   return {
     messages,
     isLoading,
@@ -431,5 +486,8 @@ export function useChatRupecoSimulado() {
     providenciaData,
     requisitosData,
     validarRequisito,
+    aprobarExpediente,
+    aprobacion,
+    todosRequisitosValidados,
   };
 }
