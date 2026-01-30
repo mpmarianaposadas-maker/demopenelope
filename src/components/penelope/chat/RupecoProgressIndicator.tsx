@@ -1,14 +1,13 @@
 import { CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+// Importar el tipo desde el hook
 export type RupecoStep = 
-  | 'tipo_tramite'
-  | 'identificacion_responsable'
-  | 'domicilios_contacto'
-  | 'representacion'
-  | 'datos_societarios'
-  | 'licencia_servicio'
-  | 'confirmacion'
+  | 'inicio'
+  | 'ingreso_recepcion'
+  | 'clasificacion_ia'
+  | 'validacion_documental'
+  | 'resultado'
   | 'evaluacion';
 
 interface StepConfig {
@@ -18,13 +17,13 @@ interface StepConfig {
   icon: string;
 }
 
+// Pasos según el diagrama de flujo del documento
 const STEPS: StepConfig[] = [
-  { id: 'tipo_tramite', label: 'Tipo de Trámite', shortLabel: 'Trámite', icon: '📋' },
-  { id: 'identificacion_responsable', label: 'Identificación', shortLabel: 'ID', icon: '👤' },
-  { id: 'domicilios_contacto', label: 'Domicilios', shortLabel: 'Dom.', icon: '📍' },
-  { id: 'representacion', label: 'Representación', shortLabel: 'Rep.', icon: '🤝' },
-  { id: 'datos_societarios', label: 'Societarios', shortLabel: 'Soc.', icon: '🏢' },
-  { id: 'licencia_servicio', label: 'Licencia', shortLabel: 'Lic.', icon: '📄' },
+  { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: '📥' },
+  { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: '🤖' },
+  { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: '🔍' },
+  { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: '📋' },
+  { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: '✅' },
 ];
 
 interface RupecoProgressIndicatorProps {
@@ -34,24 +33,24 @@ interface RupecoProgressIndicatorProps {
 
 export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProgressIndicatorProps) {
   const getStepIndex = (step: RupecoStep): number => {
-    if (step === 'confirmacion' || step === 'evaluacion') return STEPS.length;
+    if (step === 'inicio') return -1;
     return STEPS.findIndex(s => s.id === step);
   };
 
   const currentIndex = getStepIndex(currentStep);
-  const isComplete = currentStep === 'confirmacion' || currentStep === 'evaluacion';
+  const isComplete = currentStep === 'evaluacion';
 
-  // Filtrar datos societarios si no es PJ
-  const visibleSteps = esPJ ? STEPS : STEPS.filter(s => s.id !== 'datos_societarios');
+  // No mostrar si estamos en inicio
+  if (currentStep === 'inicio') return null;
 
   return (
     <div className="bg-muted/50 rounded-lg p-3 mb-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-xs font-medium text-muted-foreground">
-          Núcleo RUPECO
+          Flujo de Verificación RUPECO
         </span>
         <span className="text-xs text-muted-foreground">
-          {isComplete ? 'Completo' : `Bloque ${Math.min(currentIndex + 1, visibleSteps.length)} de ${visibleSteps.length}`}
+          {isComplete ? '✅ Completo' : `Paso ${currentIndex + 1} de ${STEPS.length}`}
         </span>
       </div>
       
@@ -63,17 +62,16 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
             isComplete ? "bg-green-500" : "bg-primary"
           )}
           style={{ 
-            width: `${isComplete ? 100 : ((currentIndex) / visibleSteps.length) * 100}%` 
+            width: `${isComplete ? 100 : ((currentIndex + 1) / STEPS.length) * 100}%` 
           }}
         />
       </div>
 
       {/* Steps */}
       <div className="flex justify-between gap-1">
-        {visibleSteps.map((step, index) => {
-          const stepIndex = STEPS.findIndex(s => s.id === step.id);
-          const isActive = currentIndex === stepIndex;
-          const isDone = currentIndex > stepIndex || isComplete;
+        {STEPS.map((step, index) => {
+          const isActive = currentIndex === index;
+          const isDone = currentIndex > index || isComplete;
           
           return (
             <div 
@@ -115,12 +113,12 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
       </div>
 
       {/* Current step description */}
-      {!isComplete && (
+      {!isComplete && currentIndex >= 0 && (
         <div className="mt-3 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-lg">{STEPS[currentIndex]?.icon || '✅'}</span>
+            <span className="text-lg">{STEPS[currentIndex]?.icon || '📋'}</span>
             <span className="text-muted-foreground">
-              Completando: <strong className="text-foreground">{STEPS[currentIndex]?.label || 'Evaluación'}</strong>
+              <strong className="text-foreground">{STEPS[currentIndex]?.label}</strong>
             </span>
           </div>
         </div>
@@ -131,7 +129,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
           <div className="flex items-center gap-2 text-xs text-green-600">
             <span className="text-lg">✅</span>
             <span>
-              <strong>Relevamiento completo.</strong> Escribí "listo" para evaluar.
+              <strong>Evaluación generada.</strong> Expediente verificado.
             </span>
           </div>
         </div>
