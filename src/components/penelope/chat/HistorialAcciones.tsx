@@ -104,16 +104,40 @@ const getBadgeAccion = (tipo: TipoAccion) => {
   }
 };
 
+type FiltroTipo = 'todos' | 'validaciones' | 'decisiones' | 'sistema';
+
+const FILTROS: { valor: FiltroTipo; label: string; tipos: TipoAccion[] | null }[] = [
+  { valor: 'todos', label: 'Todos', tipos: null },
+  { valor: 'validaciones', label: 'Validaciones', tipos: ['validar_requisito', 'rechazar_requisito', 'subsanar_requisito'] },
+  { valor: 'decisiones', label: 'Decisiones', tipos: ['aprobar_expediente', 'rechazar_expediente', 'revertir_decision'] },
+  { valor: 'sistema', label: 'Sistema', tipos: ['inicio_verificacion'] },
+];
+
 export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccionesProps) {
   const [expandido, setExpandido] = useState(true);
+  const [filtroActivo, setFiltroActivo] = useState<FiltroTipo>('todos');
 
   if (acciones.length === 0) {
     return null;
   }
 
-  const accionesOrdenadas = [...acciones].sort(
+  const accionesFiltradas = filtroActivo === 'todos'
+    ? acciones
+    : acciones.filter(a => {
+        const filtro = FILTROS.find(f => f.valor === filtroActivo);
+        return filtro?.tipos?.includes(a.tipo);
+      });
+
+  const accionesOrdenadas = [...accionesFiltradas].sort(
     (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
   );
+
+  // Contar acciones por tipo para mostrar badges
+  const conteos = {
+    validaciones: acciones.filter(a => ['validar_requisito', 'rechazar_requisito', 'subsanar_requisito'].includes(a.tipo)).length,
+    decisiones: acciones.filter(a => ['aprobar_expediente', 'rechazar_expediente', 'revertir_decision'].includes(a.tipo)).length,
+    sistema: acciones.filter(a => a.tipo === 'inicio_verificacion').length,
+  };
 
   return (
     <Card className="border-2 border-muted">
@@ -141,6 +165,42 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
             Expediente: {expedienteNumero}
           </div>
         )}
+        
+        {/* Filtros */}
+        <div className="flex flex-wrap gap-2 mt-3">
+          {FILTROS.map(filtro => {
+            const isActive = filtroActivo === filtro.valor;
+            const count = filtro.valor === 'todos' 
+              ? acciones.length 
+              : conteos[filtro.valor as keyof typeof conteos] || 0;
+            
+            return (
+              <Button
+                key={filtro.valor}
+                variant={isActive ? "default" : "outline"}
+                size="sm"
+                className={cn(
+                  "text-xs h-7 px-2.5",
+                  isActive && "bg-primary text-primary-foreground"
+                )}
+                onClick={() => setFiltroActivo(filtro.valor)}
+              >
+                {filtro.label}
+                <Badge 
+                  variant="secondary" 
+                  className={cn(
+                    "ml-1.5 h-4 min-w-4 px-1 text-[10px]",
+                    isActive 
+                      ? "bg-primary-foreground/20 text-primary-foreground" 
+                      : "bg-muted"
+                  )}
+                >
+                  {count}
+                </Badge>
+              </Button>
+            );
+          })}
+        </div>
       </CardHeader>
 
       {expandido && (
@@ -215,8 +275,11 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
           
           <div className="mt-3 pt-3 border-t border-border">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>Primera acción: {accionesOrdenadas[accionesOrdenadas.length - 1]?.timestamp.toLocaleString('es-AR')}</span>
-              <span>Última acción: {accionesOrdenadas[0]?.timestamp.toLocaleString('es-AR')}</span>
+              <span>
+                {filtroActivo !== 'todos' && `Mostrando ${accionesOrdenadas.length} de ${acciones.length} • `}
+                Primera: {accionesOrdenadas[accionesOrdenadas.length - 1]?.timestamp.toLocaleString('es-AR')}
+              </span>
+              <span>Última: {accionesOrdenadas[0]?.timestamp.toLocaleString('es-AR')}</span>
             </div>
           </div>
         </CardContent>
