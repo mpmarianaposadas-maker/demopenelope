@@ -11,6 +11,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PanelEstadoExpediente } from './PanelEstadoExpediente';
 import { PanelMetricasPrompts } from './PanelMetricasPrompts';
+import { KillSwitchPanel } from '../KillSwitchPanel';
 import { useLanguage } from '@/hooks/useLanguage';
 
 export function MobileAsideDrawer() {
@@ -37,6 +38,7 @@ export function MobileAsideDrawer() {
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-65px)]">
           <div className="p-4 space-y-4">
+            <KillSwitchPanel />
             <PanelEstadoExpediente />
             <PanelMetricasPrompts />
           </div>

@@ -1,5 +1,6 @@
 import { Header } from '@/components/penelope/Header';
 import { AccessibleTabs } from '@/components/penelope/AccessibleTabs';
+import { KillSwitchPanel } from '@/components/penelope/KillSwitchPanel';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
   PanelDemoInteractiva,
@@ -46,6 +47,7 @@ const Index = () => {
             className="hidden lg:flex lg:flex-col w-72 flex-shrink-0 gap-4"
             aria-label="Información complementaria"
           >
+            <KillSwitchPanel />
             <PanelEstadoExpediente />
             <PanelMetricasPrompts />
           </aside>
