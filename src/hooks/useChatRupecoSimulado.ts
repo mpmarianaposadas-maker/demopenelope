@@ -175,6 +175,16 @@ export function useChatRupecoSimulado() {
       ? `**${exp.tramite.nombre}** (${exp.tramite.codigo})\n*Normativa: ${exp.tramite.normativa}*`
       : 'No identificado';
 
+    // Obtener normativa específica de cada documento
+    const obtenerNormativaDoc = (docId: string): string => {
+      const docRupeco = NUCLEO_RUPECO.flatMap(b => b.documentos).find(d => d.id === docId);
+      if (docRupeco) {
+        return docRupeco.articuloEspecifico || docRupeco.normativa;
+      }
+      const docAdicional = exp.tramite?.documentosAdicionales.find(d => d.id === docId);
+      return docAdicional?.normativa || 'Normativa vigente';
+    };
+
     let response = `## 📋 Informe de Validación Documental
 
 **Expediente:** ${exp.numero}
@@ -186,7 +196,7 @@ export function useChatRupecoSimulado() {
 
 ### 🤖 Resultado de Clasificación IA
 
-| Nivel de Confianza | Acción |
+| Nivel de Confianza | Acción Sugerida |
 |:------------------:|:------:|
 | **${exp.nivelConfianzaGlobal}%** | ${accion.descripcion} |
 
@@ -198,7 +208,9 @@ export function useChatRupecoSimulado() {
 
     if (detectados.length > 0) {
       detectados.forEach(doc => {
-        response += `- ✅ ${doc.nombre} *(${doc.nivelConfianza}% confianza)*\n`;
+        const normativa = obtenerNormativaDoc(doc.id);
+        response += `- ✅ **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
+        response += `  → ${normativa}\n`;
       });
     } else {
       response += `*No se detectaron documentos*\n`;
@@ -208,24 +220,28 @@ export function useChatRupecoSimulado() {
 
     if (faltantes.length > 0) {
       faltantes.forEach(doc => {
+        const normativa = obtenerNormativaDoc(doc.id);
         response += `- ❌ **${doc.nombre}**\n`;
+        response += `  → Exigido por: ${normativa}\n`;
       });
       
-      response += `\n---\n\n### ⚠️ Acción Requerida\n\n`;
-      response += `Se requiere **intimación al administrado** para presentar la documentación faltante.\n\n`;
+      response += `\n---\n\n### ⚠️ Acción Requerida: INTIMACIÓN\n\n`;
+      response += `Se ha generado un **borrador de Providencia de Intimación** para revisión del agente.\n\n`;
+      response += `> 📝 **El borrador requiere validación humana** antes de su firma y notificación al administrado.\n\n`;
       
       if (exp.tramite) {
         const diasRestantes = exp.tramite.plazoSilencioPositivo;
-        response += `⏰ **Plazo silencio positivo:** ${diasRestantes} días (Decreto 971/2024)\n`;
+        response += `⏰ **Plazo silencio positivo:** ${diasRestantes} días (Decreto N° 971/2024 - PEHAR)\n`;
         response += `📅 **Fecha límite estimada:** ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
       }
     } else {
       response += `*Todos los documentos requeridos han sido detectados*\n\n`;
       response += `---\n\n### ✅ Expediente Completo\n\n`;
-      response += `El expediente puede pasar a la etapa de **análisis técnico-jurídico**.\n`;
+      response += `El expediente puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
+      response += `> No se requiere intimación al administrado.\n`;
     }
 
-    response += `\n---\n\n*Escribí **"ver JSON"** para obtener la evaluación estructurada.*`;
+    response += `\n---\n\n*Escribí **"ver JSON"** para obtener la evaluación estructurada completa.*`;
 
     return response;
   }, []);
