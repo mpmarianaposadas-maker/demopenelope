@@ -1,6 +1,11 @@
 /**
  * Definición del Núcleo Documental RUPECO
- * Basado en Res. ENACOM 3731/2019 y Decreto 971/2024
+ * Basado en:
+ * - Resolución ENACOM N° 3731/2019 (RUPECO - Registro Único de Personas de Comunicaciones)
+ * - Decreto N° 971/2024 (Reglamento General del Silencio Administrativo Positivo - PEHAR)
+ * - Ley N° 27.078 (Argentina Digital)
+ * - Ley N° 26.522 (Servicios de Comunicación Audiovisual)
+ * - Decreto N° 1759/72 T.O. 2017 (Reglamento de Procedimientos Administrativos)
  */
 
 export interface DocumentoRequerido {
@@ -10,6 +15,7 @@ export interface DocumentoRequerido {
   obligatorio: boolean;
   aplicaA: ('humana' | 'juridica')[];
   normativa: string;
+  articuloEspecifico?: string;
 }
 
 export interface BloqueDocumental {
@@ -19,12 +25,12 @@ export interface BloqueDocumental {
   documentos: DocumentoRequerido[];
 }
 
-// Núcleo Documental Común según Tabla 1 del documento
+// Núcleo Documental Común según Res. ENACOM 3731/2019
 export const NUCLEO_RUPECO: BloqueDocumental[] = [
   {
     id: 'identificacion',
     nombre: 'Identificación del Responsable',
-    descripcion: 'Datos de identificación del titular del trámite',
+    descripcion: 'Datos de identificación del titular del trámite - Art. 3° y 4° Res. ENACOM 3731/2019',
     documentos: [
       {
         id: 'tipo_persona',
@@ -32,93 +38,103 @@ export const NUCLEO_RUPECO: BloqueDocumental[] = [
         descripcion: 'Persona humana o jurídica',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 3',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 3° - Sujetos obligados a inscripción',
       },
       {
         id: 'dni_titular',
         nombre: 'DNI del titular',
-        descripcion: 'Documento Nacional de Identidad vigente',
+        descripcion: 'Documento Nacional de Identidad vigente (ambas caras)',
         obligatorio: true,
         aplicaA: ['humana'],
-        normativa: 'Res. ENACOM 3731/19, Art. 4',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 4° inc. a) - Documentación acreditante de identidad',
       },
       {
         id: 'cuit_cuil',
-        nombre: 'Constancia CUIT/CUIL',
+        nombre: 'Constancia de CUIT/CUIL',
         descripcion: 'Constancia de inscripción AFIP vigente',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 4',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 4° inc. b) - Clave Única de Identificación Tributaria',
       },
       {
         id: 'estatuto_contrato',
         nombre: 'Estatuto o Contrato Social',
-        descripcion: 'Instrumento constitutivo con última modificación',
+        descripcion: 'Instrumento constitutivo con última modificación inscripta',
         obligatorio: true,
         aplicaA: ['juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 5',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 5° inc. a) - Instrumento constitutivo de persona jurídica',
       },
       {
         id: 'acta_autoridades',
-        nombre: 'Acta de designación de autoridades',
-        descripcion: 'Acta de asamblea/directorio vigente',
+        nombre: 'Acta de designación de autoridades vigentes',
+        descripcion: 'Acta de asamblea/directorio con autoridades actuales',
         obligatorio: true,
         aplicaA: ['juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 5',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 5° inc. b) - Acta de designación de representantes',
       },
     ],
   },
   {
     id: 'domicilios',
     nombre: 'Domicilios y Contacto',
-    descripcion: 'Información de localización y contacto',
+    descripcion: 'Información de localización y contacto - Art. 6° Res. ENACOM 3731/2019',
     documentos: [
       {
         id: 'domicilio_legal',
         nombre: 'Constitución de domicilio legal',
-        descripcion: 'Domicilio legal/real constituido',
+        descripcion: 'Domicilio legal/real constituido en jurisdicción ENACOM',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 6',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 6° inc. a) - Domicilio legal constituido',
       },
       {
         id: 'domicilio_servicios',
         nombre: 'Domicilio de prestación de servicios',
-        descripcion: 'Ubicación donde se prestan los servicios',
+        descripcion: 'Ubicación donde se prestan efectivamente los servicios',
         obligatorio: false,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Ley 27.078, Art. 8',
+        normativa: 'Ley N° 27.078 (Argentina Digital)',
+        articuloEspecifico: 'Art. 8° - Área de prestación del servicio',
       },
       {
         id: 'telefono_contacto',
         nombre: 'Teléfono de contacto',
-        descripcion: 'Número telefónico de contacto',
+        descripcion: 'Número telefónico de contacto actualizado',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 6',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 6° inc. b) - Datos de contacto',
       },
       {
         id: 'email_contacto',
         nombre: 'Correo electrónico',
-        descripcion: 'Dirección de correo electrónico válida',
+        descripcion: 'Dirección de correo electrónico válida para notificaciones',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 6',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 6° inc. c) - Correo electrónico para notificaciones',
       },
     ],
   },
   {
     id: 'representacion',
     nombre: 'Representación',
-    descripcion: 'Datos del representante si no actúa el titular',
+    descripcion: 'Datos del representante si no actúa el titular - Art. 7° Res. ENACOM 3731/2019',
     documentos: [
       {
         id: 'poder_representacion',
         nombre: 'Poder de representación',
-        descripcion: 'Instrumento que acredita la representación',
+        descripcion: 'Instrumento que acredita la representación (poder especial o general)',
         obligatorio: false,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 7',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 7° inc. a) - Acreditación de personería',
       },
       {
         id: 'dni_representante',
@@ -126,61 +142,67 @@ export const NUCLEO_RUPECO: BloqueDocumental[] = [
         descripcion: 'Documento del apoderado/representante',
         obligatorio: false,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 7',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 7° inc. b) - Identificación del representante',
       },
     ],
   },
   {
     id: 'societarios',
     nombre: 'Datos Societarios',
-    descripcion: 'Información societaria para personas jurídicas',
+    descripcion: 'Información societaria para personas jurídicas - Art. 5° Res. ENACOM 3731/2019',
     documentos: [
       {
         id: 'inscripcion_igj',
-        nombre: 'Inscripción IGJ/DPPJ',
-        descripcion: 'Constancia de inscripción registral',
+        nombre: 'Inscripción IGJ/Registro Público',
+        descripcion: 'Constancia de inscripción registral (IGJ, DPPJ provincial)',
         obligatorio: true,
         aplicaA: ['juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 5',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 5° inc. c) - Inscripción en registro público',
       },
       {
         id: 'certificado_vigencia',
         nombre: 'Certificado de vigencia',
-        descripcion: 'Certificado de vigencia de la sociedad',
+        descripcion: 'Certificado de vigencia de la sociedad (no mayor a 30 días)',
         obligatorio: false,
         aplicaA: ['juridica'],
-        normativa: 'Res. ENACOM 3731/19, Art. 5',
+        normativa: 'Res. ENACOM N° 3731/2019',
+        articuloEspecifico: 'Art. 5° inc. d) - Constancia de vigencia societaria',
       },
     ],
   },
   {
     id: 'fiscales',
     nombre: 'Obligaciones Fiscales y Previsionales',
-    descripcion: 'Cumplimiento de obligaciones tributarias',
+    descripcion: 'Cumplimiento de obligaciones tributarias - Decreto 971/2024 y Ley 27.078',
     documentos: [
       {
         id: 'constancia_afip',
         nombre: 'Constancia de inscripción AFIP',
-        descripcion: 'Constancia de inscripción vigente',
+        descripcion: 'Constancia de inscripción vigente en AFIP',
         obligatorio: true,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Ley 27.078, Art. 12',
+        normativa: 'Ley N° 27.078 (Argentina Digital)',
+        articuloEspecifico: 'Art. 12° - Requisitos fiscales para licenciatarios',
       },
       {
         id: 'libre_deuda_afip',
         nombre: 'Libre deuda AFIP',
-        descripcion: 'Certificado de cumplimiento fiscal',
+        descripcion: 'Certificado de cumplimiento fiscal o plan de facilidades',
         obligatorio: false,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Decreto 971/2024, Anexo II',
+        normativa: 'Decreto N° 971/2024',
+        articuloEspecifico: 'Anexo II - Requisitos complementarios PEHAR',
       },
       {
         id: 'constancia_iibb',
         nombre: 'Constancia Ingresos Brutos',
-        descripcion: 'Inscripción en IIBB provincial',
+        descripcion: 'Inscripción en IIBB provincial o convenio multilateral',
         obligatorio: false,
         aplicaA: ['humana', 'juridica'],
-        normativa: 'Ley 27.078, Art. 12',
+        normativa: 'Ley N° 27.078 (Argentina Digital)',
+        articuloEspecifico: 'Art. 12° - Cumplimiento tributario provincial',
       },
     ],
   },

@@ -45,24 +45,26 @@ function generarTextoProvidencia(
 ): string {
   const fechaActual = formatearFecha(new Date());
   const fechaLimite = formatearFecha(
-    calcularFechaLimite(expediente.fechaIngreso, 10) // 10 días para subsanar
+    calcularFechaLimite(expediente.fechaIngreso, 10) // 10 días hábiles para subsanar
   );
   const tipoPersonaTexto = expediente.tipoPersona === 'juridica' 
     ? 'la persona jurídica' 
     : 'el/la administrado/a';
 
   const listaDocumentos = documentosFaltantes
-    .map((doc, idx) => `   ${idx + 1}. ${doc.nombre} (${doc.normativa})`)
+    .map((doc, idx) => `   ${idx + 1}. ${doc.nombre}\n      → Base normativa: ${doc.normativa}`)
     .join('\n');
 
   return `
 ═══════════════════════════════════════════════════════════════════════════════
                           ENTE NACIONAL DE COMUNICACIONES
-                                    ENACOM
+                                     ENACOM
 ═══════════════════════════════════════════════════════════════════════════════
 
-                         PROVIDENCIA DE INTIMACIÓN
-                         
+                      *** BORRADOR - REQUIERE VALIDACIÓN ***
+
+                          PROVIDENCIA DE INTIMACIÓN
+                          
 Expediente N°: ${expediente.numero}
 Carátula: ${expediente.caratula}
 Trámite: ${expediente.tramiteNombre} (${expediente.tramiteCodigo})
@@ -78,19 +80,22 @@ El expediente de la referencia, mediante el cual ${tipoPersonaTexto}
 
                                CONSIDERANDO:
 
-Que de la verificación documental efectuada por el sistema de validación 
-automática "PENÉLOPE" surge la falta de presentación de documentación 
-obligatoria requerida por la normativa vigente;
+Que de la verificación documental automatizada efectuada por el sistema 
+"PENÉLOPE" surge la falta de presentación de documentación obligatoria 
+requerida por la normativa vigente;
 
-Que conforme lo establecido en el Decreto 971/2024 (Procedimiento de Evaluación 
-y Habilitación de Regulaciones - PEHAR) y la Resolución ENACOM 3731/2019 
-(RUPECO - Registro Único de Personas de Comunicaciones), la documentación 
-exigida resulta de cumplimiento obligatorio para el inicio del trámite;
+Que conforme lo establecido en el Decreto N° 971/2024 (Reglamento General 
+del Silencio Administrativo Positivo - PEHAR), la documentación exigida 
+resulta de cumplimiento obligatorio para la procedencia del trámite;
 
-Que el artículo 5° del Reglamento de Procedimientos Administrativos (Decreto 
-1759/72 t.o. 2017) establece que la Administración intimará al interesado para 
-que subsane los defectos formales de la presentación dentro del plazo que se 
-fije bajo apercibimiento de tenerla por desistida;
+Que la Resolución ENACOM N° 3731/2019 (RUPECO - Registro Único de Personas 
+de Comunicaciones) establece los requisitos documentales mínimos que deben 
+cumplir los administrados ante este Organismo;
+
+Que el Art. 5° del Reglamento de Procedimientos Administrativos (Decreto 
+N° 1759/72 T.O. 2017) dispone que la Administración intimará al interesado 
+para que subsane los defectos formales de la presentación dentro del plazo 
+que se fije, bajo apercibimiento de tenerla por desistida;
 
 ───────────────────────────────────────────────────────────────────────────────
 
@@ -106,21 +111,27 @@ ${listaDocumentos}
 ARTÍCULO 2°.- HACER SABER que el incumplimiento de lo dispuesto en el 
 artículo anterior dará lugar a que se tenga por desistido el trámite, 
 procediendo al archivo de las actuaciones conforme lo dispuesto por el 
-artículo 5° del Reglamento de Procedimientos Administrativos.
+Art. 5° del Decreto N° 1759/72 (T.O. 2017).
 
-ARTÍCULO 3°.- NOTIFICAR al interesado por los medios previstos en el 
-artículo 41 del Decreto 1759/72 (t.o. 2017).
+ARTÍCULO 3°.- NOTIFICAR al interesado conforme los medios previstos en el 
+Art. 41 del Decreto N° 1759/72 (T.O. 2017).
 
 ARTÍCULO 4°.- Registrar, comunicar y cumplido, archivar.
 
 ───────────────────────────────────────────────────────────────────────────────
 
-                              ⚠️ AVISO IMPORTANTE
+                          ⚠️ CONTROL DE PLAZOS (Decreto 971/2024)
 
 Plazo de silencio administrativo positivo aplicable: ${expediente.plazoSilencioPositivo} días
 Fecha límite absoluta para resolución: ${formatearFecha(calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo))}
 
 ───────────────────────────────────────────────────────────────────────────────
+
+                      *** SECCIÓN PARA USO INTERNO ***
+
+[ ] Validado por agente: _________________________
+
+[ ] Revisión jurídica: _________________________
 
 Firma: _________________________
 
@@ -128,11 +139,14 @@ Aclaración: _________________________
 
 Cargo: _________________________
 
-Fecha de notificación: _________________________
+Fecha de firma: _________________________
 
 ═══════════════════════════════════════════════════════════════════════════════
-                    Generado automáticamente por PENÉLOPE v1.0
-                Sistema de Verificación Documental - ENACOM
+            BORRADOR GENERADO AUTOMÁTICAMENTE POR PENÉLOPE v1.0
+         Sistema de Verificación Documental - ENACOM
+         
+         ⚠️ ESTE DOCUMENTO REQUIERE REVISIÓN Y VALIDACIÓN HUMANA
+            ANTES DE SU FIRMA Y NOTIFICACIÓN AL ADMINISTRADO
 ═══════════════════════════════════════════════════════════════════════════════
 `.trim();
 }
@@ -179,12 +193,15 @@ export function ProvidenciaIntimacion({
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-amber-600" />
           <CardTitle className="text-base text-amber-800 dark:text-amber-200">
-            Providencia de Intimación Generada
+            📋 Borrador de Providencia de Intimación
           </CardTitle>
         </div>
         <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-          Se detectaron {documentosFaltantes.length} documento(s) faltante(s). 
-          La providencia ha sido generada automáticamente según normativa vigente.
+          Se detectaron <strong>{documentosFaltantes.length} documento(s) faltante(s)</strong>. 
+          El borrador ha sido generado automáticamente según la normativa vigente.
+        </p>
+        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-medium">
+          ⚠️ Requiere validación del agente antes de su firma y cursado al administrado.
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
