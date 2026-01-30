@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
   CheckCircle2, 
   XCircle, 
@@ -14,10 +15,15 @@ import {
   Scale,
   UserCheck,
   Clock,
-  RotateCcw
+  RotateCcw,
+  FileWarning,
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
+
+// Estados de detección del documento según semáforo
+export type EstadoDeteccion = 'verde' | 'amarillo' | 'rojo';
 
 export interface RequisitoItem {
   id: string;
@@ -28,6 +34,11 @@ export interface RequisitoItem {
   nivelConfianza: number;
   validadoPorAgente?: boolean;
   observacionAgente?: string;
+  // Nuevos campos para orden en expediente
+  estadoIA: EstadoDeteccion;
+  ordenExpediente: string;
+  comentarioBrief?: string;
+  problemaOCR?: boolean;
 }
 
 interface RequisitoVerificacionProps {
@@ -40,6 +51,23 @@ interface RequisitoVerificacionProps {
   onRevertirDecision?: (agenteNombre: string, justificacion: string) => void;
   aprobacion?: AprobacionExpediente | null;
   todosValidados?: boolean;
+}
+
+// Componente para mostrar el estado semáforo
+function EstadoSemaforo({ estado, problemaOCR }: { estado: EstadoDeteccion; problemaOCR?: boolean }) {
+  const config = {
+    verde: { icon: '🟢', label: 'Verde', className: 'text-success' },
+    amarillo: { icon: '🟡', label: 'Amarillo', className: 'text-warning-foreground' },
+    rojo: { icon: '🔴', label: 'Rojo', className: 'text-destructive' },
+  };
+  const { icon, className } = config[estado];
+  
+  return (
+    <span className={cn("flex items-center gap-1 text-sm", className)}>
+      {icon} {estado.charAt(0).toUpperCase() + estado.slice(1)}
+      {problemaOCR && <FileWarning className="h-3 w-3 ml-1" />}
+    </span>
+  );
 }
 
 export function RequisitoVerificacion({ 
@@ -62,25 +90,13 @@ export function RequisitoVerificacion({
   const [mostrarFormRechazo, setMostrarFormRechazo] = useState(false);
   const [mostrarFormReversion, setMostrarFormReversion] = useState(false);
   
-  const cumplidos = requisitos.filter(r => r.detectado);
-  const faltantes = requisitos.filter(r => !r.detectado);
+  const verdes = requisitos.filter(r => r.estadoIA === 'verde');
+  const amarillos = requisitos.filter(r => r.estadoIA === 'amarillo');
+  const rojos = requisitos.filter(r => r.estadoIA === 'rojo');
   const validadosManualmente = requisitos.filter(r => r.validadoPorAgente === true).length;
-  const rechazadosManualmente = requisitos.filter(r => r.validadoPorAgente === false).length;
   const totalRevisados = requisitos.filter(r => r.validadoPorAgente !== undefined).length;
   const puedeAprobar = todosValidados && !aprobacion;
   const expedienteResuelto = aprobacion?.aprobado || aprobacion?.rechazado;
-
-  const getConfianzaColor = (nivel: number) => {
-    if (nivel >= 85) return 'text-success';
-    if (nivel >= 60) return 'text-warning-foreground';
-    return 'text-destructive';
-  };
-
-  const getConfianzaBg = (nivel: number) => {
-    if (nivel >= 85) return 'bg-success/10';
-    if (nivel >= 60) return 'bg-cream';
-    return 'bg-destructive/10';
-  };
 
   return (
     <Card className="border-2 border-primary/20">
@@ -89,7 +105,7 @@ export function RequisitoVerificacion({
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
             <CardTitle className="text-base">
-              Verificación de Requisitos RUPECO
+              📂 Verificación del Núcleo Documental (demo)
             </CardTitle>
           </div>
           <Button
@@ -101,19 +117,17 @@ export function RequisitoVerificacion({
           </Button>
         </div>
         
-        {/* Resumen */}
+        {/* Resumen con semáforos */}
         <div className="flex flex-wrap gap-2 mt-2">
           <Badge variant="outline" className="bg-success/10 text-success border-success/30">
-            ✓ {cumplidos.length} detectados
+            🟢 {verdes.length} verdes
+          </Badge>
+          <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+            🟡 {amarillos.length} amarillos
           </Badge>
           <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
-            ✗ {faltantes.length} faltantes
+            🔴 {rojos.length} rojos
           </Badge>
-          {validadosManualmente > 0 && (
-            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/30">
-              👤 {validadosManualmente} validados
-            </Badge>
-          )}
           <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/30">
             📋 {totalRevisados}/{requisitos.length} revisados
           </Badge>
@@ -133,58 +147,58 @@ export function RequisitoVerificacion({
             </div>
           </div>
 
-          {/* Leyenda */}
-          <div className="p-2 bg-cream/50 rounded-lg text-xs border border-cream-dark">
-            <div className="font-medium mb-1 text-cream-foreground">⚖️ Política de "Cuatro Ojos"</div>
-            <p className="text-cream-foreground/80">
-              Cada requisito detectado por IA debe ser verificado por el agente. 
-              Use los controles para validar o rechazar la detección automática.
-            </p>
-          </div>
-
-          {/* Requisitos cumplidos */}
-          {cumplidos.length > 0 && (
-            <div>
-              <div className="text-sm font-medium mb-2 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-success" />
-                Requisitos Detectados ({cumplidos.length})
-              </div>
-              <div className="space-y-2">
-                {cumplidos.map((req) => (
-                  <div 
+          {/* Tabla de verificación documental - Formato especificado */}
+          <div className="rounded-md border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead className="w-12 text-center font-semibold">Nº</TableHead>
+                  <TableHead className="font-semibold">Requisito</TableHead>
+                  <TableHead className="w-24 text-center font-semibold">Estado IA</TableHead>
+                  <TableHead className="font-semibold">Orden en el expediente</TableHead>
+                  <TableHead className="font-semibold">Comentario breve</TableHead>
+                  <TableHead className="w-24 text-center font-semibold">Acción</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {requisitos.map((req, index) => (
+                  <TableRow 
                     key={req.id}
                     className={cn(
-                      "p-3 rounded-lg border transition-all",
-                      req.validadoPorAgente === true && "border-success bg-success/5",
-                      req.validadoPorAgente === false && "border-destructive bg-destructive/5",
-                      req.validadoPorAgente === undefined && "border-border bg-background"
+                      req.validadoPorAgente === true && "bg-success/5",
+                      req.validadoPorAgente === false && "bg-destructive/5",
                     )}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm">{req.nombre}</span>
-                          <Badge 
-                            variant="outline" 
-                            className={cn("text-xs", getConfianzaBg(req.nivelConfianza), getConfianzaColor(req.nivelConfianza))}
-                          >
-                            {req.nivelConfianza}% conf.
-                          </Badge>
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          <span className="font-medium">Base normativa:</span> {req.normativa}
-                          {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
-                        </div>
+                    <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                    <TableCell>
+                      <div className="font-medium text-sm">{req.nombre}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {req.normativa}
+                        {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
                       </div>
-                      
-                      {/* Controles de validación */}
-                      <div className="flex items-center gap-1">
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <EstadoSemaforo estado={req.estadoIA} problemaOCR={req.problemaOCR} />
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      {req.ordenExpediente || 'No determinado'}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground max-w-[200px]">
+                      {req.comentarioBrief || '—'}
+                      {req.problemaOCR && (
+                        <div className="mt-1 text-xs text-amber-600 italic">
+                          ⚠️ Posible error OCR
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex items-center justify-center gap-1">
                         <Button
                           variant={req.validadoPorAgente === true ? "default" : "outline"}
                           size="sm"
                           className="h-7 px-2"
                           onClick={() => onValidarRequisito(req.id, true)}
-                          title="Validar detección"
+                          title="Validar"
                         >
                           <CheckCircle2 className="h-3 w-3" />
                         </Button>
@@ -193,96 +207,58 @@ export function RequisitoVerificacion({
                           size="sm"
                           className="h-7 px-2"
                           onClick={() => onValidarRequisito(req.id, false)}
-                          title="Rechazar detección"
+                          title="Rechazar"
                         >
                           <XCircle className="h-3 w-3" />
                         </Button>
                       </div>
-                    </div>
-                    
-                    {req.validadoPorAgente !== undefined && (
-                      <div className="mt-2 pt-2 border-t border-border/50 text-xs">
-                        {req.validadoPorAgente ? (
-                          <span className="text-success flex items-center gap-1">
-                            <CheckCircle2 className="h-3 w-3" />
-                            Validado por agente
-                          </span>
-                        ) : (
-                          <span className="text-destructive flex items-center gap-1">
-                            <XCircle className="h-3 w-3" />
-                            Rechazado por agente - Requiere documentación
-                          </span>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                    </TableCell>
+                  </TableRow>
                 ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {/* Texto informativo sobre "Orden en el expediente" */}
+          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
+              <p className="text-xs text-blue-800">
+                <strong>ℹ️</strong> El campo "Orden en el expediente" indica en qué parte del expediente digital 
+                (orden de documentos o fojas estimadas) se detectó cada requisito, siguiendo la lógica de 
+                visualización GDE/TAD en esta demo.
+              </p>
+            </div>
+          </div>
+
+          {/* Advertencia de errores OCR si hay documentos amarillos */}
+          {amarillos.length > 0 && (
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="flex items-start gap-2">
+                <FileWarning className="h-5 w-5 text-amber-600 shrink-0" />
+                <div className="text-sm text-amber-800">
+                  <p className="font-medium">⚠️ Posibles errores de OCR/digitalización detectados</p>
+                  <p className="text-xs mt-1">
+                    La lectura automática (OCR) puede no haber captado todo el contenido del documento 
+                    (páginas incompletas, baja resolución o secciones ilegibles). 
+                    <strong> Revise manualmente el archivo original antes de marcar estos requisitos como ausentes.</strong>
+                  </p>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Requisitos faltantes */}
-          {faltantes.length > 0 && (
-            <div>
-              <div className="text-sm font-medium mb-2 flex items-center gap-2">
-                <XCircle className="h-4 w-4 text-destructive" />
-                Requisitos Faltantes ({faltantes.length})
-              </div>
-              <div className="space-y-2">
-                {faltantes.map((req) => (
-                  <div 
-                    key={req.id}
-                    className={cn(
-                      "p-3 rounded-lg border transition-all",
-                      req.validadoPorAgente === true && "border-success bg-success/5",
-                      req.validadoPorAgente !== true && "border-destructive/50 bg-destructive/5"
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <XCircle className="h-4 w-4 text-destructive flex-shrink-0" />
-                          <span className="font-medium text-sm">{req.nombre}</span>
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1 ml-6">
-                          <span className="font-medium">Exigido por:</span> {req.normativa}
-                          {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
-                        </div>
-                      </div>
-                      
-                      {/* Control para marcar como subsanado */}
-                      <Button
-                        variant={req.validadoPorAgente === true ? "default" : "outline"}
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={() => onValidarRequisito(req.id, true)}
-                        title="Marcar como subsanado/presentado"
-                      >
-                        {req.validadoPorAgente === true ? (
-                          <>
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Subsanado
-                          </>
-                        ) : (
-                          'Marcar subsanado'
-                        )}
-                      </Button>
-                    </div>
-                    
-                    {req.validadoPorAgente === true && (
-                      <div className="mt-2 pt-2 border-t border-success/30 text-xs text-success flex items-center gap-1">
-                        <CheckCircle2 className="h-3 w-3" />
-                        Documento presentado/subsanado por el administrado
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Leyenda de política "Cuatro Ojos" */}
+          <div className="p-2 bg-cream/50 rounded-lg text-xs border border-cream-dark">
+            <div className="font-medium mb-1 text-cream-foreground">⚖️ Política de "Cuatro Ojos"</div>
+            <p className="text-cream-foreground/80">
+              Cada requisito detectado por IA debe ser verificado por el agente. 
+              Use los controles para validar o rechazar la detección automática.
+            </p>
+          </div>
 
           {/* Advertencia de silencio positivo */}
-          {faltantes.filter(f => f.validadoPorAgente !== true).length > 0 && (
+          {rojos.filter(f => f.validadoPorAgente !== true).length > 0 && (
             <div className="p-3 bg-cream rounded-lg border border-cream-dark">
               <div className="flex items-start gap-2">
                 <AlertTriangle className="h-5 w-5 text-cream-foreground flex-shrink-0" />
@@ -291,7 +267,7 @@ export function RequisitoVerificacion({
                     ⏰ Control de Silencio Positivo (Decreto 971/2024)
                   </div>
                   <p className="text-xs text-cream-foreground/80 mt-1">
-                    Hay {faltantes.filter(f => f.validadoPorAgente !== true).length} documento(s) faltante(s). 
+                    Hay {rojos.filter(f => f.validadoPorAgente !== true).length} documento(s) faltante(s). 
                     Debe generarse Providencia de Intimación para evitar la configuración del silencio administrativo positivo.
                   </p>
                 </div>

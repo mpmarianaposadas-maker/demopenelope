@@ -37,6 +37,9 @@ export interface ClasificacionPendiente {
   ambiguo: boolean;
 }
 
+// Estados de detección del documento según semáforo
+export type EstadoDeteccion = 'verde' | 'amarillo' | 'rojo';
+
 interface DocumentoDetectado {
   id: string;
   nombre: string;
@@ -46,6 +49,11 @@ interface DocumentoDetectado {
   articuloEspecifico?: string;
   validadoPorAgente?: boolean;
   observacionAgente?: string;
+  // Nuevos campos para verificación documental reformada
+  estadoIA: EstadoDeteccion;
+  ordenExpediente: string;
+  comentarioBrief?: string;
+  problemaOCR?: boolean;
 }
 
 export interface AprobacionExpediente {
@@ -244,9 +252,47 @@ export function useChatRupecoSimulado() {
         articuloEspecifico: undefined,
       };
     };
+
+    // Simular orden en el expediente (fojas estimadas)
+    const generarOrdenExpediente = (index: number, detectado: boolean): string => {
+      if (!detectado) return 'No localizado';
+      const fojaInicio = index * 3 + 1;
+      const fojaFin = fojaInicio + Math.floor(Math.random() * 5) + 1;
+      const ubicaciones = [
+        `Fojas ${fojaInicio}–${fojaFin}`,
+        `PDF ${index + 1}`,
+        `Anexo ${index + 1}`,
+        `Carátula / fojas ${fojaInicio}–${fojaFin}`,
+        `Fojas ${fojaInicio}–${fojaFin} / PDF ${index + 1}`,
+      ];
+      return ubicaciones[Math.floor(Math.random() * ubicaciones.length)];
+    };
+
+    // Generar comentario breve según estado
+    const generarComentarioBrief = (estadoIA: EstadoDeteccion, problemaOCR: boolean): string => {
+      if (estadoIA === 'verde') {
+        const comentarios = [
+          'Datos coherentes con registro tributario.',
+          'Documento legible y completo.',
+          'Validación automática satisfactoria.',
+          'Firma y sello verificados.',
+        ];
+        return comentarios[Math.floor(Math.random() * comentarios.length)];
+      } else if (estadoIA === 'amarillo') {
+        const comentarios = [
+          'OCR parcial, revisar páginas finales.',
+          'Baja resolución en algunas secciones.',
+          'Posible falta de páginas.',
+          'Firma poco legible.',
+        ];
+        return comentarios[Math.floor(Math.random() * comentarios.length)];
+      } else {
+        return 'No se halló documento equivalente.';
+      }
+    };
     
     // Simular detección con probabilidades realistas
-    return todosDocumentos.map(doc => {
+    return todosDocumentos.map((doc, index) => {
       const probabilidadDeteccion = Math.random();
       const detectado = probabilidadDeteccion > 0.3; // 70% de probabilidad de detección
       const nivelConfianza = detectado 
@@ -255,6 +301,22 @@ export function useChatRupecoSimulado() {
       
       const docInfo = getDocInfo(doc.id);
       
+      // Determinar estado IA (semáforo) basado en detección y confianza
+      let estadoIA: EstadoDeteccion;
+      let problemaOCR = false;
+      
+      if (!detectado) {
+        estadoIA = 'rojo';
+      } else if (nivelConfianza >= 85) {
+        estadoIA = 'verde';
+      } else {
+        estadoIA = 'amarillo';
+        problemaOCR = Math.random() > 0.5; // 50% de probabilidad de problema OCR
+      }
+      
+      const ordenExpediente = generarOrdenExpediente(index, detectado);
+      const comentarioBrief = generarComentarioBrief(estadoIA, problemaOCR);
+      
       return {
         id: doc.id,
         nombre: doc.nombre,
@@ -262,6 +324,10 @@ export function useChatRupecoSimulado() {
         nivelConfianza: Math.round(nivelConfianza),
         normativa: docInfo.normativa,
         articuloEspecifico: docInfo.articuloEspecifico,
+        estadoIA,
+        ordenExpediente,
+        comentarioBrief,
+        problemaOCR,
       };
     });
   }, []);
@@ -799,6 +865,11 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       nivelConfianza: d.nivelConfianza,
       validadoPorAgente: d.validadoPorAgente,
       observacionAgente: d.observacionAgente,
+      // Nuevos campos para verificación documental reformada
+      estadoIA: d.estadoIA,
+      ordenExpediente: d.ordenExpediente,
+      comentarioBrief: d.comentarioBrief,
+      problemaOCR: d.problemaOCR,
     })),
     tipoPersona: expediente.tipoPersona,
     tramiteNombre: expediente.tramite?.nombre || 'Trámite ENACOM',
