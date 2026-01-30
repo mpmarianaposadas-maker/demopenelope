@@ -5,8 +5,8 @@ import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useSecurityValidation } from '@/hooks/useSecurityValidation';
 
-// Bloques del flujo RUPECO
-type RupecoStep = 
+// Bloques del flujo RUPECO - exportado para el indicador de progreso
+export type RupecoStep = 
   | 'inicio'
   | 'tipo_tramite'
   | 'identificacion_responsable'
@@ -661,5 +661,7 @@ Si querés modificar algo, indicá qué bloque: identificación, domicilios, rep
     resetChat,
     evaluation,
     isSystemActive,
+    currentStep,
+    esPJ: nucleo.datos_societarios.aplica,
   };
 }
