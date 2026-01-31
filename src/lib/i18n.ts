@@ -75,7 +75,9 @@ export const translations: Record<Language, Translations> = {
     // Panel Arquitectura
     'arq.title': 'Arquitectura del Sistema Penélope',
     'arq.intro1': 'El sistema Penélope fue diseñado siguiendo los requisitos de la norma internacional ISO/IEC 42001:2023 (Sistemas de Gestión de Inteligencia Artificial).',
-    'arq.intro2': 'Implementa una arquitectura de tipo <em>secure overlay</em>, donde la capa de IA lee información de los sistemas registrales y de expedientes, pero no puede realizar escrituras ni decisiones finales sin intervención humana.',
+    'arq.intro2.prefix': 'Implementa una arquitectura de tipo ',
+    'arq.intro2.emphasis': 'secure overlay',
+    'arq.intro2.suffix': ', donde la capa de IA lee información de los sistemas registrales y de expedientes, pero no puede realizar escrituras ni decisiones finales sin intervención humana.',
     'arq.intro3': 'La capa de automatización no-code orquesta los flujos de validación formal, generación de borradores y notificaciones, manteniendo siempre trazabilidad de cada paso.',
     'arq.componentes.title': 'Componentes principales',
     'arq.componentes.item1': 'Módulo de ingesta de expedientes desde TAD y GEDO.',
@@ -412,7 +414,9 @@ export const translations: Record<Language, Translations> = {
     // Panel Arquitectura
     'arq.title': 'Penélope System Architecture',
     'arq.intro1': 'The Penélope system was designed following the requirements of the international standard ISO/IEC 42001:2023 (Artificial Intelligence Management Systems).',
-    'arq.intro2': 'It implements a <em>secure overlay</em> architecture, where the AI layer reads information from registry and case file systems, but cannot write or make final decisions without human intervention.',
+    'arq.intro2.prefix': 'It implements a ',
+    'arq.intro2.emphasis': 'secure overlay',
+    'arq.intro2.suffix': ' architecture, where the AI layer reads information from registry and case file systems, but cannot write or make final decisions without human intervention.',
     'arq.intro3': 'The no-code automation layer orchestrates formal validation flows, draft generation and notifications, always maintaining traceability of each step.',
     'arq.componentes.title': 'Main components',
     'arq.componentes.item1': 'Case file ingestion module from TAD and GEDO.',

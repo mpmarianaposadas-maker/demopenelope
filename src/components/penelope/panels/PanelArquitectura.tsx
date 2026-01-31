@@ -10,7 +10,7 @@ export function PanelArquitectura() {
         <CardTitle>{t('arq.title')}</CardTitle>
         <CardText>{t('arq.intro1')}</CardText>
         <CardText>
-          <span dangerouslySetInnerHTML={{ __html: t('arq.intro2') }} />
+          {t('arq.intro2.prefix')}<em>{t('arq.intro2.emphasis')}</em>{t('arq.intro2.suffix')}
         </CardText>
         <CardText>{t('arq.intro3')}</CardText>
       </Card>
