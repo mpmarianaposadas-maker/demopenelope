@@ -20,7 +20,7 @@ const QUICK_ACTIONS = [
   { label: '📺 Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
   { label: '📮 Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
   { label: '🔄 Modificación societaria TIC', message: 'Modificación societaria TIC para empresa' },
-  { label: '📋 Renovación TIC', message: 'Renovación de licencia TIC persona jurídica' },
+  { label: '📋 Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
 ];
 
 export function ChatRupeco() {

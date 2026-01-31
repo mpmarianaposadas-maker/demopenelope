@@ -33,7 +33,7 @@ const CATEGORIAS_PERMITIDAS = [
   { codigo: 'ENAC00062', nombre: 'Licencia TIC – Alta nueva' },
   { codigo: 'ENAC00025', nombre: 'Autorización de servicios audiovisuales' },
   { codigo: 'ENAC00063', nombre: 'Modificación societaria TIC' },
-  { codigo: 'ENAC00064', nombre: 'Renovación de licencia TIC' },
+  { codigo: 'ENAC00064', nombre: 'Actualización de datos RUPECO' },
   { codigo: 'ENAC00013', nombre: 'Habilitación de servicios postales' },
 ];
 

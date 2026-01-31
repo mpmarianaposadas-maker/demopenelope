@@ -172,20 +172,19 @@ export function useChatRupecoSimulado() {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00063') || null;
         confianza = 80;
       }
-      // Renovación TIC
-      else if (lower.includes('tic') && lower.includes('renov')) {
-        // Crear trámite de renovación si no existe
+      // Actualización RUPECO
+      else if (lower.includes('rupeco') || (lower.includes('actualiz') && lower.includes('dato'))) {
         tramiteDetectado = {
           codigo: 'ENAC00064',
-          nombre: 'Renovación de licencia TIC',
+          nombre: 'Actualización de datos RUPECO',
           categoria: 'TIC',
-          normativa: 'Ley 27.078, Res. ENACOM 3731/2019 (RUPECO)',
-          documentosObligatorios: 10,
-          overlapRupeco: 80,
-          plazoSilencioPositivo: 60,
+          normativa: 'Res. ENACOM 3731/2019 (RUPECO)',
+          documentosObligatorios: 6,
+          overlapRupeco: 95,
+          plazoSilencioPositivo: 30,
           documentosAdicionales: [],
         };
-        confianza = 75;
+        confianza = 85;
       }
       // Audiovisual
       else if (lower.includes('audiovisual') || lower.includes('televisión') || lower.includes('radio')) {
