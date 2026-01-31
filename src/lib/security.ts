@@ -215,8 +215,11 @@ export function logSecurityEvent(event: Omit<SecurityEvent, 'timestamp'>): void 
     securityLog.shift();
   }
   
-  // In production, this would send to a secure logging service
-  console.info('[Security Event]', fullEvent);
+  // Only log to console in development mode
+  // In production, this would send to a secure backend logging service
+  if (import.meta.env.DEV) {
+    console.info('[Security Event]', fullEvent);
+  }
 }
 
 export function getSecurityLog(): readonly SecurityEvent[] {
