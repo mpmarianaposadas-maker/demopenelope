@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,10 +21,10 @@ import {
   Copy,
   Check,
   Info,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 
 // Categorías de errores RUPECO/TAD según documentación
 export type CategoriaErrorRupeco = 
@@ -113,15 +113,80 @@ const CATEGORIAS_ERRORES: CategoriaInfo[] = [
   },
 ];
 
+// Tipos de trámite disponibles para demo
+const TIPOS_TRAMITE_DEMO = [
+  'Licencia TIC - Alta nueva',
+  'Autorización de servicios audiovisuales',
+  'Modificación societaria TIC',
+  'Actualización de datos RUPECO',
+  'Habilitación de servicios postales',
+];
+
+// Nombres de empresas ficticios para demo
+const EMPRESAS_DEMO = [
+  'Comunicaciones Patagónicas S.R.L.',
+  'TeleSur Argentina S.A.',
+  'Conectividad Federal S.A.S.',
+  'Red Digital del Litoral S.A.',
+  'Servicios Multimediales Andinos S.R.L.',
+  'Fibra Óptica del NOA S.A.',
+  'Telecomunicaciones del Plata S.A.',
+  'Internet Cuyo S.R.L.',
+];
+
+// Genera datos aleatorios para demo
+function generarDatosDemo() {
+  const randomNum = Math.floor(10000000 + Math.random() * 90000000);
+  const expedienteNumero = `EX-2026-${randomNum.toString().padStart(8, '0')}-APN-DNLTC`;
+  const tipoTramite = TIPOS_TRAMITE_DEMO[Math.floor(Math.random() * TIPOS_TRAMITE_DEMO.length)];
+  const empresaNombre = EMPRESAS_DEMO[Math.floor(Math.random() * EMPRESAS_DEMO.length)];
+  
+  return { expedienteNumero, tipoTramite, empresaNombre };
+}
+
 export function AsistenteRupecoTAD() {
-  const { expedienteNumero, tipoTramite, empresaNombre } = useTipoTramite();
+  // Datos aleatorios para demo (se generan una vez al montar)
+  const datosDemo = useMemo(() => generarDatosDemo(), []);
   
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<CategoriaErrorRupeco | null>(null);
   const [descripcionProblema, setDescripcionProblema] = useState('');
   const [mostrarBorrador, setMostrarBorrador] = useState(false);
   const [copiado, setCopiado] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  
+  const formRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const categoriaInfo = CATEGORIAS_ERRORES.find(c => c.codigo === categoriaSeleccionada);
+
+  // Ocultar indicador de scroll cuando el usuario hace scroll
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+    
+    const handleScroll = () => {
+      if (content.scrollTop > 50) {
+        setShowScrollHint(false);
+      }
+    };
+    
+    content.addEventListener('scroll', handleScroll);
+    return () => content.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Scroll suave al seleccionar categoría
+  const handleCategoriaClick = (codigo: CategoriaErrorRupeco) => {
+    setCategoriaSeleccionada(codigo);
+    setMostrarBorrador(false);
+    
+    // Esperar un tick para que el contenido se renderice
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
+  };
 
   const generarBorradorSubsanacion = (): string => {
     if (!categoriaInfo) return '';
@@ -131,12 +196,12 @@ export function AsistenteRupecoTAD() {
 
     return `NOTA DE SUBSANACIÓN
 
-Expediente: ${expedienteNumero}
+Expediente: ${datosDemo.expedienteNumero}
 Fecha: ${fecha}
 
 De nuestra consideración:
 
-En relación al trámite de ${tipoTramite} iniciado por ${empresaNombre}, se ha detectado la siguiente observación:
+En relación al trámite de ${datosDemo.tipoTramite} iniciado por ${datosDemo.empresaNombre}, se ha detectado la siguiente observación:
 
 **Categoría del problema:** ${categoriaInfo.nombre}
 
@@ -163,13 +228,13 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
   };
 
   return (
-    <Card className="border-2 border-amber-200 bg-amber-50/30">
+    <Card className="border-2 border-amber-200 bg-amber-50/30 relative">
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-full bg-amber-100">
             <HelpCircle className="h-5 w-5 text-amber-700" />
           </div>
-          <div>
+          <div className="flex-1">
             <CardTitle className="text-lg text-amber-900">
               🛠️ Asistente RUPECO/TAD
             </CardTitle>
@@ -177,10 +242,17 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
               Clasificación y resolución de errores comunes
             </p>
           </div>
+          {/* Badge de demo */}
+          <Badge variant="secondary" className="text-xs bg-amber-200 text-amber-800">
+            Demo
+          </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent 
+        ref={contentRef}
+        className="space-y-4 max-h-[70vh] overflow-y-auto scroll-smooth relative"
+      >
         {/* Selector de categoría */}
         <div className="space-y-3">
           <label className="text-sm font-medium">
@@ -190,10 +262,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
             {CATEGORIAS_ERRORES.map((cat) => (
               <button
                 key={cat.codigo}
-                onClick={() => {
-                  setCategoriaSeleccionada(cat.codigo);
-                  setMostrarBorrador(false);
-                }}
+                onClick={() => handleCategoriaClick(cat.codigo)}
                 className={cn(
                   "flex items-start gap-3 p-3 rounded-lg border text-left transition-all",
                   categoriaSeleccionada === cat.codigo
@@ -221,9 +290,17 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
           </div>
         </div>
 
-        {/* Explicación técnica */}
+        {/* Indicador de scroll */}
+        {showScrollHint && !categoriaSeleccionada && (
+          <div className="flex flex-col items-center justify-center py-2 text-muted-foreground animate-bounce">
+            <ChevronDown className="h-5 w-5" />
+            <span className="text-xs">Seleccione una categoría</span>
+          </div>
+        )}
+
+        {/* Explicación técnica y formulario */}
         {categoriaInfo && (
-          <div className="space-y-4">
+          <div ref={formRef} className="space-y-4 pt-2">
             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="flex items-start gap-2">
                 <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
@@ -273,37 +350,44 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
               />
             </div>
 
-            {/* Datos del trámite */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Nº Expediente
-                </label>
-                <Input 
-                  value={expedienteNumero} 
-                  readOnly 
-                  className="bg-muted text-sm font-mono"
-                />
+            {/* Datos del trámite (demo) */}
+            <div className="p-3 bg-secondary/30 rounded-lg border border-dashed border-amber-300">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge variant="outline" className="text-xs bg-amber-100 text-amber-700 border-amber-300">
+                  📋 Datos de demostración
+                </Badge>
               </div>
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Tipo de trámite
-                </label>
-                <Input 
-                  value={tipoTramite} 
-                  readOnly 
-                  className="bg-muted text-sm"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-medium text-muted-foreground">
-                  Empresa/Persona
-                </label>
-                <Input 
-                  value={empresaNombre} 
-                  readOnly 
-                  className="bg-muted text-sm"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Nº Expediente
+                  </label>
+                  <Input 
+                    value={datosDemo.expedienteNumero} 
+                    readOnly 
+                    className="bg-muted text-sm font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Tipo de trámite
+                  </label>
+                  <Input 
+                    value={datosDemo.tipoTramite} 
+                    readOnly 
+                    className="bg-muted text-sm"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground">
+                    Empresa/Persona
+                  </label>
+                  <Input 
+                    value={datosDemo.empresaNombre} 
+                    readOnly 
+                    className="bg-muted text-sm"
+                  />
+                </div>
               </div>
             </div>
 
@@ -347,7 +431,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
                 </pre>
                 <div className="p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
                   <strong>⚠️ Importante:</strong> Este borrador requiere revisión y aprobación del agente 
-                  antes de su envío. Los campos entre corchetes deben ser completados con los datos reales.
+                  antes de su envío.
                 </div>
               </div>
             )}
