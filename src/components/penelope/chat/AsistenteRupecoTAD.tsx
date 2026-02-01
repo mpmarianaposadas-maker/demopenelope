@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -24,6 +24,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 
 // Categorías de errores RUPECO/TAD según documentación
 export type CategoriaErrorRupeco = 
@@ -112,17 +113,9 @@ const CATEGORIAS_ERRORES: CategoriaInfo[] = [
   },
 ];
 
-interface AsistenteRupecoTADProps {
-  expedienteNumero?: string;
-  tramiteNombre?: string;
-  empresaNombre?: string;
-}
-
-export function AsistenteRupecoTAD({ 
-  expedienteNumero = '[NÚMERO_DE_TRÁMITE]',
-  tramiteNombre = '[TIPO_DE_TRÁMITE]',
-  empresaNombre = '[NOMBRE_DE_LA_EMPRESA]',
-}: AsistenteRupecoTADProps) {
+export function AsistenteRupecoTAD() {
+  const { expedienteNumero, tipoTramite, empresaNombre } = useTipoTramite();
+  
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<CategoriaErrorRupeco | null>(null);
   const [descripcionProblema, setDescripcionProblema] = useState('');
   const [mostrarBorrador, setMostrarBorrador] = useState(false);
@@ -143,7 +136,7 @@ Fecha: ${fecha}
 
 De nuestra consideración:
 
-En relación al trámite de ${tramiteNombre} iniciado por ${empresaNombre}, se ha detectado la siguiente observación:
+En relación al trámite de ${tipoTramite} iniciado por ${empresaNombre}, se ha detectado la siguiente observación:
 
 **Categoría del problema:** ${categoriaInfo.nombre}
 
@@ -289,7 +282,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
                 <Input 
                   value={expedienteNumero} 
                   readOnly 
-                  className="bg-muted text-sm"
+                  className="bg-muted text-sm font-mono"
                 />
               </div>
               <div className="space-y-1">
@@ -297,7 +290,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
                   Tipo de trámite
                 </label>
                 <Input 
-                  value={tramiteNombre} 
+                  value={tipoTramite} 
                   readOnly 
                   className="bg-muted text-sm"
                 />

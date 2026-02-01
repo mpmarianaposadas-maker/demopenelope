@@ -12,7 +12,7 @@ const steps = [
 
 export function PanelEstadoExpediente() {
   const { t } = useLanguage();
-  const { tipoTramite } = useTipoTramite();
+  const { tipoTramite, expedienteNumero } = useTipoTramite();
 
   const getStatusClasses = (status: 'completed' | 'current' | 'pending') => {
     switch (status) {
@@ -43,7 +43,7 @@ export function PanelEstadoExpediente() {
       {/* Expediente info */}
       <div className="bg-secondary/50 rounded-lg p-3 mb-4">
         <div className="text-xs text-muted-foreground mb-1">{t('aside.estado.expediente')}</div>
-        <div className="font-mono text-sm font-medium text-foreground">EX-2026-01234567-APN-DNLTC</div>
+        <div className="font-mono text-sm font-medium text-foreground">{expedienteNumero}</div>
         <div className="text-xs text-muted-foreground mt-2">{t('aside.estado.tramite')}</div>
         <div className="text-sm text-foreground font-medium transition-all duration-300">{tipoTramite}</div>
       </div>
