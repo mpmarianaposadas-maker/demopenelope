@@ -8,3 +8,4 @@ export { ClasificacionConfirmacion, type ClasificacionPendiente, type NivelConfi
 export { RequisitoVerificacion, type RequisitoItem, type EstadoDeteccion } from './RequisitoVerificacion';
 export { HistorialAcciones, type AccionAgente, type TipoAccion } from './HistorialAcciones';
 export { AsistenteRupecoTAD, type CategoriaErrorRupeco } from './AsistenteRupecoTAD';
+export { BotonIntervencionManual } from './BotonIntervencionManual';

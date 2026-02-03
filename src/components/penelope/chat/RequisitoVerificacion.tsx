@@ -17,10 +17,12 @@ import {
   Clock,
   RotateCcw,
   FileWarning,
-  Info
+  Info,
+  FileText
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Estados de detección del documento según semáforo
 export type EstadoDeteccion = 'verde' | 'amarillo' | 'rojo';
@@ -70,7 +72,108 @@ function EstadoSemaforo({ estado, problemaOCR }: { estado: EstadoDeteccion; prob
   );
 }
 
-export function RequisitoVerificacion({ 
+// Componente de card para vista mobile
+function RequisitoCardMobile({ 
+  req, 
+  index, 
+  onValidarRequisito 
+}: { 
+  req: RequisitoItem; 
+  index: number; 
+  onValidarRequisito: (id: string, validado: boolean) => void;
+}) {
+  const estadoConfig = {
+    verde: { bg: 'bg-success/10 border-success/30', text: 'text-success', emoji: '🟢' },
+    amarillo: { bg: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600', emoji: '🟡' },
+    rojo: { bg: 'bg-destructive/10 border-destructive/30', text: 'text-destructive', emoji: '🔴' }
+  };
+
+  const config = estadoConfig[req.estadoIA];
+
+  return (
+    <Card className={cn(
+      "border",
+      req.validadoPorAgente === true && "border-success bg-success/5",
+      req.validadoPorAgente === false && "border-destructive bg-destructive/5",
+      req.validadoPorAgente === undefined && config.bg
+    )}>
+      <CardContent className="p-4 space-y-3">
+        {/* Header con número y estado */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-medium">
+              {index + 1}
+            </span>
+            <Badge variant="outline" className={cn("gap-1", config.bg, config.text)}>
+              {config.emoji} {req.estadoIA.charAt(0).toUpperCase() + req.estadoIA.slice(1)}
+              {req.problemaOCR && <FileWarning className="h-3 w-3" />}
+            </Badge>
+          </div>
+          {req.validadoPorAgente !== undefined && (
+            <Badge variant={req.validadoPorAgente ? "default" : "destructive"} className="text-xs">
+              {req.validadoPorAgente ? '✓ Validado' : '✗ Rechazado'}
+            </Badge>
+          )}
+        </div>
+
+        {/* Nombre del requisito */}
+        <div>
+          <p className="font-medium text-sm">{req.nombre}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {req.normativa}
+            {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
+          </p>
+        </div>
+
+        {/* Orden en expediente */}
+        <div className="flex items-center gap-2 text-xs">
+          <FileText className="h-3 w-3 text-muted-foreground" />
+          <span className="text-muted-foreground">Orden:</span>
+          <span className="font-medium">{req.ordenExpediente || 'No determinado'}</span>
+        </div>
+
+        {/* Comentario breve */}
+        {req.comentarioBrief && (
+          <p className="text-xs text-muted-foreground bg-muted/50 p-2 rounded">
+            {req.comentarioBrief}
+          </p>
+        )}
+
+        {/* Alerta OCR si aplica */}
+        {req.problemaOCR && (
+          <div className="text-xs text-amber-600 italic flex items-center gap-1 bg-amber-50 dark:bg-amber-950/30 p-2 rounded">
+            <FileWarning className="h-3 w-3" />
+            Posible error OCR - Revisar manualmente
+          </div>
+        )}
+
+        {/* Botones de acción */}
+        <div className="flex gap-2 pt-2">
+          <Button
+            variant={req.validadoPorAgente === true ? "default" : "outline"}
+            size="sm"
+            className="flex-1 h-9"
+            onClick={() => onValidarRequisito(req.id, true)}
+          >
+            <CheckCircle2 className="h-4 w-4 mr-1" />
+            Validar
+          </Button>
+          <Button
+            variant={req.validadoPorAgente === false ? "destructive" : "outline"}
+            size="sm"
+            className="flex-1 h-9"
+            onClick={() => onValidarRequisito(req.id, false)}
+          >
+            <XCircle className="h-4 w-4 mr-1" />
+            Rechazar
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function RequisitoVerificacion({
   requisitos, 
   onValidarRequisito,
   tipoPersona,
@@ -89,6 +192,7 @@ export function RequisitoVerificacion({
   const [mostrarFormAprobacion, setMostrarFormAprobacion] = useState(false);
   const [mostrarFormRechazo, setMostrarFormRechazo] = useState(false);
   const [mostrarFormReversion, setMostrarFormReversion] = useState(false);
+  const isMobile = useIsMobile();
   
   const verdes = requisitos.filter(r => r.estadoIA === 'verde');
   const amarillos = requisitos.filter(r => r.estadoIA === 'amarillo');
@@ -147,77 +251,92 @@ export function RequisitoVerificacion({
             </div>
           </div>
 
-          {/* Tabla de verificación documental - Formato especificado */}
-          <div className="rounded-md border overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-muted/50">
-                  <TableHead className="w-12 text-center font-semibold">Nº</TableHead>
-                  <TableHead className="font-semibold">Requisito</TableHead>
-                  <TableHead className="w-24 text-center font-semibold">Estado IA</TableHead>
-                  <TableHead className="font-semibold">Orden en el expediente</TableHead>
-                  <TableHead className="font-semibold">Comentario breve</TableHead>
-                  <TableHead className="w-24 text-center font-semibold">Acción</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {requisitos.map((req, index) => (
-                  <TableRow 
-                    key={req.id}
-                    className={cn(
-                      req.validadoPorAgente === true && "bg-success/5",
-                      req.validadoPorAgente === false && "bg-destructive/5",
-                    )}
-                  >
-                    <TableCell className="text-center font-medium">{index + 1}</TableCell>
-                    <TableCell>
-                      <div className="font-medium text-sm">{req.nombre}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {req.normativa}
-                        {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <EstadoSemaforo estado={req.estadoIA} problemaOCR={req.problemaOCR} />
-                    </TableCell>
-                    <TableCell className="text-sm">
-                      {req.ordenExpediente || 'No determinado'}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground max-w-[200px]">
-                      {req.comentarioBrief || '—'}
-                      {req.problemaOCR && (
-                        <div className="mt-1 text-xs text-amber-600 italic">
-                          ⚠️ Posible error OCR
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <Button
-                          variant={req.validadoPorAgente === true ? "default" : "outline"}
-                          size="sm"
-                          className="h-7 px-2"
-                          onClick={() => onValidarRequisito(req.id, true)}
-                          title="Validar"
-                        >
-                          <CheckCircle2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant={req.validadoPorAgente === false ? "destructive" : "outline"}
-                          size="sm"
-                          className="h-7 px-2"
-                          onClick={() => onValidarRequisito(req.id, false)}
-                          title="Rechazar"
-                        >
-                          <XCircle className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
+          {/* Tabla/Cards de verificación documental - Layout responsive */}
+          {isMobile ? (
+            // Vista mobile: Cards apilables
+            <div className="space-y-3">
+              {requisitos.map((req, index) => (
+                <RequisitoCardMobile
+                  key={req.id}
+                  req={req}
+                  index={index}
+                  onValidarRequisito={onValidarRequisito}
+                />
+              ))}
+            </div>
+          ) : (
+            // Vista desktop: Tabla completa
+            <div className="rounded-md border overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="w-12 text-center font-semibold">Nº</TableHead>
+                    <TableHead className="font-semibold">Requisito</TableHead>
+                    <TableHead className="w-24 text-center font-semibold">Estado IA</TableHead>
+                    <TableHead className="font-semibold">Orden en el expediente</TableHead>
+                    <TableHead className="font-semibold">Comentario breve</TableHead>
+                    <TableHead className="w-24 text-center font-semibold">Acción</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {requisitos.map((req, index) => (
+                    <TableRow 
+                      key={req.id}
+                      className={cn(
+                        req.validadoPorAgente === true && "bg-success/5",
+                        req.validadoPorAgente === false && "bg-destructive/5",
+                      )}
+                    >
+                      <TableCell className="text-center font-medium">{index + 1}</TableCell>
+                      <TableCell>
+                        <div className="font-medium text-sm">{req.nombre}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {req.normativa}
+                          {req.articuloEspecifico && ` - ${req.articuloEspecifico}`}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <EstadoSemaforo estado={req.estadoIA} problemaOCR={req.problemaOCR} />
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {req.ordenExpediente || 'No determinado'}
+                      </TableCell>
+                      <TableCell className="text-sm text-muted-foreground max-w-[200px]">
+                        {req.comentarioBrief || '—'}
+                        {req.problemaOCR && (
+                          <div className="mt-1 text-xs text-amber-600 italic">
+                            ⚠️ Posible error OCR
+                          </div>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <Button
+                            variant={req.validadoPorAgente === true ? "default" : "outline"}
+                            size="sm"
+                            className="h-7 px-2"
+                            onClick={() => onValidarRequisito(req.id, true)}
+                            title="Validar"
+                          >
+                            <CheckCircle2 className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant={req.validadoPorAgente === false ? "destructive" : "outline"}
+                            size="sm"
+                            className="h-7 px-2"
+                            onClick={() => onValidarRequisito(req.id, false)}
+                            title="Rechazar"
+                          >
+                            <XCircle className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
 
           {/* Texto informativo sobre "Orden en el expediente" */}
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">

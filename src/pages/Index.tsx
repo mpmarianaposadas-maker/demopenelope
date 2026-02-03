@@ -9,6 +9,8 @@ import {
   PanelTrazabilidad,
   PanelMetricas,
   SecurityDemoPanel,
+  PanelMetricasOperador,
+  ConsultaEstadoTramite,
 } from '@/components/penelope/panels';
 import { PanelSimuladorInterno } from '@/components/penelope/simulador';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
@@ -21,6 +23,8 @@ const tabs = [
   { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
   { id: 'seguridad', label: 'Seguridad', i18nKey: 'tabs.seguridad' },
   { id: 'simulador', label: 'Simulador Interno', i18nKey: 'tabs.simulador' },
+  { id: 'metricas-operador', label: 'Métricas Operador', i18nKey: 'tabs.metricasOperador' },
+  { id: 'trazabilidad-ciudadana', label: 'Estado de Trámite', i18nKey: 'tabs.trazabilidadCiudadana' },
 ];
 
 const Index = () => {
@@ -45,6 +49,8 @@ const Index = () => {
               <PanelMetricas />
               <SecurityDemoPanel />
               <PanelSimuladorInterno />
+              <PanelMetricasOperador />
+              <ConsultaEstadoTramite />
             </AccessibleTabs>
           </section>
 
