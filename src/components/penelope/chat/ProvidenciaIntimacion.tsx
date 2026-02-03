@@ -40,7 +40,7 @@ function calcularFechaLimite(fechaIngreso: Date, plazo: number): Date {
   return fechaLimite;
 }
 
-function generarTextoProvidencia(
+function generarTextoNota(
   expediente: ExpedienteData,
   documentosFaltantes: DocumentoFaltante[]
 ): string {
@@ -48,32 +48,35 @@ function generarTextoProvidencia(
   const fechaLimiteSilencio = formatearFecha(
     calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo)
   );
-  const tipoPersonaTexto = expediente.tipoPersona === 'juridica' 
-    ? 'la persona jurídica' 
-    : 'el/la administrado/a';
 
   const tablaDocumentos = documentosFaltantes
     .map((doc, idx) => `| ${idx + 1} | ${doc.nombre} | ${doc.normativa} |`)
     .join('\n');
 
   return `
-══════════════════════════════════════════════════════════════════
-                ENTE NACIONAL DE COMUNICACIONES - ENACOM
-               PROVIDENCIA DE INTIMACIÓN (BORRADOR)
-══════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════
+          ENTE NACIONAL DE COMUNICACIONES - ENACOM
+          NOTA - BORRADOR PARA CARGA EN GDE
+═══════════════════════════════════════════════════════════════════
 
-┌─────────────────────────────────────────────────────────────────┐
-│ EXPEDIENTE: ${expediente.numero.padEnd(45)}│
-│ CARÁTULA:   ${expediente.caratula.substring(0, 45).padEnd(45)}│
-│ FECHA:      ${fechaActual.padEnd(45)}│
-└─────────────────────────────────────────────────────────────────┘
+Expediente: ${expediente.numero}
+Fecha: ${fechaActual}
 
-VISTO: El expediente de referencia, por el cual ${tipoPersonaTexto}
-"${expediente.caratula.split(' s/')[0]}" solicita ${expediente.tramiteNombre.toLowerCase()}.
+Destinatario: ${expediente.caratula.split(' s/')[0]}
+Domicilio constituido: [Domicilio registrado en TAD]
 
-CONSIDERANDO: Que de la verificación documental surge la falta de
-documentación obligatoria conforme Res. ENACOM N° 3731/2019 (RUPECO)
-y el Decreto N° 971/2024 (Silencio Administrativo Positivo - PEHAR).
+Ref.: INTIMACIÓN - Subsanación documental
+
+De mi consideración:
+
+Me dirijo a Ud. en relación al expediente de referencia, tramitado ante
+este Ente Nacional de Comunicaciones conforme la normativa vigente en
+materia de Servicios de Tecnologías de la Información y las Comunicaciones
+(Ley N° 27.078 y modificatorias).
+
+Del análisis formal de la documentación aportada mediante Trámites a
+Distancia (TAD), se ha detectado la falta de documentación obligatoria
+conforme Res. ENACOM N° 3731/2019 (RUPECO).
 
 ══════════════════════════════════════════════════════════════════
                     DOCUMENTACIÓN FALTANTE
@@ -84,29 +87,34 @@ y el Decreto N° 971/2024 (Silencio Administrativo Positivo - PEHAR).
 ${tablaDocumentos}
 
 ══════════════════════════════════════════════════════════════════
-                         RESUELVE
-══════════════════════════════════════════════════════════════════
 
-ARTÍCULO 1°.- INTIMAR a subsanar dentro de DIEZ (10) DÍAS HÁBILES
-desde la notificación, bajo apercibimiento de archivo (Art. 5°,
-Decreto N° 1759/72 T.O. 2017).
+En virtud de lo expuesto, y de conformidad con lo establecido en los
+artículos 1° inciso f) y 3° de la Ley Nacional de Procedimientos
+Administrativos N° 19.549, se INTIMA a subsanar dentro de DIEZ (10)
+DÍAS HÁBILES ADMINISTRATIVOS desde la notificación de la presente,
+bajo apercibimiento de archivo (Art. 5°, Decreto N° 1759/72 T.O. 2017).
 
-ARTÍCULO 2°.- Presentar documentación vía TAD citando el expediente.
+La documentación requerida deberá ser presentada a través del sistema
+de Trámites a Distancia (TAD), citando el número de expediente.
 
 ══════════════════════════════════════════════════════════════════
 ⚠️  CONTROL SILENCIO POSITIVO (Decreto 971/2024)
     Plazo máximo: ${expediente.plazoSilencioPositivo} días | Vence: ${fechaLimiteSilencio}
 ══════════════════════════════════════════════════════════════════
 
-┌─────────────────────────────────────────────────────────────────┐
-│  ⚠️ BORRADOR - REQUIERE VALIDACIÓN Y FIRMA DEL AGENTE         │
-│                                                                 │
-│  Validado por: _________________________  Fecha: ___________   │
-│                                                                 │
-│  Firma: ____________________________                           │
-└─────────────────────────────────────────────────────────────────┘
+Sin otro particular, saludo a Ud. atentamente.
 
-         Sistema Penélope v1.0 - Generación automática
+───────────────────────────────────────────────────────────────────
+ BORRADOR - REQUIERE VALIDACIÓN Y CARGA MANUAL EN GDE
+ 
+ Validado por: _________________________  Fecha: ___________
+ 
+ □ Verificar datos del destinatario
+ □ Verificar documentación faltante
+ □ Cargar en sistema GDE como NOTA (NO)
+───────────────────────────────────────────────────────────────────
+
+          Sistema Penélope v1.0 - Generación automática
 `.trim();
 }
 
@@ -116,14 +124,14 @@ export function ProvidenciaIntimacion({
 }: ProvidenciaIntimacionProps) {
   const [copied, setCopied] = useState(false);
   
-  const textoProvidencia = generarTextoProvidencia(expediente, documentosFaltantes);
+  const textoNota = generarTextoNota(expediente, documentosFaltantes);
   const fechaLimiteSilencio = calcularFechaLimite(expediente.fechaIngreso, expediente.plazoSilencioPositivo);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(textoProvidencia);
+      await navigator.clipboard.writeText(textoNota);
       setCopied(true);
-      toast.success('Providencia copiada al portapapeles');
+      toast.success('Nota copiada al portapapeles');
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       toast.error('Error al copiar');
@@ -131,16 +139,16 @@ export function ProvidenciaIntimacion({
   };
 
   const handleDownload = () => {
-    const blob = new Blob([textoProvidencia], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([textoNota], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Providencia_Intimacion_${expediente.numero.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
+    link.download = `Nota_Intimacion_GDE_${expediente.numero.replace(/[^a-zA-Z0-9]/g, '_')}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-    toast.success('Providencia descargada');
+    toast.success('Nota descargada - Lista para cargar en GDE');
   };
 
   if (documentosFaltantes.length === 0) {
@@ -150,16 +158,22 @@ export function ProvidenciaIntimacion({
   return (
     <Card className="border-amber-200 bg-amber-50/50 dark:border-amber-900 dark:bg-amber-950/20">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-amber-600" />
             <CardTitle className="text-base text-amber-800 dark:text-amber-200">
-              Borrador de Providencia de Intimación
+              Borrador de Nota de Intimación
             </CardTitle>
           </div>
-          <div className="flex items-center gap-1.5 text-xs bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">
-            <AlertTriangle className="h-3 w-3 text-amber-600" />
-            <span className="text-amber-700 dark:text-amber-300 font-medium">Requiere validación</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-1.5 text-xs bg-blue-100 dark:bg-blue-900/50 px-2 py-1 rounded">
+              <FileText className="h-3 w-3 text-blue-600" />
+              <span className="text-blue-700 dark:text-blue-300 font-medium">Para carga en GDE</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-xs bg-amber-100 dark:bg-amber-900/50 px-2 py-1 rounded">
+              <AlertTriangle className="h-3 w-3 text-amber-600" />
+              <span className="text-amber-700 dark:text-amber-300 font-medium">Requiere validación</span>
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -230,11 +244,11 @@ export function ProvidenciaIntimacion({
         <details className="group">
           <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground flex items-center gap-1">
             <span className="group-open:rotate-90 transition-transform">▶</span>
-            Ver texto completo del borrador
+            Ver texto completo del borrador de nota
           </summary>
           <div className="mt-2 bg-white dark:bg-background rounded-md border p-3 max-h-[150px] overflow-y-auto">
             <pre className="text-[9px] font-mono text-muted-foreground whitespace-pre-wrap leading-relaxed">
-              {textoProvidencia}
+              {textoNota}
             </pre>
           </div>
         </details>
@@ -271,7 +285,7 @@ export function ProvidenciaIntimacion({
         </div>
         
         <p className="text-[10px] text-amber-700 dark:text-amber-400 text-center font-medium">
-          ⚠️ Borrador generado automáticamente · Requiere revisión y firma del agente
+          ⚠️ Borrador de NOTA para carga en GDE · Requiere validación y carga manual por el operador
         </p>
       </CardContent>
     </Card>
