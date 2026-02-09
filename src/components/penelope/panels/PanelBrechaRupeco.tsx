@@ -3,8 +3,11 @@ import { Table, TableRow, TableCell } from '../Table';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AlertTriangle, ArrowRight } from 'lucide-react';
+import { SiguientePaso } from './SiguientePaso';
+import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
 export function PanelBrechaRupeco() {
+  const { goToTab } = useTabNavigation();
   const sectores = [
     {
       nombre: 'TIC',
@@ -217,6 +220,12 @@ export function PanelBrechaRupeco() {
           ✱ La extensión no requiere reforma legislativa, sino una resolución del ENACOM.
         </p>
       </Card>
+
+      <SiguientePaso
+        label="Propuesta Normativa"
+        description="Revise el articulado propuesto"
+        onNavigate={() => goToTab('propuesta-normativa')}
+      />
     </>
   );
 }

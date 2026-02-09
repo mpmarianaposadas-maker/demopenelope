@@ -1,8 +1,11 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Check, Scale, Globe, Shield } from 'lucide-react';
+import { SiguientePaso } from './SiguientePaso';
+import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
 export function PanelPropuestaNormativa() {
+  const { goToTab } = useTabNavigation();
   const articulos = [
     {
       num: 'Art. 1°',
@@ -161,6 +164,12 @@ export function PanelPropuestaNormativa() {
           El articulado es una propuesta académica.
         </p>
       </Card>
+
+      <SiguientePaso
+        label="Métricas"
+        description="Consulte las proyecciones de impacto"
+        onNavigate={() => goToTab('metricas')}
+      />
     </>
   );
 }
