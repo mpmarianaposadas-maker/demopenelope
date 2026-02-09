@@ -13,7 +13,7 @@ import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { HistorialAcciones } from './HistorialAcciones';
 import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
-import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
+import { useChatRupecoSimulado, type ScenarioType } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const QUICK_ACTIONS = [
@@ -24,7 +24,13 @@ const QUICK_ACTIONS = [
   { label: '📋 Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
 ];
 
-export function ChatRupeco() {
+interface ChatRupecoProps {
+  externalMessage?: string | null;
+  scenarioType?: ScenarioType;
+  onMessageConsumed?: () => void;
+}
+
+export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessageConsumed }: ChatRupecoProps) {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -48,11 +54,18 @@ export function ChatRupeco() {
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero,
-    // Nuevas funciones para clasificación
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
-  } = useChatRupecoSimulado();
+  } = useChatRupecoSimulado(scenarioType);
+
+  // Handle external message trigger
+  useEffect(() => {
+    if (externalMessage && !isLoading && isSystemActive) {
+      sendMessage(externalMessage);
+      onMessageConsumed?.();
+    }
+  }, [externalMessage]);
 
   useEffect(() => {
     if (scrollRef.current) {
