@@ -3,6 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/hooks/useLanguage';
 import { AlertTriangle, ArrowDown, CheckCircle, XCircle } from 'lucide-react';
+import { SiguientePaso } from './SiguientePaso';
+import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
 interface FlowStepProps {
   number: number;
@@ -50,6 +52,7 @@ function FlowStep({ number, title, description, actor, warning, highlighted }: F
 
 export function PanelArquitectura() {
   const { t } = useLanguage();
+  const { goToTab } = useTabNavigation();
 
   const principios = [
     { titulo: 'No delegación decisoria', desc: 'El sistema no interpreta el Derecho, no evalúa solvencia ni emite actos administrativos.' },
@@ -166,6 +169,12 @@ export function PanelArquitectura() {
           ]}
         />
       </Card>
+
+      <SiguientePaso
+        label="Brecha RUPECO"
+        description="Visualice el hallazgo central del trabajo"
+        onNavigate={() => goToTab('brecha-rupeco')}
+      />
     </>
   );
 }

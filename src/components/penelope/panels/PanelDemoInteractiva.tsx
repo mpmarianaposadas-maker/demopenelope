@@ -2,9 +2,12 @@ import { Card, CardTitle, CardText } from '../Card';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SiguientePaso } from './SiguientePaso';
+import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
 export function PanelDemoInteractiva() {
   const { t } = useLanguage();
+  const { goToTab } = useTabNavigation();
 
   return (
     <div className="space-y-6">
@@ -32,6 +35,12 @@ export function PanelDemoInteractiva() {
           <AsistenteRupecoTAD />
         </TabsContent>
       </Tabs>
+
+      <SiguientePaso
+        label="Arquitectura"
+        description="Explore los diagramas de flujo del sistema"
+        onNavigate={() => goToTab('arquitectura')}
+      />
     </div>
   );
 }

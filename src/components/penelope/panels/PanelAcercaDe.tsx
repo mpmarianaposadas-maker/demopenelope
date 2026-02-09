@@ -1,29 +1,20 @@
+import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
-import { Check, X, BookOpen, GraduationCap, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Check, X, BookOpen, GraduationCap, ArrowRight, Compass } from 'lucide-react';
+import { SiguientePaso } from './SiguientePaso';
+import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
 export function PanelAcercaDe() {
+  const [showWelcome, setShowWelcome] = useState(true);
+  const { goToTab } = useTabNavigation();
+
   const transformaciones = [
-    {
-      de: 'Administración reactiva',
-      a: 'Administración preventiva',
-      desc: 'De esperar vencimientos a anticiparse a riesgos procedimentales.',
-    },
-    {
-      de: 'Inercia procedimental',
-      a: 'Gestión activa',
-      desc: 'De acumulación pasiva a intervención temprana.',
-    },
-    {
-      de: 'Cumplimiento burocrático',
-      a: 'Experiencia del ciudadano',
-      desc: 'Del enfoque en proceso interno al interés público.',
-    },
-    {
-      de: 'Silencio como distorsión',
-      a: 'Silencio como garantía',
-      desc: 'El silencio positivo vuelve a ser garantía excepcional.',
-    },
+    { de: 'Administración reactiva', a: 'Administración preventiva', desc: 'De esperar vencimientos a anticiparse a riesgos procedimentales.' },
+    { de: 'Inercia procedimental', a: 'Gestión activa', desc: 'De acumulación pasiva a intervención temprana.' },
+    { de: 'Cumplimiento burocrático', a: 'Experiencia del ciudadano', desc: 'Del enfoque en proceso interno al interés público.' },
+    { de: 'Silencio como distorsión', a: 'Silencio como garantía', desc: 'El silencio positivo vuelve a ser garantía excepcional.' },
   ];
 
   const esItems = [
@@ -44,8 +35,57 @@ export function PanelAcercaDe() {
     'Sistema que opera en etapa de decisión',
   ];
 
+  const pasos = [
+    { emoji: '📖', tab: 'Acerca de', desc: 'Conozca el marco conceptual y la pregunta de investigación' },
+    { emoji: '🔍', tab: 'Demo Interactiva', desc: 'Simule el procesamiento de un expediente real' },
+    { emoji: '🏗️', tab: 'Arquitectura', desc: 'Explore los diagramas de flujo y el modelo de fiabilidad' },
+    { emoji: '📊', tab: 'Brecha RUPECO', desc: 'Visualice el hallazgo central: la brecha del 57%' },
+    { emoji: '⚖️', tab: 'Propuesta Normativa', desc: 'Revise el articulado propuesto' },
+    { emoji: '📈', tab: 'Métricas', desc: 'Consulte las proyecciones de impacto (Tabla 4)' },
+  ];
+
   return (
     <>
+      {/* Banner de bienvenida */}
+      {showWelcome && (
+        <div className="relative bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-5 mb-6">
+          <button
+            onClick={() => setShowWelcome(false)}
+            className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Cerrar banner de bienvenida"
+          >
+            <X size={18} />
+          </button>
+          <div className="flex items-start gap-3 mb-3">
+            <Compass size={24} className="text-primary flex-shrink-0 mt-0.5" />
+            <div>
+              <h2 className="text-base font-semibold text-foreground mb-1">
+                Bienvenido/a a la Demo Interactiva del Sistema Penélope
+              </h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Esta demo acompaña el trabajo final «El viaje de Penélope» y permite explorar de forma interactiva el sistema propuesto. A continuación encontrará un recorrido sugerido.
+              </p>
+            </div>
+          </div>
+          <ol className="space-y-1.5 ml-9 mb-4">
+            {pasos.map((paso, i) => (
+              <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                <span>{paso.emoji}</span>
+                <span><strong>{paso.tab}</strong> — {paso.desc}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="ml-9 flex items-center gap-4">
+            <Button size="sm" onClick={() => setShowWelcome(false)}>
+              Entendido, comenzar
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Puede navegar libremente entre las pestañas en cualquier orden.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Sección 1: El Viaje de Penélope */}
       <Card>
         <CardTitle>El Viaje de Penélope</CardTitle>
@@ -157,6 +197,13 @@ export function PanelAcercaDe() {
           </div>
         </div>
       </Card>
+
+      {/* Navegación al siguiente paso */}
+      <SiguientePaso
+        label="Demo Interactiva"
+        description="Pruebe el sistema en acción con un trámite simulado"
+        onNavigate={() => goToTab('demo-interactiva')}
+      />
     </>
   );
 }

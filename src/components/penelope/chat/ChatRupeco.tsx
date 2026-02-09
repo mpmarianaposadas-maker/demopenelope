@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RotateCcw, Bot, AlertTriangle } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 import { RupecoEvaluation } from './RupecoEvaluation';
@@ -25,6 +26,7 @@ const QUICK_ACTIONS = [
 
 export function ChatRupeco() {
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
   
   const { 
@@ -88,7 +90,13 @@ export function ChatRupeco() {
         <div className="flex-shrink-0 bg-destructive/10 border-b border-destructive/20 px-4 py-2">
           <div className="flex items-center gap-2 text-destructive text-sm">
             <AlertTriangle className="h-4 w-4" />
-            {t('chat.systemDisabled')}
+            <div>
+              <span>{t('chat.systemDisabled')}</span>
+              <span className="block text-xs mt-0.5 opacity-80">
+                Para reactivarlo, use el panel de Kill Switch en la barra lateral.
+                {isMobile && ' Abra el panel lateral con el botón ☰.'}
+              </span>
+            </div>
           </div>
         </div>
       )}

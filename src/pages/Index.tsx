@@ -19,19 +19,45 @@ import { PanelSimuladorInterno } from '@/components/penelope/simulador';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
 
 const tabs = [
+  // Conceptual
   { id: 'acerca-de', label: 'Acerca de', i18nKey: 'tabs.acercaDe' },
-  { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
   { id: 'arquitectura', label: 'Arquitectura', i18nKey: 'tabs.arquitectura' },
   { id: 'brecha-rupeco', label: 'Brecha RUPECO', i18nKey: 'tabs.brechaRupeco' },
+  // Operativo
+  { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
   { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
+  { id: 'simulador', label: 'Simulador Interno', i18nKey: 'tabs.simulador' },
+  // Gobernanza
   { id: 'trazabilidad', label: 'Trazabilidad', i18nKey: 'tabs.trazabilidad' },
-  { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
   { id: 'propuesta-normativa', label: 'Propuesta Normativa', i18nKey: 'tabs.propuestaNormativa' },
   { id: 'seguridad', label: 'Seguridad', i18nKey: 'tabs.seguridad' },
-  { id: 'simulador', label: 'Simulador Interno', i18nKey: 'tabs.simulador' },
+  // Monitoreo
+  { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
   { id: 'metricas-operador', label: 'Métricas Operador', i18nKey: 'tabs.metricasOperador' },
   { id: 'trazabilidad-ciudadana', label: 'Estado de Trámite', i18nKey: 'tabs.trazabilidadCiudadana' },
 ];
+
+const groups = [
+  { label: 'Conceptual', tabIds: ['acerca-de', 'arquitectura', 'brecha-rupeco'] },
+  { label: 'Operativo', tabIds: ['demo-interactiva', 'borradores', 'simulador'] },
+  { label: 'Gobernanza', tabIds: ['trazabilidad', 'propuesta-normativa', 'seguridad'] },
+  { label: 'Monitoreo', tabIds: ['metricas', 'metricas-operador', 'trazabilidad-ciudadana'] },
+];
+
+const tooltips: Record<string, string> = {
+  'acerca-de': 'Marco conceptual, pregunta de investigación y alcance',
+  'arquitectura': 'Diagramas de flujo y modelo de fiabilidad por diseño',
+  'brecha-rupeco': 'Hallazgo central: cobertura del 57% y principio Once-Only',
+  'demo-interactiva': 'Simule un trámite completo con verificación RUPECO',
+  'borradores': 'Providencia de pase y nota de intimación generadas por IA',
+  'simulador': 'Simulación del flujo interno paso a paso',
+  'trazabilidad': 'Pilares de compliance y registro de auditoría',
+  'propuesta-normativa': 'Articulado propuesto y experiencias comparadas',
+  'seguridad': 'Validación contra prompt injection y datos sensibles',
+  'metricas': 'Proyecciones de impacto basadas en benchmarking internacional',
+  'metricas-operador': 'Dashboard de rendimiento con exportación CSV',
+  'trazabilidad-ciudadana': 'Consulta pública del estado de un expediente',
+};
 
 const Index = () => {
   const { language, toggleLanguage, t } = useLanguage();
@@ -47,17 +73,21 @@ const Index = () => {
             className="flex-1 min-w-0" 
             aria-label="Secciones principales de la demo"
           >
-            <AccessibleTabs tabs={tabs} t={t}>
+            <AccessibleTabs tabs={tabs} t={t} groups={groups} tooltips={tooltips}>
+              {/* Conceptual */}
               <PanelAcercaDe />
-              <PanelDemoInteractiva />
               <PanelArquitectura />
               <PanelBrechaRupeco />
+              {/* Operativo */}
+              <PanelDemoInteractiva />
               <PanelBorradores />
+              <PanelSimuladorInterno />
+              {/* Gobernanza */}
               <PanelTrazabilidad />
-              <PanelMetricas />
               <PanelPropuestaNormativa />
               <SecurityDemoPanel />
-              <PanelSimuladorInterno />
+              {/* Monitoreo */}
+              <PanelMetricas />
               <PanelMetricasOperador />
               <ConsultaEstadoTramite />
             </AccessibleTabs>
