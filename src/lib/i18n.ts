@@ -22,6 +22,9 @@ export const translations: Record<Language, Translations> = {
     'tabs.metricas': 'Métricas',
     'tabs.seguridad': 'Seguridad',
     'tabs.simulador': 'Simulador Interno',
+    'tabs.acercaDe': 'Acerca de',
+    'tabs.brechaRupeco': 'Brecha RUPECO',
+    'tabs.propuestaNormativa': 'Propuesta Normativa',
     
     // Language toggle
     'lang.toggle': 'EN',
@@ -489,6 +492,9 @@ export const translations: Record<Language, Translations> = {
     'tabs.metricas': 'Metrics',
     'tabs.seguridad': 'Security',
     'tabs.simulador': 'Internal Simulator',
+    'tabs.acercaDe': 'About',
+    'tabs.brechaRupeco': 'RUPECO Gap',
+    'tabs.propuestaNormativa': 'Regulatory Proposal',
     // Language toggle
     'lang.toggle': 'ES',
     'lang.current': 'EN',

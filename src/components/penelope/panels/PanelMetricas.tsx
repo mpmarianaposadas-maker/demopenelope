@@ -1,6 +1,7 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
 import { useLanguage } from '@/hooks/useLanguage';
+import { AlertTriangle } from 'lucide-react';
 
 export function PanelMetricas() {
   const { t } = useLanguage();
@@ -19,38 +20,31 @@ export function PanelMetricas() {
     { pais: 'Reino Unido', sistema: 'GOV.UK Notify (notificaciones)', reduccion: '75% en comunicaciones', estado: t('metr.estadoOperativo') },
     { pais: 'Dinamarca', sistema: 'MitID + Once-Only', reduccion: '80% en documentación', estado: t('metr.estadoOperativo') },
     { pais: 'Colombia', sistema: 'SUIT (Trámites digitales)', reduccion: '60% en tiempos administrativos', estado: t('metr.estadoOperativo') },
-    { pais: 'Argentina - ENACOM', sistema: 'Sistema Penélope', reduccion: '85% proyectado', estado: t('metr.estadoDesarrollo') },
+    { pais: 'Argentina - ENACOM', sistema: 'Sistema Penélope', reduccion: '35-40% proyectado', estado: t('metr.estadoDesarrollo') },
   ];
 
   return (
     <>
       <Card>
         <CardTitle>{t('metr.title')}</CardTitle>
-        <CardText>{t('metr.intro')}</CardText>
+        <CardText>
+          Proyecciones estimadas basadas en experiencias internacionales comparables (ANATEL - Brasil, OFCOM - Reino Unido) y estudios de organismos multilaterales (BID, OCDE). Las cifras representan objetivos de diseño, no datos empíricos del ENACOM.
+        </CardText>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
-          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
-            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi1.value')}</div>
-            <div className="text-sm text-muted-foreground">{t('metr.kpi1.label')}</div>
-          </div>
-          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
-            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi2.value')}</div>
-            <div className="text-sm text-muted-foreground">{t('metr.kpi2.label')}</div>
-          </div>
-          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
-            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi3.value')}</div>
-            <div className="text-sm text-muted-foreground">{t('metr.kpi3.label')}</div>
-          </div>
-          <div className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
-            <div className="text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{t('metr.kpi4.value')}</div>
-            <div className="text-sm text-muted-foreground">{t('metr.kpi4.label')}</div>
-          </div>
+          {[
+            { value: '35-40%', subtitle: 'reducción total', note: 'en etapas preliminares' },
+            { value: '70-100%', subtitle: 'overlap RUPECO', note: 'requisitos reutilizables' },
+            { value: '12-18', subtitle: 'días ganados', note: 'para análisis sustantivo' },
+            { value: '100%', subtitle: 'supervisión humana', note: 'en toda decisión' },
+          ].map((kpi, i) => (
+            <div key={i} className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
+              <div className="text-2xl md:text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{kpi.value}</div>
+              <div className="text-sm text-muted-foreground font-medium">{kpi.subtitle}</div>
+              <div className="text-xs text-muted-foreground/70 mt-0.5">{kpi.note}</div>
+            </div>
+          ))}
         </div>
-
-        <CardText>{t('metr.desc1')}</CardText>
-        <CardText>{t('metr.desc2')}</CardText>
-        <CardText>{t('metr.desc3')}</CardText>
-        <CardText>{t('metr.desc4')}</CardText>
       </Card>
 
       <Card>
@@ -112,6 +106,19 @@ export function PanelMetricas() {
             </TableRow>
           ))}
         </Table>
+      </Card>
+
+      {/* Nota metodológica */}
+      <Card>
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertTriangle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-amber-800 mb-1">Nota metodológica</p>
+            <p className="text-sm text-amber-700">
+              Los indicadores de impacto y las simulaciones presentadas son proyecciones estimadas (objetivos de diseño), construidas sobre la base de experiencias internacionales comparables (ANATEL - Brasil, OFCOM - Reino Unido) y estudios de organismos multilaterales (BID, OCDE). No reflejan datos empíricos del ENACOM.
+            </p>
+          </div>
+        </div>
       </Card>
     </>
   );

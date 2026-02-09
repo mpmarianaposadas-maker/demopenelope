@@ -3,11 +3,14 @@ import { AccessibleTabs } from '@/components/penelope/AccessibleTabs';
 import { KillSwitchPanel } from '@/components/penelope/KillSwitchPanel';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
+  PanelAcercaDe,
   PanelDemoInteractiva,
   PanelArquitectura,
+  PanelBrechaRupeco,
   PanelBorradores,
   PanelTrazabilidad,
   PanelMetricas,
+  PanelPropuestaNormativa,
   SecurityDemoPanel,
   PanelMetricasOperador,
   ConsultaEstadoTramite,
@@ -16,11 +19,14 @@ import { PanelSimuladorInterno } from '@/components/penelope/simulador';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
 
 const tabs = [
+  { id: 'acerca-de', label: 'Acerca de', i18nKey: 'tabs.acercaDe' },
   { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
   { id: 'arquitectura', label: 'Arquitectura', i18nKey: 'tabs.arquitectura' },
+  { id: 'brecha-rupeco', label: 'Brecha RUPECO', i18nKey: 'tabs.brechaRupeco' },
   { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
   { id: 'trazabilidad', label: 'Trazabilidad', i18nKey: 'tabs.trazabilidad' },
   { id: 'metricas', label: 'Métricas', i18nKey: 'tabs.metricas' },
+  { id: 'propuesta-normativa', label: 'Propuesta Normativa', i18nKey: 'tabs.propuestaNormativa' },
   { id: 'seguridad', label: 'Seguridad', i18nKey: 'tabs.seguridad' },
   { id: 'simulador', label: 'Simulador Interno', i18nKey: 'tabs.simulador' },
   { id: 'metricas-operador', label: 'Métricas Operador', i18nKey: 'tabs.metricasOperador' },
@@ -42,11 +48,14 @@ const Index = () => {
             aria-label="Secciones principales de la demo"
           >
             <AccessibleTabs tabs={tabs} t={t}>
+              <PanelAcercaDe />
               <PanelDemoInteractiva />
               <PanelArquitectura />
+              <PanelBrechaRupeco />
               <PanelBorradores />
               <PanelTrazabilidad />
               <PanelMetricas />
+              <PanelPropuestaNormativa />
               <SecurityDemoPanel />
               <PanelSimuladorInterno />
               <PanelMetricasOperador />
