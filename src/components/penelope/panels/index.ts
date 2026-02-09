@@ -1,8 +1,11 @@
 export { PanelDemoInteractiva } from './PanelDemoInteractiva';
+export { PanelAcercaDe } from './PanelAcercaDe';
 export { PanelArquitectura } from './PanelArquitectura';
+export { PanelBrechaRupeco } from './PanelBrechaRupeco';
 export { PanelBorradores } from './PanelBorradores';
 export { PanelTrazabilidad } from './PanelTrazabilidad';
 export { PanelMetricas } from './PanelMetricas';
+export { PanelPropuestaNormativa } from './PanelPropuestaNormativa';
 export { SecurityDemoPanel } from './SecurityDemoPanel';
 export { PanelMetricasOperador } from './PanelMetricasOperador';
 export { ConsultaEstadoTramite } from './ConsultaEstadoTramite';
