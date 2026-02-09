@@ -104,7 +104,9 @@ function getNivelConfianzaCualitativo(nivelNumerico: number): NivelConfianzaCual
   return 'Bajo';
 }
 
-export function useChatRupecoSimulado() {
+export type ScenarioType = 'random' | 'completo' | 'incompleto' | 'subsanacion' | 'vencimiento';
+
+export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
   const { setTipoTramite } = useTipoTramite();
   const { isSystemActive } = useKillSwitch();
   const { validateInput } = useSecurityValidation();
@@ -292,13 +294,33 @@ export function useChatRupecoSimulado() {
       }
     };
     
-    // Simular detección con probabilidades realistas
+    // Simular detección según escenario seleccionado
     return todosDocumentos.map((doc, index) => {
-      const probabilidadDeteccion = Math.random();
-      const detectado = probabilidadDeteccion > 0.3; // 70% de probabilidad de detección
-      const nivelConfianza = detectado 
-        ? 60 + Math.random() * 40 // Entre 60% y 100%
-        : 0;
+      let detectado: boolean;
+      let nivelConfianza: number;
+
+      switch (scenarioType) {
+        case 'completo':
+          detectado = true;
+          nivelConfianza = 85 + Math.random() * 15;
+          break;
+        case 'incompleto':
+          detectado = index % 2 === 0; // ~50% missing alternating
+          nivelConfianza = detectado ? 60 + Math.random() * 30 : 0;
+          break;
+        case 'subsanacion':
+          detectado = Math.random() > 0.15; // 85% detected but lower confidence
+          nivelConfianza = detectado ? 50 + Math.random() * 30 : 0;
+          break;
+        case 'vencimiento':
+          detectado = true;
+          nivelConfianza = 80 + Math.random() * 20;
+          break;
+        default: // 'random'
+          detectado = Math.random() > 0.3;
+          nivelConfianza = detectado ? 60 + Math.random() * 40 : 0;
+          break;
+      }
       
       const docInfo = getDocInfo(doc.id);
       
@@ -331,7 +353,7 @@ export function useChatRupecoSimulado() {
         problemaOCR,
       };
     });
-  }, []);
+  }, [scenarioType]);
 
   const generarEvaluacionJSON = useCallback((exp: ExpedienteSimulado): RupecoEvaluationData => {
     const detectados = exp.documentosDetectados.filter(d => d.detectado);
