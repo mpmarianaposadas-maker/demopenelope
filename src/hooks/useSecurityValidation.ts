@@ -46,18 +46,25 @@ export function useSecurityValidation() {
         riskLevel: detection.riskLevel as 'low' | 'medium' | 'high',
       });
 
+      // Determine if it's a PII issue
+      const isPII = detection.sensitiveData?.hasSensitiveData;
+
       // Show toast based on risk level
       if (detection.riskLevel === 'high') {
         toast({
           variant: 'destructive',
-          title: '⚠️ Contenido bloqueado',
-          description: 'Se detectó contenido potencialmente peligroso. La entrada ha sido rechazada.',
+          title: isPII ? '🔒 Datos sensibles detectados' : '⚠️ Contenido bloqueado',
+          description: isPII 
+            ? `Se detectaron datos personales (${detection.sensitiveData?.detectedTypes.join(', ')}). No se permite compartir información sensible (Ley 25.326).`
+            : 'Se detectó contenido potencialmente peligroso. La entrada ha sido rechazada.',
         });
       } else if (detection.riskLevel === 'medium') {
         toast({
           variant: 'destructive',
-          title: '⚠️ Contenido sospechoso',
-          description: 'Se detectaron patrones inusuales. El contenido ha sido sanitizado.',
+          title: isPII ? '🔒 Posibles datos sensibles' : '⚠️ Contenido sospechoso',
+          description: isPII
+            ? `Se detectó posible información personal (${detection.sensitiveData?.detectedTypes.join(', ')}). Revise antes de continuar.`
+            : 'Se detectaron patrones inusuales. El contenido ha sido sanitizado.',
         });
       } else if (detection.riskLevel === 'low') {
         toast({
