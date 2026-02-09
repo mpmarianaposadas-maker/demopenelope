@@ -6,21 +6,47 @@ import { z } from 'zod';
 
 // Common prompt injection patterns to detect
 const INJECTION_PATTERNS = [
-  // Direct instruction overrides
+  // Direct instruction overrides (EN)
   /ignore\s+(previous|all|above)\s+(instructions?|prompts?)/i,
   /forget\s+(everything|all|your)\s+(instructions?|training)/i,
   /disregard\s+(your|all|previous)\s+(rules?|instructions?)/i,
   
-  // Role manipulation attempts
+  // Direct instruction overrides (ES)
+  /ignor[aáe]\s+(las\s+)?(anteriores|todas|previas)\s+(instrucciones|reglas|directivas)/i,
+  /olvid[aáe]\s+(todo|todas?\s+las?\s+)(instrucciones|reglas|restricciones)/i,
+  /no\s+(hagas?\s+caso|sigas?|respetes?)\s+(las?\s+)?(reglas?|instrucciones|restricciones|l[ií]mites)/i,
+  /salt[aáe]te\s+(las?\s+)?(reglas?|restricciones|instrucciones|l[ií]mites|medidas)/i,
+  /desactiv[aáe]\s+(las?\s+)?(reglas?|restricciones|filtros?|medidas|protecciones?|seguridad)/i,
+  
+  // Role manipulation attempts (EN)
   /you\s+are\s+now\s+(a|an|the)/i,
   /pretend\s+(to\s+be|you\s+are)/i,
   /act\s+as\s+(if|a|an)/i,
   /roleplay\s+as/i,
   
-  // System prompt extraction
+  // Role manipulation attempts (ES)
+  /ahora\s+(sos|eres|ser[aá]s)\s+(un|una|el|la)/i,
+  /comport[aá]te\s+como/i,
+  /hac[eé]\s+de\s+cuenta\s+que/i,
+  /fingi?\s+que\s+(sos|eres)/i,
+  /actu[aá]\s+como\s+(si|un|una)/i,
+  
+  // System prompt extraction (EN)
   /what\s+(is|are)\s+your\s+(instructions?|prompts?|rules?)/i,
   /show\s+(me\s+)?your\s+(system\s+)?prompt/i,
   /reveal\s+your\s+(instructions?|programming)/i,
+  
+  // System prompt extraction (ES)
+  /mostr[aáe]me\s+(tu|el)\s+(prompt|sistema|instrucciones)/i,
+  /cu[aá]les?\s+(son\s+)?(tus|las)\s+(instrucciones|reglas|directivas)/i,
+  /revel[aáe]\s+(tu|tus)\s+(instrucciones|programaci[oó]n|configuraci[oó]n)/i,
+  
+  // Security bypass attempts (ES)
+  /evit[aáe]\s+(las?\s+)?(medidas|controles?|filtros?|validaci[oó]n|seguridad)/i,
+  /deshabili(t[aáe]|tar)\s+(la\s+)?(seguridad|protecci[oó]n|validaci[oó]n|filtros?)/i,
+  /sin\s+(restricciones?|l[ií]mites?|filtros?|seguridad|reglas)/i,
+  /modo\s+(libre|sin\s+restricciones|admin|administrador|debug)/i,
+  /bypass\s+(security|seguridad|filters?|filtros?)/i,
   
   // Delimiter injection
   /\[\[.*\]\]/,
@@ -38,6 +64,50 @@ const INJECTION_PATTERNS = [
   /;\s*(SELECT|INSERT|UPDATE|DELETE|DROP)/i,
 ];
 
+// ============================================
+// Sensitive Data (PII) Detection Patterns
+// ============================================
+
+const PII_PATTERNS = [
+  // Argentine DNI (7-8 digits, with or without dots)
+  { pattern: /\b\d{2}\.?\d{3}\.?\d{3}\b/, label: 'DNI' },
+  // Argentine CUIT/CUIL (XX-XXXXXXXX-X format)
+  { pattern: /\b\d{2}-?\d{7,8}-?\d\b/, label: 'CUIT/CUIL' },
+  // Credit card numbers (13-19 digits, with or without spaces/dashes)
+  { pattern: /\b(?:\d[ -]*?){13,19}\b/, label: 'tarjeta de crédito' },
+  // Email addresses
+  { pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/, label: 'email' },
+  // Phone numbers (Argentine format and international)
+  { pattern: /(?:\+?54\s?)?(?:9\s?)?(?:11|[2-9]\d{2,3})\s?\d{4}[\s-]?\d{4}\b/, label: 'teléfono' },
+  // Passport numbers
+  { pattern: /\b[A-Z]{3}\d{6}\b/, label: 'pasaporte' },
+  // Explicit sensitive data keywords
+  { pattern: /\b(contrase[nñ]a|password|clave\s+de\s+acceso|pin\s+de\s+seguridad|n[uú]mero\s+de\s+(tarjeta|cuenta|dni|documento))\b/i, label: 'dato sensible' },
+];
+
+/**
+ * Detects sensitive/personal data (PII) in input
+ */
+export function detectSensitiveData(input: string): {
+  hasSensitiveData: boolean;
+  detectedTypes: string[];
+} {
+  const detectedTypes: string[] = [];
+  
+  for (const { pattern, label } of PII_PATTERNS) {
+    if (pattern.test(input)) {
+      if (!detectedTypes.includes(label)) {
+        detectedTypes.push(label);
+      }
+    }
+  }
+  
+  return {
+    hasSensitiveData: detectedTypes.length > 0,
+    detectedTypes,
+  };
+}
+
 // Characters that could be used for injection
 const DANGEROUS_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
 
@@ -50,6 +120,7 @@ export function detectPromptInjection(input: string): {
   isInjection: boolean;
   matchedPatterns: string[];
   riskLevel: 'none' | 'low' | 'medium' | 'high';
+  sensitiveData?: { hasSensitiveData: boolean; detectedTypes: string[] };
 } {
   const matchedPatterns: string[] = [];
   
@@ -59,22 +130,33 @@ export function detectPromptInjection(input: string): {
     }
   }
   
+  // Also check for sensitive data
+  const sensitiveData = detectSensitiveData(input);
+  
   let riskLevel: 'none' | 'low' | 'medium' | 'high' = 'none';
   
-  if (matchedPatterns.length === 0) {
-    riskLevel = 'none';
-  } else if (matchedPatterns.length === 1) {
-    riskLevel = 'low';
-  } else if (matchedPatterns.length <= 3) {
-    riskLevel = 'medium';
-  } else {
+  // PII detected → at least medium risk
+  if (sensitiveData.hasSensitiveData) {
+    riskLevel = sensitiveData.detectedTypes.length >= 2 ? 'high' : 'medium';
+  }
+  
+  // Injection patterns override if higher
+  if (matchedPatterns.length >= 4) {
     riskLevel = 'high';
+  } else if (matchedPatterns.length >= 2 && riskLevel !== 'high') {
+    riskLevel = 'medium';
+  } else if (matchedPatterns.length === 1 && riskLevel === 'none') {
+    riskLevel = 'low';
   }
   
   return {
-    isInjection: matchedPatterns.length > 0,
-    matchedPatterns,
+    isInjection: matchedPatterns.length > 0 || sensitiveData.hasSensitiveData,
+    matchedPatterns: [
+      ...matchedPatterns,
+      ...sensitiveData.detectedTypes.map(t => `PII:${t}`),
+    ],
     riskLevel,
+    sensitiveData,
   };
 }
 
