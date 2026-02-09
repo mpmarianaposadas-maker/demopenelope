@@ -1,328 +1,112 @@
 
-# Plan: Mejoras de Visibilidad, Formatos Documentales y Control Humano
+# Plan: 6 cambios para alinear la demo con el trabajo final de posgrado
 
-## Resumen Ejecutivo
+## Resumen
 
-Se implementaran mejoras siguiendo tres ejes principales:
-1. **Visibilidad y UX (Nielsen)**: Panel de verificacion responsive para mobile/tablet
-2. **Formatos documentales correctos**: Notas para peticionantes (carga en GDE) y Providencias para tramites internos
-3. **Transparencia, control humano y rendicion de cuentas**: Metricas, trazabilidad ciudadana y boton de intervencion manual
+Se crean 3 nuevos paneles (Acerca de, Brecha RUPECO, Propuesta Normativa), se reescribe Arquitectura con diagramas de flujo, se corrigen los KPIs de Metricas, y se reorganizan las pestanas.
 
 ---
 
-## 1. Formatos Documentales Correctos
+## Archivos nuevos (3)
 
-### 1.1 Distincion entre tipos de documento
+### 1. `src/components/penelope/panels/PanelAcercaDe.tsx`
+Panel introductorio con 6 secciones:
+- Cita estilizada sobre el mito de Penelope (bloque con fondo primary/5)
+- Grilla 2x2 de transformacion institucional (de -> a) con tarjetas
+- Pregunta de investigacion e hipotesis
+- Dos columnas "ES / NO ES" con checks verdes y cruces rojas (lucide-react icons: Check, X)
+- Estadisticas de alcance (4 KPIs: 5, 14, 12, 3)
+- Creditos con Badge del posgrado
 
-| Destinatario | Tipo Documento | Sistema de Carga | Componente |
-|-------------|----------------|------------------|------------|
-| Peticionantes externos | **Nota (NO)** | GDE | `ProvidenciaIntimacion.tsx` (renombrar) |
-| Tramite interno | **Providencia (PV)** | GDE | `PanelBorradores.tsx` |
+Usa: Card, CardTitle, CardText de penelope/Card, Badge de ui/badge, Check/X/BookOpen/GraduationCap de lucide-react.
 
-### 1.2 Modificacion de `ProvidenciaIntimacion.tsx`
+### 2. `src/components/penelope/panels/PanelBrechaRupeco.tsx`
+Panel de analisis de brecha RUPECO con 5 secciones:
+- Introduccion con datos del decreto 971/2024
+- Cobertura por sector con barras de progreso (Progress de ui/progress) y badges verde/rojo
+- Nucleo documental comun (dos columnas personas humanas / juridicas)
+- Principio Once-Only antes vs despues (dos columnas roja/verde con badges de documentos)
+- Tabla de oportunidad de consolidacion (Table/TableRow/TableCell de penelope/Table)
 
-**Cambio principal**: Reformatear como "Nota de Intimacion" para carga en GDE
+Usa: Card, CardTitle, CardText, Progress, Badge, Table, AlertTriangle icon.
 
-El documento generado se dirigira al peticionante pero con formato de Nota que requiere:
-- Encabezado: "NOTA - BORRADOR PARA CARGA EN GDE"
-- Indicacion clara: "Este documento debe ser validado por el operador y cargado manualmente en el sistema GDE"
-- Eliminacion del formato de Providencia (VISTO/CONSIDERANDO/RESUELVE)
-- Estructura de Nota administrativa
+### 3. `src/components/penelope/panels/PanelPropuestaNormativa.tsx`
+Panel de propuesta normativa con 5 secciones:
+- Introduccion sobre encuadre juridico
+- Articulado propuesto: 5 tarjetas con borde izquierdo coloreado (azul/ambar/verde segun categoria)
+- Extension del RUPECO con checks
+- Responsabilidad del Estado (Ley 26.944, caso Vadell)
+- Experiencias internacionales (grilla 2x2 con banderas emoji)
 
-**Texto generado reformateado**:
-
-```text
-═══════════════════════════════════════════════════════════════════
-          ENTE NACIONAL DE COMUNICACIONES - ENACOM
-          NOTA - BORRADOR PARA CARGA EN GDE
-═══════════════════════════════════════════════════════════════════
-
-Expediente: EX-2026-XXXXXXXX-APN-ENACOM
-Fecha: [fecha actual]
-
-Destinatario: [Razon social / Nombre del peticionante]
-Domicilio constituido: [Domicilio TAD]
-
-Ref.: INTIMACION - Subsanacion documental
-
-De mi consideracion:
-
-Me dirijo a Ud. en relacion al expediente de referencia...
-
-[Tabla de documentos faltantes]
-
-Se INTIMA a subsanar dentro de DIEZ (10) DIAS HABILES...
-
-[Control de silencio positivo]
-
-───────────────────────────────────────────────────────────────────
- BORRADOR - REQUIERE VALIDACION Y CARGA MANUAL EN GDE
- Validado por: _________________________ Fecha: ___________
-───────────────────────────────────────────────────────────────────
-```
-
-### 1.3 Modificacion de `PanelBorradores.tsx`
-
-**Cambios**:
-- Mantener el formato de Providencia (PV) para documentos internos (pases entre areas)
-- Cambiar "Comunicacion Oficial (CO)" a "Nota (NO)" para comunicaciones a peticionantes
-- Agregar indicacion clara de sistema de destino (GDE)
+Usa: Card, CardTitle, CardText, Badge, Check/Scale/Globe/Shield icons.
 
 ---
 
-## 2. Visibilidad y UX - Panel de Verificacion Responsive
+## Archivos modificados (4)
 
-### 2.1 Modificacion de `RequisitoVerificacion.tsx`
+### 4. `src/components/penelope/panels/PanelArquitectura.tsx` (reescribir)
+Mantiene la intro existente con traducciones i18n, agrega:
+- Seccion "Modelo de Fiabilidad Procedimental" con bloque destacado y grilla 2x2 de principios
+- Seccion "Diagramas de Flujo" con Tabs internos (Flujo Principal / Flujo de Subsanacion)
+  - Flujo Principal: 7 pasos verticales con colores por actor + linea de limite roja punteada
+  - Flujo Subsanacion: 6 pasos verticales
+- Leyenda de actores (3 badges: azul, verde, ambar)
+- Mantiene seccion de componentes principales al final
 
-**Problema**: La tabla de 6 columnas no es visible en mobile/tablet
+Usa: Card, CardTitle, CardText, CardList, Tabs/TabsList/TabsTrigger/TabsContent de ui/tabs, Badge.
 
-**Solucion**: Layout condicional segun breakpoint
+### 5. `src/components/penelope/panels/PanelMetricas.tsx` (corregir KPIs)
+Cambios:
+- KPI 1: "35-40%" / "reduccion total" + nota "en etapas preliminares"
+- KPI 2: "70-100%" / "overlap RUPECO" + nota "requisitos reutilizables"
+- KPI 3: "12-18" / "dias ganados" + nota "para analisis sustantivo"
+- KPI 4: "100%" / "supervision humana" + nota "en toda decision"
+- Nuevo texto introductorio sobre metodologia (ANATEL, OFCOM, BID, OCDE)
+- Fila Argentina en tabla internacional: "35-40% proyectado"
+- Nuevo bloque de alerta ambar "Nota metodologica" al final
 
-```text
-Desktop (lg+):              Mobile/Tablet (<lg):
-┌─────────────────────┐     ┌─────────────────────┐
-│ Tabla 6 columnas    │     │ Card 1              │
-│ N | Req | Estado... │ --> │ ○ Requisito 1       │
-└─────────────────────┘     │ Estado: 🟢 Verde    │
-                            │ Orden: Fojas 1-3    │
-                            │ [✓] [✗]             │
-                            ├─────────────────────┤
-                            │ Card 2              │
-                            │ ○ Requisito 2       │
-                            │ Estado: 🔴 Rojo     │
-                            └─────────────────────┘
-```
+Se agrega estructura de 3 lineas por KPI (valor, subtitulo, nota en texto mas chico).
 
-**Implementacion**:
-- Usar hook `useIsMobile()` existente
-- Renderizar `<Table>` en desktop, lista de `<Card>` en mobile
-- Mantener todas las funcionalidades (validar/rechazar, semaforo, observaciones)
-- Badges de estado prominentes en mobile
+### 6. `src/pages/Index.tsx`
+- Importar PanelAcercaDe, PanelBrechaRupeco, PanelPropuestaNormativa
+- Reordenar tabs array a 12 pestanas en el orden solicitado
+- Reordenar children del AccessibleTabs en el mismo orden
 
----
+### 7. `src/components/penelope/panels/index.ts`
+- Agregar exports: PanelAcercaDe, PanelBrechaRupeco, PanelPropuestaNormativa
 
-## 3. Panel de Metricas para Operadores
-
-### 3.1 Nuevo componente: `PanelMetricasOperador.tsx`
-
-**Metricas a mostrar** (valores simulados):
-
-| Metrica | Descripcion | Valor Demo |
-|---------|-------------|------------|
-| Total expedientes procesados | Contador global | 1,247 |
-| Silencio positivo evitado | Gestion a tiempo | 892 (71.5%) |
-| Alertas de plazo generadas | Notificaciones | 156 |
-| Tiempo promedio antes | Sin Penelope | 28 dias |
-| Tiempo promedio despues | Con Penelope | 4.2 dias |
-| Clasificacion correcta | Precision | 94.3% |
-
-**Funcionalidades**:
-- Badge "SOLO OPERADORES HABILITADOS"
-- Graficos con Recharts (ya instalado)
-- Filtros de periodo (semana/mes/ano)
-- Boton de descarga CSV
-
-### 3.2 Utilidad de exportacion: `exportCSV.ts`
-
-```typescript
-export function exportToCSV(data: MetricaRow[], filename: string): void {
-  // Genera CSV con headers y datos
-  // Descarga automatica como archivo
-}
-```
-
----
-
-## 4. Modulo de Trazabilidad Ciudadana
-
-### 4.1 Nuevo componente: `ConsultaEstadoTramite.tsx`
-
-**Proposito**: Consulta externa de estado de expediente sin exponer decisiones internas
-
-**Flujo**:
-1. Usuario ingresa ID unico de seguimiento
-2. Sistema valida formato
-3. Muestra informacion publica del estado
-
-**Informacion visible**:
-- Estado del expediente: Verificado / En revision / En espera
-- Fecha de ingreso del tramite
-- Fecha estimada de resolucion
-- Documentos adjuntos (solo nombres, sin datos sensibles)
-- Historial de pasos automatizados (solo eventos publicos)
-
-**Informacion NO visible**:
-- Decisiones internas
-- Juicios tecnicos del operador
-- Clasificaciones de confianza de la IA
-- Observaciones internas
-
----
-
-## 5. Boton de Intervencion Manual
-
-### 5.1 Nuevo componente: `BotonIntervencionManual.tsx`
-
-**Etiqueta**: "Intervenir manualmente este paso"
-**Icono**: Stop (rojo/amarillo prominente)
-
-**Comportamiento**:
-1. Detiene temporalmente el flujo automatizado
-2. Muestra modal de intervencion con:
-   - Campo obligatorio: Nombre del agente
-   - Campo obligatorio: Motivo de intervencion
-   - Area para revisar/modificar datos
-3. Registra en historial de acciones
-
-### 5.2 Integracion
-
-Agregar el boton en:
-- `ClasificacionConfirmacion.tsx` - Paso de clasificacion
-- `RequisitoVerificacion.tsx` - Paso de verificacion documental
-- `PanelSimuladorInterno.tsx` - Paso de control de plazos
-
-### 5.3 Hook de estado: `useIntervencionManual.ts`
-
-```typescript
-interface IntervencionManual {
-  id: string;
-  timestamp: Date;
-  agenteNombre: string;
-  pasoIntervenido: 'clasificacion' | 'verificacion' | 'plazos';
-  motivoIntervencion: string;
-  datosModificados?: Record<string, { antes: string; despues: string }>;
-}
-```
-
----
-
-## Estructura de Archivos
-
-```text
-src/
-├── components/penelope/
-│   ├── chat/
-│   │   ├── RequisitoVerificacion.tsx    [MODIFICAR - responsive]
-│   │   ├── ProvidenciaIntimacion.tsx    [MODIFICAR - formato Nota]
-│   │   ├── BotonIntervencionManual.tsx  [NUEVO]
-│   │   └── index.ts                     [MODIFICAR - exports]
-│   ├── panels/
-│   │   ├── PanelBorradores.tsx          [MODIFICAR - formatos]
-│   │   ├── PanelMetricasOperador.tsx    [NUEVO]
-│   │   ├── ConsultaEstadoTramite.tsx    [NUEVO]
-│   │   └── index.ts                     [MODIFICAR - exports]
-├── hooks/
-│   └── useIntervencionManual.ts         [NUEVO]
-├── lib/
-│   ├── i18n.ts                          [MODIFICAR - traducciones]
-│   └── exportCSV.ts                     [NUEVO]
-├── pages/
-│   └── Index.tsx                        [MODIFICAR - nuevos tabs]
-```
+### 8. `src/lib/i18n.ts`
+Agregar traducciones de tabs en ambos idiomas:
+- ES: `tabs.acercaDe`, `tabs.brechaRupeco`, `tabs.propuestaNormativa`
+- EN: mismas keys con valores en ingles
+- Actualizar KPIs de metricas en ambos idiomas (valores, labels, descripciones, intro)
 
 ---
 
 ## Seccion Tecnica
 
-### Modificaciones Detalladas
+### Orden de implementacion
+1. Agregar traducciones a i18n.ts (tabs + KPIs corregidos)
+2. Crear PanelAcercaDe.tsx
+3. Crear PanelBrechaRupeco.tsx
+4. Crear PanelPropuestaNormativa.tsx
+5. Reescribir PanelArquitectura.tsx
+6. Corregir PanelMetricas.tsx (KPIs + nota metodologica)
+7. Actualizar panels/index.ts
+8. Actualizar Index.tsx (imports, tabs, orden)
 
-#### ProvidenciaIntimacion.tsx
+### Dependencias
+No se instalan nuevas dependencias. Se usan:
+- lucide-react (ya instalado): Check, X, AlertTriangle, BookOpen, GraduationCap, Shield, Scale, Globe, ArrowRight, FileText, Users, Building
+- @radix-ui/react-tabs via ui/tabs (ya instalado)
+- @radix-ui/react-progress via ui/progress (ya instalado)
+- Badge de ui/badge (ya existe)
+- Card/CardTitle/CardText/CardList de penelope/Card (ya existe)
+- Table/TableRow/TableCell de penelope/Table (ya existe)
 
-1. Renombrar funcion generadora a `generarTextoNota()`
-2. Cambiar estructura de VISTO/CONSIDERANDO/RESUELVE a formato Nota
-3. Actualizar encabezados y disclaimers
-4. Cambiar titulo del Card a "Borrador de Nota de Intimacion"
-5. Agregar indicacion de carga en GDE
-
-#### RequisitoVerificacion.tsx - Responsive
-
-1. Importar `useIsMobile` hook
-2. Crear componente interno `RequisitoCardMobile` para layout mobile
-3. Renderizar condicionalmente:
-   - `isMobile ? <RequisitoCardMobile /> : <Table />`
-4. Mantener misma logica de validacion/rechazo
-5. Usar Cards apilables verticalmente con estados visuales prominentes
-
-#### PanelBorradores.tsx
-
-1. Cambiar "Comunicacion Oficial (CO)" a "Nota (NO)"
-2. Actualizar textos para indicar carga en GDE
-3. Mantener Providencia (PV) solo para documentos internos
-4. Agregar indicadores de sistema de destino
-
-### Nuevas Traducciones (i18n.ts)
-
-Se agregaran aproximadamente 70 nuevas claves:
-
-```typescript
-// Nota de Intimacion (reemplazo de CO para peticionantes)
-'borr.nota.title': 'Borrador de Nota de Intimacion',
-'borr.nota.tipoDoc': 'Nota (NO)',
-'borr.nota.destino': 'Para carga en GDE',
-'borr.nota.disclaimer': 'Este documento debe ser validado por el operador y cargado manualmente en el sistema GDE antes de notificar al peticionante.',
-
-// Metricas Operador
-'metricas.operador.title': 'Panel de Metricas (Uso Interno)',
-'metricas.operador.badge': 'SOLO OPERADORES HABILITADOS',
-'metricas.operador.totalProcesados': 'Expedientes procesados',
-'metricas.operador.silencioEvitado': 'Silencio positivo evitado',
-'metricas.operador.alertasGeneradas': 'Alertas de plazo generadas',
-'metricas.operador.tiempoAntes': 'Tiempo promedio (antes)',
-'metricas.operador.tiempoDespues': 'Tiempo promedio (con Penelope)',
-'metricas.operador.clasificacionCorrecta': 'Clasificacion correcta',
-'metricas.operador.descargarCSV': 'Descargar CSV',
-// ... 15 claves mas
-
-// Trazabilidad Ciudadana
-'trazabilidad.ciudadana.title': 'Estado de mi Tramite',
-'trazabilidad.ciudadana.buscar': 'Ingrese su ID de seguimiento',
-'trazabilidad.ciudadana.estado.verificado': 'Verificado',
-'trazabilidad.ciudadana.estado.enRevision': 'En revision',
-'trazabilidad.ciudadana.estado.enEspera': 'En espera',
-// ... 15 claves mas
-
-// Intervencion Manual
-'intervencion.boton': 'Intervenir manualmente este paso',
-'intervencion.modal.title': 'Registro de Intervencion Manual',
-'intervencion.modal.agente': 'Nombre del agente',
-'intervencion.modal.motivo': 'Motivo de la intervencion',
-'intervencion.modal.confirmar': 'Registrar intervencion',
-// ... 15 claves mas
-
-// Verificacion mobile
-'verificacion.mobile.validar': 'Validar requisito',
-'verificacion.mobile.rechazar': 'Rechazar requisito',
-// ... 5 claves mas
-```
-
-### Consideraciones de Accesibilidad
-
-- Cards mobile con roles ARIA apropiados
-- Navegacion por teclado en layout responsive
-- Contraste adecuado en indicadores de estado
-- Labels descriptivos en formularios de intervencion
-- Tooltips accesibles con `aria-describedby`
-
-### Restricciones Respetadas
-
-- Sistema NO realiza decisiones sustantivas
-- Todas las notas/providencias son borradores que requieren validacion humana
-- Boton de intervencion manual garantiza control humano significativo
-- Formato documental correcto segun destinatario (Nota para externos, PV para internos)
-- Trazabilidad ciudadana no expone decisiones internas
-
----
-
-## Orden de Implementacion
-
-1. Crear utilidad `exportCSV.ts`
-2. Crear hook `useIntervencionManual.ts`
-3. Crear componente `BotonIntervencionManual.tsx`
-4. Modificar `ProvidenciaIntimacion.tsx` - formato Nota para GDE
-5. Modificar `PanelBorradores.tsx` - formatos correctos
-6. Modificar `RequisitoVerificacion.tsx` - layout responsive
-7. Crear `PanelMetricasOperador.tsx`
-8. Crear `ConsultaEstadoTramite.tsx`
-9. Agregar traducciones a `i18n.ts`
-10. Integrar nuevos paneles en `Index.tsx`
-11. Actualizar exports en archivos index
+### Patron de estilo
+- Textos nuevos en espanol directo (contenido academico-legal)
+- useLanguage solo para traducciones de tabs y KPIs existentes
+- Tarjetas con borde izquierdo coloreado: `border-l-4 border-l-blue-500`
+- Bloques de alerta ambar: `bg-amber-50 border border-amber-200 rounded-lg p-4`
+- Grillas responsivas: `grid grid-cols-1 md:grid-cols-2 gap-4`
