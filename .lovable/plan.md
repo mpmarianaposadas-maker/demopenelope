@@ -1,140 +1,145 @@
 
-# Plan: 3 mejoras de usabilidad para la demo Penelope
+
+# Plan: Alineacion del lenguaje de la demo con las directrices academicas del PoC
 
 ## Resumen
 
-Se implementan 3 mejoras de usabilidad alineadas con heuristicas de Nielsen: (1) sistema de ayuda contextual con banner de bienvenida y tooltips, (2) agrupacion visual de las 12 pestanas en 4 categorias, y (3) navegacion contextual entre pestanas con indicador de progreso.
+La demo utiliza terminos decisorios como "aprobado", "rechazado", "EXPEDIENTE APROBADO", "EXPEDIENTE RECHAZADO", y frases que sugieren capacidad decisoria del sistema. Segun las directrices, toda salida debe usar lenguaje preparatorio y no vinculante. Se actualizan textos en 5 archivos para reemplazar terminologia decisoria por terminologia preparatoria, y se agregan disclaimers PoC visibles donde faltan.
 
 ---
 
-## Archivos nuevos (2)
+## Cambios por archivo
 
-### 1. `src/components/penelope/panels/SiguientePaso.tsx`
-Componente reutilizable de navegacion entre pestanas. Muestra un bloque con fondo `secondary/30`, texto "Siguiente paso sugerido:", boton con el nombre de la pestana destino + flecha, y una breve descripcion. Acepta props: `label`, `description`, `onNavigate`.
+### 1. `src/hooks/useChatRupecoSimulado.ts`
 
-### 2. `src/contexts/TabNavigationContext.tsx`
-Context de React que expone `goToTab(tabId: string)` y `visitedTabs: Set<string>`. Lo provee `AccessibleTabs` internamente y lo consumen los paneles hijos y `SiguientePaso`.
+Reemplazar los mensajes generados en el chat:
 
----
+- Linea 89-93: Cambiar `MENSAJE_INICIAL` de "Módulo de Admisibilidad Formal" a "Módulo de Verificación Formal (PoC Ilustrativa)". Agregar nota: "Esta simulación no emite actos administrativos ni decisiones vinculantes."
 
-## Archivos modificados (6)
+- Linea 477: Cambiar `## ✅ Clasificación Confirmada` a `## ✅ Clasificación Confirmada por Operador`
 
-### 3. `src/components/penelope/AccessibleTabs.tsx` (cambios significativos)
+- Linea 515: En el informe, cambiar "INFORME DE VERIFICACIÓN AUTOMÁTICA" a "INFORME DE VERIFICACIÓN FORMAL (Borrador No Vinculante)"
 
-**Nuevas props:**
-- `groups?: TabGroup[]` (opcional) con interfaz `{ label: string; tabIds: string[] }`
-- `tooltips?: Record<string, string>` (opcional) - mapa de tabId a texto de tooltip
+- Linea 540: Cambiar "Requisitos Cumplidos" a "Requisitos Detectados"
 
-**Cambios internos:**
-- Crea y provee `TabNavigationContext` con `goToTab` (que busca el index por tabId y llama `setActiveIndex`) y `visitedTabs`
-- Trackea pestanas visitadas con un `useState<Set<string>>` que se actualiza en cada click/cambio de tab
-- Si `groups` esta definido, renderiza las pestanas agrupadas: etiqueta de grupo (text-[10px], text-muted-foreground/70) arriba de cada grupo, separador vertical (div 1px width, bg-border) entre grupos, oculto en mobile
-- Si `tooltips` esta definido, cada boton de tab tiene un div con position relative, y al hacer hover (onMouseEnter/onMouseLeave con useState) aparece un div absolutamente posicionado debajo con el texto del tooltip (bg-gray-900, text-white, text-xs, rounded, px-2 py-1, z-50, animate fade-in). En mobile no se muestra (hidden en `md:block`)
-- Indicador de progreso del recorrido: dentro del panel de contenido (antes de `children[activeIndex]`), si el usuario ha visitado entre 1 y 5 de las 6 pestanas del recorrido, muestra un pequeno badge "X/6 del recorrido" con mini barra de progreso en la esquina superior derecha. Cuando llega a 6, muestra "Recorrido completo" en verde que desaparece con setTimeout de 3 segundos. Las 6 pestanas del recorrido: `acerca-de`, `demo-interactiva`, `arquitectura`, `brecha-rupeco`, `propuesta-normativa`, `metricas`
+- Linea 557: Cambiar "Requisitos Faltantes" a "Documentación No Localizada"
 
-### 4. `src/pages/Index.tsx`
+- Linea 569: Cambiar "ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación" a "ACCIÓN PREPARATORIA: Borrador de Intimación (sujeto a validación humana)"
 
-- Reordenar el array `tabs` y los children de `AccessibleTabs` segun los 4 grupos:
-  1. acerca-de, arquitectura, brecha-rupeco (Conceptual)
-  2. demo-interactiva, borradores, simulador (Operativo)
-  3. trazabilidad, propuesta-normativa, seguridad (Gobernanza)
-  4. metricas, metricas-operador, trazabilidad-ciudadana (Monitoreo)
+- Linea 570: Cambiar "ha generado automáticamente un borrador" a "ha generado un borrador no vinculante"
 
-- Definir el array `groups` y `tooltips` y pasarlos como props a `AccessibleTabs`
+- Linea 579: Cambiar "puede derivarse a la etapa de análisis técnico-jurídico" a "se encuentra en condiciones formales para su derivación a la etapa de análisis técnico-jurídico (requiere supervisión humana)"
 
-- Los tooltips:
-  - acerca-de: "Marco conceptual, pregunta de investigacion y alcance"
-  - demo-interactiva: "Simule un tramite completo con verificacion RUPECO"
-  - arquitectura: "Diagramas de flujo y modelo de fiabilidad por diseno"
-  - brecha-rupeco: "Hallazgo central: cobertura del 57% y principio Once-Only"
-  - borradores: "Providencia de pase y nota de intimacion generadas por IA"
-  - trazabilidad: "Pilares de compliance y registro de auditoria"
-  - metricas: "Proyecciones de impacto basadas en benchmarking internacional"
-  - propuesta-normativa: "Articulado propuesto y experiencias comparadas"
-  - seguridad: "Validacion contra prompt injection y datos sensibles"
-  - simulador: "Simulacion del flujo interno paso a paso"
-  - metricas-operador: "Dashboard de rendimiento con exportacion CSV"
-  - trazabilidad-ciudadana: "Consulta publica del estado de un expediente"
+- Lineas 691: Cambiar `## ✅ EXPEDIENTE APROBADO` a `## ✅ VERIFICACIÓN FORMAL COMPLETADA`. Cambiar "ha sido verificado y aprobado" a "ha completado la verificación formal preliminar y se encuentra en condiciones de derivarse". Agregar nota: "Esta validación formal no constituye acto administrativo."
 
-### 5. `src/components/penelope/panels/PanelAcercaDe.tsx`
+- Lineas 738: Cambiar `## ❌ EXPEDIENTE RECHAZADO` a `## ❌ OBSERVACIONES PENDIENTES - Requiere Subsanación`. Cambiar "ha sido rechazado y no puede continuar" a "presenta observaciones formales pendientes de subsanación". Cambiar "motivo del rechazo" a "observaciones detectadas".
 
-- Agregar `useState` para `showWelcome` (default true)
-- Importar `Compass`, `X` de lucide-react y `useContext` de react
-- Importar `TabNavigationContext`
-- Antes de la seccion "El Viaje de Penelope", renderizar condicionalmente el banner de bienvenida:
-  - Gradiente `bg-gradient-to-r from-primary/10 to-primary/5`, borde `border border-primary/20`, rounded-lg, p-5
-  - Boton X para cerrar (esquina superior derecha)
-  - Icono Compass + titulo + texto introductorio
-  - Lista numerada de 6 pasos con emojis
-  - Boton "Entendido, comenzar" que oculta el banner
-  - Nota al pie en text-xs
+- Linea 761: Cambiar `'APROBACIÓN' : 'RECHAZO'` a `'VALIDACIÓN FORMAL' : 'OBSERVACIÓN'`
 
-- Al final, agregar `SiguientePaso` con destino "demo-interactiva", label "Demo Interactiva", description "Pruebe el sistema en accion con un tramite simulado"
+- Linea 679: Cambiar la descripcion de la accion de "aprobado" a "verificación formal completada"
 
-### 6. `src/components/penelope/panels/PanelDemoInteractiva.tsx`
+- Linea 725: Cambiar la descripcion de la accion de "rechazado" a "observaciones pendientes registradas"
 
-- Importar `TabNavigationContext` y `SiguientePaso`
-- Agregar al final: SiguientePaso hacia "arquitectura" con descripcion "Explore los diagramas de flujo del sistema"
+### 2. `src/components/penelope/chat/RequisitoVerificacion.tsx`
 
-### 7. `src/components/penelope/panels/PanelArquitectura.tsx`
+- Linea 114: Cambiar `'✓ Validado' : '✗ Rechazado'` a `'✓ Conforme' : '✗ Observado'`
 
-- Agregar SiguientePaso al final hacia "brecha-rupeco" con descripcion "Visualice el hallazgo central del trabajo"
+- Linea 159: Cambiar "Validar" (boton) a "Conforme"
 
-### 8. `src/components/penelope/panels/PanelBrechaRupeco.tsx`
+- Linea 166: Cambiar "Rechazar" (boton) a "Observar"
 
-- Agregar SiguientePaso al final hacia "propuesta-normativa" con descripcion "Revise el articulado propuesto"
+- Linea 319-320: Idem botones desktop
 
-### 9. `src/components/penelope/panels/PanelPropuestaNormativa.tsx`
+- Linea 406: Cambiar "✅ Expediente Aprobado" a "✅ Verificación Formal Completada"
 
-- Agregar SiguientePaso al final hacia "metricas" con descripcion "Consulte las proyecciones de impacto"
+- Linea 450: Cambiar "❌ Expediente Rechazado" a "❌ Observaciones Pendientes"
 
-### 10. `src/components/penelope/chat/ChatRupeco.tsx`
+- Linea 461: Cambiar "Motivo de rechazo" a "Observaciones"
 
-- Importar `useIsMobile` de `@/hooks/use-mobile`
-- En el banner de sistema deshabilitado (lineas 87-94), agregar texto adicional: "Para reactivarlo, use el panel de Kill Switch en la barra lateral." En mobile, agregar tambien: "Abra el panel lateral con el boton ☰."
+- Linea 495: Cambiar "decisión de aprobación/rechazo" a "determinación de validación formal/observación"
+
+- Linea 570: Cambiar boton "Aprobar" a "Validación Formal Conforme"
+
+- Linea 582: Cambiar boton "Rechazar" a "Registrar Observaciones"
+
+- Linea 588: Cambiar "resolver el expediente" a "completar la verificación formal"
+
+- Linea 596: Cambiar "Registro de Aprobación" a "Registro de Validación Formal"
+
+- Linea 647: Cambiar "Confirmar Aprobación" a "Confirmar Validación Formal"
+
+- Linea 655: Cambiar "Registro de Rechazo" a "Registro de Observaciones"
+
+- Linea 675: Cambiar "motivo del rechazo" a "detalle de las observaciones"
+
+- Linea 707: Cambiar "Confirmar Rechazo" a "Confirmar Observaciones"
+
+### 3. `src/components/penelope/chat/HistorialAcciones.tsx`
+
+- Linea 95: Cambiar `'Rechazo Req.'` a `'Observación Req.'`
+
+- Linea 99: Cambiar `'Aprobación'` a `'Validación Formal'`
+
+- Linea 101: Cambiar `'Rechazo Exp.'` a `'Observación Exp.'`
+
+### 4. `src/components/penelope/panels/ConsultaEstadoTramite.tsx` (ya tiene disclaimer pero necesita refuerzo)
+
+- Linea 322-324: Reforzar el disclaimer existente agregando: "La información es orientativa y no constituye acto administrativo ni genera derechos adquiridos. Los datos mostrados son ficticios y simulados con fines demostrativos."
+
+### 5. `src/components/penelope/panels/PanelBorradores.tsx` (verificar)
+
+El panel ya usa el termino "Borrador" y tiene disclaimers. Se agrega un banner visible al inicio con fondo ambar claro que diga: "Los documentos que se muestran a continuación son borradores no vinculantes generados como asistencia IA. Requieren validación, edición y firma humana antes de cualquier uso. No constituyen actos administrativos."
+
+### 6. `src/components/penelope/simulador/EstadoExpedienteResult.tsx`
+
+- Linea 24-26: Cambiar label de estado "APTO" a "VERIFICACIÓN FORMAL COMPLETA (simulación)"
+
+- Linea 26: Cambiar descripcion de "está habilitado para revisión sustantiva" a "se encuentra en condiciones formales para su derivación (simulación ilustrativa)"
+
+- Linea 30-34: Cambiar label "INCOMPLETO" a "DOCUMENTACIÓN INCOMPLETA (simulación)". Cambiar descripcion de "generará intimación automática" a "se generaría un borrador de intimación no vinculante, sujeto a revisión humana"
+
+### 7. `src/lib/i18n.ts`
+
+- Linea 68: Cambiar `demo.title` de "Demo Interactiva · Sistema Penélope" a "Demo Interactiva (PoC Ilustrativa) · Sistema Penélope"
+
+- Linea 375-377: Cambiar etiquetas del simulador:
+  - `simulador.estado.apto`: de "APTO" a "VERIFICACIÓN FORMAL COMPLETA"
+  - `simulador.estado.aptoDesc`: quitar "habilitado" y usar lenguaje informativo
+  - `simulador.estado.incompletoDesc`: quitar "automática" de intimación
+
+- Linea 465: Reforzar el disclaimer de trazabilidad ciudadana
+
+- Actualizar equivalentes en ingles
+
+### 8. `src/components/penelope/panels/PanelDemoInteractiva.tsx`
+
+- Agregar un banner sutil al inicio (despues de la Card introductoria) que diga: "PoC Ilustrativa — Los resultados de esta simulación no tienen valor normativo ni decisorio."
 
 ---
 
 ## Seccion Tecnica
 
-### Arquitectura del TabNavigationContext
+### Patron de cambio
+Todos los cambios son de texto/strings. No hay cambios de logica, estado ni estructura de componentes. El patron es:
 
 ```text
-AccessibleTabs (Provider)
-  |-- goToTab(tabId) --> finds index, calls setActiveIndex
-  |-- visitedTabs: Set<string> --> tracks visited tabs
-  |
-  +-- Panel children (Consumers)
-       |-- SiguientePaso component calls goToTab on click
-       |-- Progress indicator reads visitedTabs
+Antes: "aprobado/rechazado" (lenguaje decisorio)
+Despues: "verificación formal conforme / observaciones pendientes" (lenguaje preparatorio)
 ```
 
-### Patron de tooltips
-- Se usa un estado local `hoveredTab: string | null` en AccessibleTabs
-- Cada tab button tiene un wrapper div con `position: relative`
-- onMouseEnter sets hoveredTab, onMouseLeave clears it
-- Tooltip div con `position: absolute; top: 100%; left: 50%; transform: translateX(-50%)` y animacion CSS `animate-in fade-in-0` (ya disponible en el proyecto via tailwindcss-animate)
-- En mobile (< md), los tooltips no se renderizan
-
-### Patron de agrupacion
-- Si `groups` prop existe, se itera sobre groups en lugar de tabs directamente
-- Para cada grupo: label div + tabs del grupo + separador (excepto ultimo grupo)
-- Los separadores son `<div className="hidden md:block w-px self-stretch bg-border mx-1" />`
-- Las etiquetas de grupo: `<span className="text-[10px] text-muted-foreground/70 uppercase tracking-wider px-1">`
-
 ### Orden de implementacion
-1. Crear TabNavigationContext
-2. Crear SiguientePaso
-3. Modificar AccessibleTabs (grupos, tooltips, contexto, progreso)
-4. Modificar Index.tsx (reorden, grupos, tooltips)
-5. Modificar PanelAcercaDe (banner de bienvenida + SiguientePaso)
-6. Modificar paneles con SiguientePaso (DemoInteractiva, Arquitectura, BrechaRupeco, PropuestaNormativa)
-7. Modificar ChatRupeco (texto adicional en banner KillSwitch)
+1. useChatRupecoSimulado.ts (mensajes del chat - mayor impacto)
+2. RequisitoVerificacion.tsx (botones y paneles de decision)
+3. HistorialAcciones.tsx (badges de historial)
+4. i18n.ts (traducciones del simulador y demo)
+5. EstadoExpedienteResult.tsx (etiquetas del simulador)
+6. ConsultaEstadoTramite.tsx (disclaimer reforzado)
+7. PanelBorradores.tsx (banner PoC)
+8. PanelDemoInteractiva.tsx (banner PoC)
 
 ### Dependencias
-No se instalan nuevas dependencias. Se usan:
-- lucide-react: Compass, X, ArrowRight (ya importados en otros archivos)
-- framer-motion: motion/AnimatePresence (ya en uso en AccessibleTabs)
-- React createContext/useContext/useState
-- useIsMobile hook (ya existe)
-- tailwindcss-animate (ya en el proyecto, provee animate-in/fade-in-0)
+No se instalan nuevas dependencias. Todos son cambios de strings.
+
+### Riesgo
+Bajo. Solo se modifican textos visibles. La logica interna (nombres de variables como `aprobacion`, `rechazado`, `aprobarExpediente`) se mantiene intacta para no romper el flujo funcional — solo cambia lo que ve el usuario.
+
