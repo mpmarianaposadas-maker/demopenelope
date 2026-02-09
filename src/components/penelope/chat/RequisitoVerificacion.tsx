@@ -111,7 +111,7 @@ function RequisitoCardMobile({
           </div>
           {req.validadoPorAgente !== undefined && (
             <Badge variant={req.validadoPorAgente ? "default" : "destructive"} className="text-xs">
-              {req.validadoPorAgente ? '✓ Validado' : '✗ Rechazado'}
+              {req.validadoPorAgente ? '✓ Conforme' : '✗ Observado'}
             </Badge>
           )}
         </div>
@@ -156,7 +156,7 @@ function RequisitoCardMobile({
             onClick={() => onValidarRequisito(req.id, true)}
           >
             <CheckCircle2 className="h-4 w-4 mr-1" />
-            Validar
+            Conforme
           </Button>
           <Button
             variant={req.validadoPorAgente === false ? "destructive" : "outline"}
@@ -165,7 +165,7 @@ function RequisitoCardMobile({
             onClick={() => onValidarRequisito(req.id, false)}
           >
             <XCircle className="h-4 w-4 mr-1" />
-            Rechazar
+            Observar
           </Button>
         </div>
       </CardContent>
@@ -316,7 +316,7 @@ export function RequisitoVerificacion({
                             size="sm"
                             className="h-7 px-2"
                             onClick={() => onValidarRequisito(req.id, true)}
-                            title="Validar"
+                            title="Conforme"
                           >
                             <CheckCircle2 className="h-3 w-3" />
                           </Button>
@@ -325,7 +325,7 @@ export function RequisitoVerificacion({
                             size="sm"
                             className="h-7 px-2"
                             onClick={() => onValidarRequisito(req.id, false)}
-                            title="Rechazar"
+                            title="Observar"
                           >
                             <XCircle className="h-3 w-3" />
                           </Button>
@@ -403,7 +403,7 @@ export function RequisitoVerificacion({
                 </div>
                 <div className="flex-1">
                   <div className="font-semibold text-success flex items-center gap-2">
-                    ✅ Expediente Aprobado
+                    ✅ Verificación Formal Completada
                   </div>
                   <div className="mt-2 space-y-1 text-sm">
                     <div className="flex items-center gap-2">
@@ -447,7 +447,7 @@ export function RequisitoVerificacion({
                 </div>
                 <div className="flex-1">
                   <div className="font-semibold text-destructive flex items-center gap-2">
-                    ❌ Expediente Rechazado
+                    ❌ Observaciones Pendientes
                   </div>
                   <div className="mt-2 space-y-1 text-sm">
                     <div className="flex items-center gap-2">
@@ -460,7 +460,7 @@ export function RequisitoVerificacion({
                     </div>
                     {aprobacion.motivoRechazo && (
                       <div className="mt-2 p-2 bg-destructive/5 rounded text-xs border border-destructive/20">
-                        <strong>Motivo de rechazo:</strong> {aprobacion.motivoRechazo}
+                        <strong>Observaciones:</strong> {aprobacion.motivoRechazo}
                       </div>
                     )}
                   </div>
@@ -492,8 +492,8 @@ export function RequisitoVerificacion({
               
               <div className="p-2 bg-cream-dark/30 rounded text-xs text-cream-foreground">
                 <AlertTriangle className="h-3 w-3 inline mr-1" />
-                Esta acción revertirá la decisión de <strong>{aprobacion?.aprobado ? 'aprobación' : 'rechazo'}</strong> y 
-                permitirá tomar una nueva decisión sobre el expediente.
+                Esta acción revertirá la determinación de <strong>{aprobacion?.aprobado ? 'validación formal' : 'observación'}</strong> y 
+                permitirá realizar una nueva evaluación del expediente.
               </div>
               
               <div className="space-y-2">
@@ -567,7 +567,7 @@ export function RequisitoVerificacion({
                         size="lg"
                       >
                         <UserCheck className="h-4 w-4 mr-2" />
-                        Aprobar
+                        Validación Formal Conforme
                       </Button>
                     )}
                     {onRechazarExpediente && (
@@ -579,13 +579,13 @@ export function RequisitoVerificacion({
                         size="lg"
                       >
                         <XCircle className="h-4 w-4 mr-2" />
-                        Rechazar
+                        Registrar Observaciones
                       </Button>
                     )}
                   </div>
                   {!puedeAprobar && (
                     <p className="text-xs text-muted-foreground text-center">
-                      Debe revisar todos los requisitos antes de resolver el expediente ({totalRevisados}/{requisitos.length})
+                      Debe revisar todos los requisitos antes de completar la verificación formal ({totalRevisados}/{requisitos.length})
                     </p>
                   )}
                 </div>
@@ -593,7 +593,7 @@ export function RequisitoVerificacion({
                 <div className="space-y-3 p-4 bg-success/5 rounded-lg border border-success/30">
                   <div className="flex items-center gap-2 text-sm font-medium text-success">
                     <UserCheck className="h-4 w-4" />
-                    Registro de Aprobación
+                    Registro de Validación Formal
                   </div>
                   
                   <div className="space-y-2">
@@ -644,7 +644,7 @@ export function RequisitoVerificacion({
                       className="flex-1"
                     >
                       <CheckCircle2 className="h-4 w-4 mr-2" />
-                      Confirmar Aprobación
+                      Confirmar Validación Formal
                     </Button>
                   </div>
                 </div>
@@ -652,7 +652,7 @@ export function RequisitoVerificacion({
                 <div className="space-y-3 p-4 bg-destructive/5 rounded-lg border border-destructive/30">
                   <div className="flex items-center gap-2 text-sm font-medium text-destructive">
                     <XCircle className="h-4 w-4" />
-                    Registro de Rechazo
+                    Registro de Observaciones
                   </div>
                   
                   <div className="space-y-2">
@@ -669,10 +669,10 @@ export function RequisitoVerificacion({
                   
                   <div className="space-y-2">
                     <label className="text-sm font-medium">
-                      Motivo de Rechazo <span className="text-destructive">*</span>
+                      Detalle de las Observaciones <span className="text-destructive">*</span>
                     </label>
                     <Textarea
-                      placeholder="Indique el motivo del rechazo (obligatorio)..."
+                      placeholder="Indique el detalle de las observaciones (obligatorio)..."
                       value={motivoRechazo}
                       onChange={(e) => setMotivoRechazo(e.target.value)}
                       className="bg-background resize-none border-destructive/30"
@@ -704,7 +704,7 @@ export function RequisitoVerificacion({
                       className="flex-1"
                     >
                       <XCircle className="h-4 w-4 mr-2" />
-                      Confirmar Rechazo
+                      Confirmar Observaciones
                     </Button>
                   </div>
                 </div>

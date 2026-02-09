@@ -88,9 +88,11 @@ const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 900000
 
 const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
 
-**Penélope** - Módulo de Admisibilidad Formal
+**Penélope** - Módulo de Verificación Formal (PoC Ilustrativa)
 
-Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
+Seleccioná el tipo de trámite para ejecutar la verificación formal del núcleo RUPECO.
+
+> ℹ️ *Esta simulación no emite actos administrativos ni decisiones vinculantes.*`;
 
 // Categorías permitidas según normativa del proyecto (enunciativo y limitado a esta demo)
 const CATEGORIAS_PERMITIDAS_CODIGOS = ['ENAC00062', 'ENAC00025', 'ENAC00063', 'ENAC00064', 'ENAC00013'];
@@ -474,7 +476,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
+        content: `## ✅ Clasificación Confirmada por Operador\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
         timestamp: new Date(),
       },
     ]);
@@ -512,7 +514,7 @@ export function useChatRupecoSimulado() {
         const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
         const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
 
-        let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
+        let informe = `## 📋 INFORME DE VERIFICACIÓN FORMAL (Borrador No Vinculante)
 
 ---
 
@@ -537,7 +539,7 @@ export function useChatRupecoSimulado() {
 
 ---
 
-### ✅ Requisitos Cumplidos
+### ✅ Requisitos Detectados
 
 `;
 
@@ -554,7 +556,7 @@ export function useChatRupecoSimulado() {
           informe += `*No se detectaron documentos válidos*\n`;
         }
 
-        informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
+        informe += `\n---\n\n### ❌ Documentación No Localizada\n\n`;
 
         if (faltantes.length > 0) {
           faltantes.forEach(doc => {
@@ -566,8 +568,8 @@ export function useChatRupecoSimulado() {
             }
           });
 
-          informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
-          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
+          informe += `\n---\n\n### ⚠️ ACCIÓN PREPARATORIA: Borrador de Intimación (sujeto a validación humana)\n\n`;
+          informe += `El sistema ha detectado **${faltantes.length} documento(s) no localizado(s)** y ha generado un borrador no vinculante de Providencia de Intimación.\n\n`;
           informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
@@ -577,7 +579,7 @@ export function useChatRupecoSimulado() {
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
           informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
-          informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
+          informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y se encuentra en condiciones formales para su derivación a la etapa de **análisis técnico-jurídico** (requiere supervisión humana).\n`;
           informe += `> No se requiere intimación al administrado.\n`;
         }
 
@@ -676,7 +678,7 @@ export function useChatRupecoSimulado() {
     // Registrar en historial
     agregarAccion(
       'aprobar_expediente',
-      `Expediente ${expediente.numero} aprobado`,
+      `Expediente ${expediente.numero} — verificación formal completada`,
       agenteNombre,
       observaciones,
     );
@@ -688,7 +690,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ EXPEDIENTE APROBADO
+        content: `## ✅ VERIFICACIÓN FORMAL COMPLETADA
 
 ---
 
@@ -701,7 +703,9 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
 
 ---
 
-> El expediente ha sido verificado y aprobado para continuar a la etapa de **análisis técnico-jurídico**.`,
+> El expediente ha completado la verificación formal preliminar y se encuentra en condiciones de derivarse a la etapa de **análisis técnico-jurídico**.
+>
+> ℹ️ *Esta validación formal no constituye acto administrativo.*`,
         timestamp: new Date(),
       },
     ]);
@@ -722,7 +726,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     // Registrar en historial
     agregarAccion(
       'rechazar_expediente',
-      `Expediente ${expediente.numero} rechazado`,
+      `Expediente ${expediente.numero} — observaciones pendientes registradas`,
       agenteNombre,
       motivoRechazo,
     );
@@ -735,7 +739,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ EXPEDIENTE RECHAZADO
+        content: `## ❌ OBSERVACIONES PENDIENTES - Requiere Subsanación
 
 ---
 
@@ -744,11 +748,11 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
 | **Expediente** | ${expediente.numero} |
 | **Agente** | ${agenteNombre} |
 | **Fecha y hora** | ${nuevoRechazo.timestamp.toLocaleString('es-AR')} |
-| **Motivo de rechazo** | ${motivoRechazo} |
+| **Observaciones detectadas** | ${motivoRechazo} |
 
 ---
 
-> El expediente ha sido **rechazado** y no puede continuar al análisis técnico-jurídico. Se debe notificar al administrado el motivo del rechazo.`,
+> El expediente presenta observaciones formales pendientes de subsanación. Se debe notificar al administrado las observaciones detectadas.`,
         timestamp: new Date(),
       },
     ]);
@@ -758,7 +762,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
     if (!expediente || !aprobacion) return;
     
-    const decisionOriginal = aprobacion.aprobado ? 'APROBACIÓN' : 'RECHAZO';
+    const decisionOriginal = aprobacion.aprobado ? 'VALIDACIÓN FORMAL' : 'OBSERVACIÓN';
     
     // Registrar en historial
     agregarAccion(

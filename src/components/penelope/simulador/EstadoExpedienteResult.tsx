@@ -21,7 +21,7 @@ export function EstadoExpedienteResult({ expediente, t }: EstadoExpedienteResult
       case 'apto':
         return {
           icon: CheckCircle2,
-          label: t('simulador.estado.apto'),
+          label: `${t('simulador.estado.apto')} (simulación)`,
           description: t('simulador.estado.aptoDesc'),
           badgeClass: 'bg-green-500/20 text-green-700 dark:text-green-400 border-green-500/30',
           iconClass: 'text-green-600 dark:text-green-400',
@@ -29,7 +29,7 @@ export function EstadoExpedienteResult({ expediente, t }: EstadoExpedienteResult
       case 'incompleto':
         return {
           icon: XCircle,
-          label: t('simulador.estado.incompleto'),
+          label: `${t('simulador.estado.incompleto')} (simulación)`,
           description: t('simulador.estado.incompletoDesc'),
           badgeClass: 'bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30',
           iconClass: 'text-amber-600 dark:text-amber-400',
