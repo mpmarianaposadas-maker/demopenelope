@@ -17,6 +17,10 @@ export function PanelDemoInteractiva() {
         <CardText>{t('demo.intro2')}</CardText>
       </Card>
 
+      <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-300 text-center">
+        ℹ️ <strong>PoC Ilustrativa</strong> — Los resultados de esta simulación no tienen valor normativo ni decisorio.
+      </div>
+
       <Tabs defaultValue="verificacion" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="verificacion">

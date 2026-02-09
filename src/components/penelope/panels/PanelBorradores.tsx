@@ -6,6 +6,11 @@ export function PanelBorradores() {
 
   return (
     <>
+      {/* Banner PoC */}
+      <div className="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-lg text-sm text-amber-800 dark:text-amber-300">
+        ⚠️ Los documentos que se muestran a continuación son <strong>borradores no vinculantes</strong> generados como asistencia IA. Requieren validación, edición y firma humana antes de cualquier uso. No constituyen actos administrativos.
+      </div>
+
       {/* Providencia */}
       <Card as="article">
         <CardTitle>{t('borr.pv.title')}</CardTitle>
