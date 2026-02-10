@@ -175,7 +175,7 @@ export function PanelDemoInteractiva() {
   }, [selectedExpediente, flowState]);
 
   // Solo mostrar acciones asistidas después de que el operador haya validado todos los requisitos
-  const showAccionesAsistidas = flowState?.step === 'evaluacion' && flowState.todosRequisitosValidados && !flowState.aprobacion;
+  const showAccionesAsistidas = flowState?.step === 'evaluacion';
 
   return (
     <div className="space-y-6">
