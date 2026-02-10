@@ -174,7 +174,8 @@ export function PanelDemoInteractiva() {
     return 1;
   }, [selectedExpediente, flowState]);
 
-  const showAccionesAsistidas = flowState?.step === 'evaluacion';
+  // Solo mostrar acciones asistidas después de que el operador haya validado todos los requisitos
+  const showAccionesAsistidas = flowState?.step === 'evaluacion' && flowState.todosRequisitosValidados && !flowState.aprobacion;
 
   return (
     <div className="space-y-6">
@@ -262,7 +263,7 @@ export function PanelDemoInteractiva() {
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Verificación formal finalizada. El expediente se encuentra en condiciones de continuar su tramitación.
+            Verificación formal finalizada. El operador ha validado todos los requisitos. El expediente se encuentra en condiciones de continuar su tramitación.
           </p>
 
           <div className={cn("flex gap-3", isMobile && "flex-col")}>

@@ -23,6 +23,8 @@ export interface ChatFlowState {
     documentosFaltantes: DocumentoFaltante[];
   } | null;
   expedienteNumero?: string;
+  todosRequisitosValidados: boolean;
+  aprobacion: { aprobado: boolean; rechazado?: boolean } | null;
 }
 
 interface ChatRupecoProps {
@@ -76,8 +78,10 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
       expedienteCompleto: !providenciaData && currentStep === 'evaluacion',
       providenciaData: providenciaData ?? null,
       expedienteNumero,
+      todosRequisitosValidados,
+      aprobacion: aprobacion ? { aprobado: aprobacion.aprobado, rechazado: aprobacion.rechazado } : null,
     });
-  }, [currentStep, providenciaData, expedienteNumero, onFlowStateChange]);
+  }, [currentStep, providenciaData, expedienteNumero, onFlowStateChange, todosRequisitosValidados, aprobacion]);
 
   useEffect(() => {
     if (scrollRef.current) {
