@@ -6,35 +6,25 @@ import { Badge } from '@/components/ui/badge';
 import { RotateCcw, Bot, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ChatMessage } from './ChatMessage';
+import { ChatInput } from './ChatInput';
 import { RupecoEvaluation } from './RupecoEvaluation';
 import { RupecoProgressIndicator } from './RupecoProgressIndicator';
+import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { HistorialAcciones } from './HistorialAcciones';
 import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
-import { useChatRupecoSimulado, type ScenarioType } from '@/hooks/useChatRupecoSimulado';
+import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
-import type { ExpedienteData, DocumentoFaltante } from './ProvidenciaIntimacion';
 
-export interface ChatFlowState {
-  step: string;
-  expedienteCompleto: boolean;
-  providenciaData: {
-    expediente: ExpedienteData;
-    documentosFaltantes: DocumentoFaltante[];
-  } | null;
-  expedienteNumero?: string;
-  todosRequisitosValidados: boolean;
-  aprobacion: { aprobado: boolean; rechazado?: boolean } | null;
-}
+const QUICK_ACTIONS = [
+  { label: '📡 Licencia TIC nueva', message: 'Licencia TIC nueva para persona jurídica' },
+  { label: '📺 Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
+  { label: '📮 Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
+  { label: '🔄 Modificación societaria TIC', message: 'Modificación societaria TIC para empresa' },
+  { label: '📋 Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
+];
 
-interface ChatRupecoProps {
-  externalMessage?: string | null;
-  scenarioType?: ScenarioType;
-  onMessageConsumed?: () => void;
-  onFlowStateChange?: (state: ChatFlowState) => void;
-}
-
-export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessageConsumed, onFlowStateChange }: ChatRupecoProps) {
+export function ChatRupeco() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,30 +48,11 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero,
+    // Nuevas funciones para clasificación
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
-  } = useChatRupecoSimulado(scenarioType);
-
-  // Handle external message trigger
-  useEffect(() => {
-    if (externalMessage && !isLoading && isSystemActive) {
-      sendMessage(externalMessage);
-      onMessageConsumed?.();
-    }
-  }, [externalMessage]);
-
-  // Notify parent of flow state changes
-  useEffect(() => {
-    onFlowStateChange?.({
-      step: currentStep,
-      expedienteCompleto: !providenciaData && currentStep === 'evaluacion',
-      providenciaData: providenciaData ?? null,
-      expedienteNumero,
-      todosRequisitosValidados,
-      aprobacion: aprobacion ? { aprobado: aprobacion.aprobado, rechazado: aprobacion.rechazado } : null,
-    });
-  }, [currentStep, providenciaData, expedienteNumero, onFlowStateChange, todosRequisitosValidados, aprobacion]);
+  } = useChatRupecoSimulado();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -89,10 +60,11 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
     }
   }, [messages, evaluation, requisitosData, historialAcciones, clasificacionPendiente]);
 
+  const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
 
   return (
-    <Card className="flex flex-col max-h-[70vh]">
+    <Card className="flex flex-col h-[600px] max-h-[70vh]">
       <CardHeader className="flex-shrink-0 pb-3 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -141,6 +113,25 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
             <ChatMessage key={message.id} message={message} />
           ))}
 
+          {showQuickActions && isSystemActive && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              <span className="text-xs text-muted-foreground w-full mb-1">
+                Seleccioná el tipo de trámite:
+              </span>
+              {QUICK_ACTIONS.map((action) => (
+                <Button
+                  key={action.label}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => sendMessage(action.message)}
+                  disabled={isLoading}
+                >
+                  {action.label}
+                </Button>
+              ))}
+            </div>
+          )}
+
           {/* Panel de confirmación de clasificación */}
           {clasificacionPendiente && (
             <div className="mt-4">
@@ -169,6 +160,15 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
             </div>
           )}
 
+          {providenciaData && (
+            <div className="mt-4">
+              <ProvidenciaIntimacion 
+                expediente={providenciaData.expediente}
+                documentosFaltantes={providenciaData.documentosFaltantes}
+              />
+            </div>
+          )}
+
           {evaluation && (
             <div className="mt-4">
               <RupecoEvaluation data={evaluation} />
@@ -186,6 +186,12 @@ export function ChatRupeco({ externalMessage, scenarioType = 'random', onMessage
           )}
         </div>
       </ScrollArea>
+
+      <ChatInput
+        onSend={sendMessage}
+        isLoading={isLoading}
+        disabled={!isSystemActive || !!clasificacionPendiente}
+      />
     </Card>
   );
 }

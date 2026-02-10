@@ -1,5 +1,4 @@
 import ReactMarkdown from 'react-markdown';
-import rehypeSanitize from 'rehype-sanitize';
 import { cn } from '@/lib/utils';
 import { Bot, User } from 'lucide-react';
 
@@ -37,7 +36,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {isAssistant ? 'Penélope' : 'Tú'}
         </div>
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <ReactMarkdown rehypePlugins={[rehypeSanitize]}>{message.content}</ReactMarkdown>
+          <ReactMarkdown>{message.content}</ReactMarkdown>
         </div>
       </div>
     </div>

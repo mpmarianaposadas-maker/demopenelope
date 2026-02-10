@@ -65,7 +65,7 @@ export const translations: Record<Language, Translations> = {
     'aside.placeholder': 'Espacio reservado para información complementaria',
 
     // Panel Demo Interactiva
-    'demo.title': 'Demo Interactiva (PoC Ilustrativa) · Sistema Penélope',
+    'demo.title': 'Demo Interactiva · Sistema Penélope',
     'demo.intro1': 'Simula el procesamiento de un expediente real para un trámite TIC mediante un sistema asistencial basado en automatización no-code e inteligencia artificial generativa (LLMs).',
     'demo.intro2': 'La demo muestra cómo el sistema realiza: clasificación de trámites, detección de documentación faltante y generación asistida de borradores administrativos, siempre bajo supervisión humana.',
     'demo.flujo.title': 'Flujo asistido del expediente',
@@ -372,10 +372,10 @@ export const translations: Record<Language, Translations> = {
     'simulador.boton.reiniciar': 'Reiniciar',
     'simulador.resultado.title': 'Estado del Expediente',
     'simulador.resultado.esperando': 'Inicie la simulación para ver el resultado del procesamiento.',
-    'simulador.estado.apto': 'VERIFICACIÓN FORMAL COMPLETA',
-    'simulador.estado.aptoDesc': 'El expediente cumple con todos los requisitos formales y se encuentra en condiciones de derivarse para revisión sustantiva por el área técnica.',
+    'simulador.estado.apto': 'APTO',
+    'simulador.estado.aptoDesc': 'El expediente cumple con todos los requisitos formales y está habilitado para revisión sustantiva por el área técnica.',
     'simulador.estado.incompleto': 'INCOMPLETO',
-    'simulador.estado.incompletoDesc': 'El expediente requiere subsanación documental. Se generaría un borrador de intimación no vinculante, sujeto a revisión humana.',
+    'simulador.estado.incompletoDesc': 'El expediente requiere subsanación documental. Se generará intimación automática al administrado.',
     'simulador.estado.enProceso': 'EN PROCESO',
     'simulador.estado.enProcesoDesc': 'El expediente está siendo procesado por el sistema.',
     'simulador.expediente.tipo': 'Tipo de trámite',
@@ -462,7 +462,7 @@ export const translations: Record<Language, Translations> = {
     'trazabilidad.ciudadana.fechaEstimada': 'Fecha estimada de resolución',
     'trazabilidad.ciudadana.documentos': 'Documentos adjuntos',
     'trazabilidad.ciudadana.historial': 'Historial del trámite',
-    'trazabilidad.ciudadana.disclaimer': 'Esta consulta muestra información orientativa y no constituye acto administrativo ni genera derechos adquiridos. Los datos mostrados son ficticios y simulados con fines demostrativos. Las decisiones internas y análisis técnicos no son visibles por motivos de confidencialidad del proceso administrativo.',
+    'trazabilidad.ciudadana.disclaimer': 'Esta consulta muestra el estado público del expediente. Las decisiones internas y análisis técnicos no son visibles por motivos de confidencialidad del proceso administrativo.',
 
     // Intervención Manual
     'intervencion.boton': 'Intervenir manualmente',
@@ -534,7 +534,7 @@ export const translations: Record<Language, Translations> = {
     'aside.placeholder': 'Reserved space for complementary information',
 
     // Panel Demo Interactiva
-    'demo.title': 'Interactive Demo (Illustrative PoC) · Penélope System',
+    'demo.title': 'Interactive Demo · Penélope System',
     'demo.intro1': 'Simulates the processing of a real case file for a TIC procedure through an assistive system based on no-code automation and generative artificial intelligence (LLMs).',
     'demo.intro2': 'The demo shows how the system performs: procedure classification, missing documentation detection, and assisted generation of administrative drafts, always under human supervision.',
     'demo.flujo.title': 'Assisted case file flow',
@@ -841,10 +841,10 @@ export const translations: Record<Language, Translations> = {
     'simulador.boton.reiniciar': 'Reset',
     'simulador.resultado.title': 'Case File Status',
     'simulador.resultado.esperando': 'Start the simulation to see the processing result.',
-    'simulador.estado.apto': 'FORMAL VERIFICATION COMPLETE',
-    'simulador.estado.aptoDesc': 'The case file meets all formal requirements and is in condition to be referred for substantive review by the technical area.',
+    'simulador.estado.apto': 'ELIGIBLE',
+    'simulador.estado.aptoDesc': 'The case file meets all formal requirements and is enabled for substantive review by the technical area.',
     'simulador.estado.incompleto': 'INCOMPLETE',
-    'simulador.estado.incompletoDesc': 'The case file requires documentary correction. A non-binding summons draft would be generated, subject to human review.',
+    'simulador.estado.incompletoDesc': 'The case file requires documentary correction. An automatic summons will be generated for the applicant.',
     'simulador.estado.enProceso': 'IN PROGRESS',
     'simulador.estado.enProcesoDesc': 'The case file is being processed by the system.',
     'simulador.expediente.tipo': 'Procedure type',
@@ -931,7 +931,7 @@ export const translations: Record<Language, Translations> = {
     'trazabilidad.ciudadana.fechaEstimada': 'Estimated resolution date',
     'trazabilidad.ciudadana.documentos': 'Attached documents',
     'trazabilidad.ciudadana.historial': 'Case history',
-    'trazabilidad.ciudadana.disclaimer': 'This query shows informational data only and does not constitute an administrative act nor generate acquired rights. Data shown is fictitious and simulated for demonstration purposes. Internal decisions and technical analysis are not visible for confidentiality reasons of the administrative process.',
+    'trazabilidad.ciudadana.disclaimer': 'This query shows the public status of the case file. Internal decisions and technical analysis are not visible for confidentiality reasons of the administrative process.',
 
     // Manual Intervention
     'intervencion.boton': 'Intervene manually',

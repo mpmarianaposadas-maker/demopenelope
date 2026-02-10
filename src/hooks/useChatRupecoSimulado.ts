@@ -88,11 +88,9 @@ const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 900000
 
 const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
 
-**Penélope** - Módulo de Verificación Formal (PoC Ilustrativa)
+**Penélope** - Módulo de Admisibilidad Formal
 
-Seleccioná el tipo de trámite para ejecutar la verificación formal del núcleo RUPECO.
-
-> ℹ️ *Esta simulación no emite actos administrativos ni decisiones vinculantes.*`;
+Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
 
 // Categorías permitidas según normativa del proyecto (enunciativo y limitado a esta demo)
 const CATEGORIAS_PERMITIDAS_CODIGOS = ['ENAC00062', 'ENAC00025', 'ENAC00063', 'ENAC00064', 'ENAC00013'];
@@ -104,9 +102,7 @@ function getNivelConfianzaCualitativo(nivelNumerico: number): NivelConfianzaCual
   return 'Bajo';
 }
 
-export type ScenarioType = 'random' | 'completo' | 'incompleto' | 'subsanacion' | 'vencimiento';
-
-export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
+export function useChatRupecoSimulado() {
   const { setTipoTramite } = useTipoTramite();
   const { isSystemActive } = useKillSwitch();
   const { validateInput } = useSecurityValidation();
@@ -294,33 +290,13 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
       }
     };
     
-    // Simular detección según escenario seleccionado
+    // Simular detección con probabilidades realistas
     return todosDocumentos.map((doc, index) => {
-      let detectado: boolean;
-      let nivelConfianza: number;
-
-      switch (scenarioType) {
-        case 'completo':
-          detectado = true;
-          nivelConfianza = 85 + Math.random() * 15;
-          break;
-        case 'incompleto':
-          detectado = index % 2 === 0; // ~50% missing alternating
-          nivelConfianza = detectado ? 60 + Math.random() * 30 : 0;
-          break;
-        case 'subsanacion':
-          detectado = Math.random() > 0.15; // 85% detected but lower confidence
-          nivelConfianza = detectado ? 50 + Math.random() * 30 : 0;
-          break;
-        case 'vencimiento':
-          detectado = true;
-          nivelConfianza = 80 + Math.random() * 20;
-          break;
-        default: // 'random'
-          detectado = Math.random() > 0.3;
-          nivelConfianza = detectado ? 60 + Math.random() * 40 : 0;
-          break;
-      }
+      const probabilidadDeteccion = Math.random();
+      const detectado = probabilidadDeteccion > 0.3; // 70% de probabilidad de detección
+      const nivelConfianza = detectado 
+        ? 60 + Math.random() * 40 // Entre 60% y 100%
+        : 0;
       
       const docInfo = getDocInfo(doc.id);
       
@@ -353,7 +329,7 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
         problemaOCR,
       };
     });
-  }, [scenarioType]);
+  }, []);
 
   const generarEvaluacionJSON = useCallback((exp: ExpedienteSimulado): RupecoEvaluationData => {
     const detectados = exp.documentosDetectados.filter(d => d.detectado);
@@ -477,99 +453,6 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
     }, 400);
   }, [agregarAccion]);
 
-  // Generar informe de verificación y evaluación (extraído para reutilización)
-  const generarInformeYEvaluacion = useCallback((exp: ExpedienteSimulado) => {
-    const documentosDetectados = exp.documentosDetectados;
-    const detectados = documentosDetectados.filter(d => d.detectado);
-    const faltantes = documentosDetectados.filter(d => !d.detectado);
-    const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
-    const accion = determinarAccionPorConfianza(exp.nivelConfianzaGlobal);
-
-    let informe = `## 📋 INFORME DE VERIFICACIÓN FORMAL (Borrador No Vinculante)
-
----
-
-### Datos del Expediente
-| Campo | Valor |
-|:------|:------|
-| **Expediente** | ${exp.numero} |
-| **Carátula** | ${exp.caratula} |
-| **Tipo de persona** | ${exp.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
-| **Trámite** | ${exp.tramite?.nombre} (${exp.tramite?.codigo}) |
-| **Normativa aplicable** | ${exp.tramite?.normativa} |
-
----
-
-### Resultado de Validación Documental
-
-| Parámetro | Valor |
-|:----------|:------|
-| **Nivel de confianza** | ${exp.nivelConfianzaGlobal}% |
-| **Acción sugerida** | ${accion.descripcion} |
-| **Completitud documental** | ${porcentaje}% (${detectados.length}/${documentosDetectados.length}) |
-
----
-
-### ✅ Requisitos Detectados
-
-`;
-
-    if (detectados.length > 0) {
-      detectados.forEach(doc => {
-        informe += `- **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
-        if (doc.articuloEspecifico) {
-          informe += `  - Fundamento: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
-        } else {
-          informe += `  - Fundamento: ${doc.normativa}\n`;
-        }
-      });
-    } else {
-      informe += `*No se detectaron documentos válidos*\n`;
-    }
-
-    informe += `\n---\n\n### ❌ Documentación No Localizada\n\n`;
-
-    if (faltantes.length > 0) {
-      faltantes.forEach(doc => {
-        informe += `- **${doc.nombre}**\n`;
-        if (doc.articuloEspecifico) {
-          informe += `  - Exigido por: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
-        } else {
-          informe += `  - Exigido por: ${doc.normativa}\n`;
-        }
-      });
-
-      informe += `\n---\n\n### ⚠️ ACCIÓN PREPARATORIA: Borrador de Intimación (sujeto a validación humana)\n\n`;
-      informe += `El sistema ha detectado **${faltantes.length} documento(s) no localizado(s)** y ha generado un borrador no vinculante de Providencia de Intimación.\n\n`;
-      informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
-      
-      const diasRestantes = exp.tramite?.plazoSilencioPositivo || 60;
-      informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
-      informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
-      informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
-    } else {
-      informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
-      informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
-      informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y se encuentra en condiciones formales para su derivación a la etapa de **análisis técnico-jurídico** (requiere supervisión humana).\n`;
-      informe += `> No se requiere intimación al administrado.\n`;
-    }
-
-    setMessages(prev => [
-      ...prev,
-      {
-        id: generateId(),
-        role: 'assistant',
-        content: informe,
-        timestamp: new Date(),
-      },
-    ]);
-
-    const evalData = generarEvaluacionJSON(exp);
-    setEvaluation(evalData);
-    setCurrentStep('evaluacion');
-  }, [generarEvaluacionJSON]);
-
-
   // Confirmar la clasificación y continuar con validación documental
   const confirmarClasificacion = useCallback((tramiteConfirmado: TramiteENAC) => {
     if (!expediente || !clasificacionPendiente) return;
@@ -591,7 +474,7 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ Clasificación Confirmada por Operador\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
+        content: `## ✅ Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
         timestamp: new Date(),
       },
     ]);
@@ -599,7 +482,7 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
     setCurrentStep('validacion_documental');
     setTipoTramite(tramiteConfirmado.nombre);
 
-    // Simular extracción documental y detenerse en validacion_documental
+    // Continuar con la extracción documental
     setTimeout(() => {
       const documentosDetectados = simularExtraccionDocumental(expediente.tipoPersona, tramiteConfirmado);
       const docsConDeteccion = documentosDetectados.filter(d => d.detectado);
@@ -619,11 +502,105 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
       };
 
       setExpediente(expedienteActualizado);
-      setIsLoading(false);
-      // El flujo se detiene aquí. El operador valida manualmente cada requisito.
-      // El useEffect de arriba avanzará a resultado/evaluacion cuando todosRequisitosValidados === true.
+
+      setTimeout(() => {
+        setCurrentStep('resultado');
+        
+        // Generar informe de resultado
+        const detectados = documentosDetectados.filter(d => d.detectado);
+        const faltantes = documentosDetectados.filter(d => !d.detectado);
+        const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
+        const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
+
+        let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
+
+---
+
+### Datos del Expediente
+| Campo | Valor |
+|:------|:------|
+| **Expediente** | ${expedienteActualizado.numero} |
+| **Carátula** | ${expedienteActualizado.caratula} |
+| **Tipo de persona** | ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
+| **Trámite** | ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo}) |
+| **Normativa aplicable** | ${tramiteConfirmado.normativa} |
+
+---
+
+### Resultado de Validación Documental
+
+| Parámetro | Valor |
+|:----------|:------|
+| **Nivel de confianza** | ${nivelConfianzaGlobal}% |
+| **Acción sugerida** | ${accion.descripcion} |
+| **Completitud documental** | ${porcentaje}% (${detectados.length}/${documentosDetectados.length}) |
+
+---
+
+### ✅ Requisitos Cumplidos
+
+`;
+
+        if (detectados.length > 0) {
+          detectados.forEach(doc => {
+            informe += `- **${doc.nombre}** *(${doc.nivelConfianza}% confianza)*\n`;
+            if (doc.articuloEspecifico) {
+              informe += `  - Fundamento: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+            } else {
+              informe += `  - Fundamento: ${doc.normativa}\n`;
+            }
+          });
+        } else {
+          informe += `*No se detectaron documentos válidos*\n`;
+        }
+
+        informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
+
+        if (faltantes.length > 0) {
+          faltantes.forEach(doc => {
+            informe += `- **${doc.nombre}**\n`;
+            if (doc.articuloEspecifico) {
+              informe += `  - Exigido por: ${doc.normativa} - ${doc.articuloEspecifico}\n`;
+            } else {
+              informe += `  - Exigido por: ${doc.normativa}\n`;
+            }
+          });
+
+          informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
+          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
+          informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+          
+          const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
+          informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
+          informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
+          informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
+        } else {
+          informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
+          informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
+          informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
+          informe += `> No se requiere intimación al administrado.\n`;
+        }
+
+        // Agregar mensaje con el informe
+        setMessages(prev => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'assistant',
+            content: informe,
+            timestamp: new Date(),
+          },
+        ]);
+
+        // Generar evaluación
+        const evalData = generarEvaluacionJSON(expedienteActualizado);
+        setEvaluation(evalData);
+
+        setCurrentStep('evaluacion');
+        setIsLoading(false);
+      }, 600);
     }, 600);
-  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, agregarAccion]);
+  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion]);
 
   // Cancelar la clasificación
   const cancelarClasificacion = useCallback(() => {
@@ -699,7 +676,7 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
     // Registrar en historial
     agregarAccion(
       'aprobar_expediente',
-      `Expediente ${expediente.numero} — verificación formal completada`,
+      `Expediente ${expediente.numero} aprobado`,
       agenteNombre,
       observaciones,
     );
@@ -711,7 +688,7 @@ export function useChatRupecoSimulado(scenarioType: ScenarioType = 'random') {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ VERIFICACIÓN FORMAL COMPLETADA
+        content: `## ✅ EXPEDIENTE APROBADO
 
 ---
 
@@ -724,9 +701,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
 
 ---
 
-> El expediente ha completado la verificación formal preliminar y se encuentra en condiciones de derivarse a la etapa de **análisis técnico-jurídico**.
->
-> ℹ️ *Esta validación formal no constituye acto administrativo.*`,
+> El expediente ha sido verificado y aprobado para continuar a la etapa de **análisis técnico-jurídico**.`,
         timestamp: new Date(),
       },
     ]);
@@ -747,7 +722,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     // Registrar en historial
     agregarAccion(
       'rechazar_expediente',
-      `Expediente ${expediente.numero} — observaciones pendientes registradas`,
+      `Expediente ${expediente.numero} rechazado`,
       agenteNombre,
       motivoRechazo,
     );
@@ -760,7 +735,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ OBSERVACIONES PENDIENTES - Requiere Subsanación
+        content: `## ❌ EXPEDIENTE RECHAZADO
 
 ---
 
@@ -769,11 +744,11 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
 | **Expediente** | ${expediente.numero} |
 | **Agente** | ${agenteNombre} |
 | **Fecha y hora** | ${nuevoRechazo.timestamp.toLocaleString('es-AR')} |
-| **Observaciones detectadas** | ${motivoRechazo} |
+| **Motivo de rechazo** | ${motivoRechazo} |
 
 ---
 
-> El expediente presenta observaciones formales pendientes de subsanación. Se debe notificar al administrado las observaciones detectadas.`,
+> El expediente ha sido **rechazado** y no puede continuar al análisis técnico-jurídico. Se debe notificar al administrado el motivo del rechazo.`,
         timestamp: new Date(),
       },
     ]);
@@ -783,7 +758,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
     if (!expediente || !aprobacion) return;
     
-    const decisionOriginal = aprobacion.aprobado ? 'VALIDACIÓN FORMAL' : 'OBSERVACIÓN';
+    const decisionOriginal = aprobacion.aprobado ? 'APROBACIÓN' : 'RECHAZO';
     
     // Registrar en historial
     agregarAccion(
@@ -927,16 +902,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         d.validadoPorAgente !== undefined
       )
     : false;
-
-  // Avanzar automáticamente cuando el operador completa la validación manual
-  useEffect(() => {
-    if (currentStep === 'validacion_documental' && todosRequisitosValidados && expediente) {
-      setCurrentStep('resultado');
-      setTimeout(() => {
-        generarInformeYEvaluacion(expediente);
-      }, 600);
-    }
-  }, [currentStep, todosRequisitosValidados, expediente, generarInformeYEvaluacion]);
 
   return {
     messages,

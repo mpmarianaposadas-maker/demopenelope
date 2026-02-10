@@ -92,13 +92,13 @@ const getBadgeAccion = (tipo: TipoAccion) => {
     case 'validar_requisito':
       return { label: 'Validación', className: 'bg-success/10 text-success border-success/30' };
     case 'rechazar_requisito':
-      return { label: 'Observación Req.', className: 'bg-destructive/10 text-destructive border-destructive/30' };
+      return { label: 'Rechazo Req.', className: 'bg-destructive/10 text-destructive border-destructive/30' };
     case 'subsanar_requisito':
       return { label: 'Subsanación', className: 'bg-primary/10 text-primary border-primary/30' };
     case 'aprobar_expediente':
-      return { label: 'Validación Formal', className: 'bg-success/10 text-success border-success/30' };
+      return { label: 'Aprobación', className: 'bg-success/10 text-success border-success/30' };
     case 'rechazar_expediente':
-      return { label: 'Observación Exp.', className: 'bg-destructive/10 text-destructive border-destructive/30' };
+      return { label: 'Rechazo Exp.', className: 'bg-destructive/10 text-destructive border-destructive/30' };
     case 'revertir_decision':
       return { label: 'Reversión', className: 'bg-cream text-cream-foreground border-cream-dark' };
     case 'inicio_verificacion':

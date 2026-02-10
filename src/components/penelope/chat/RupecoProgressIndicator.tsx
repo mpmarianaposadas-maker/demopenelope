@@ -139,7 +139,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
           <div className="flex items-center gap-2 text-xs text-green-600">
             <span className="text-lg">✅</span>
             <span>
-              <strong>Verificación formal finalizada.</strong> El expediente se encuentra en condiciones de continuar su tramitación.
+              <strong>Evaluación generada.</strong> Expediente verificado.
             </span>
           </div>
         </div>

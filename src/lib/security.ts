@@ -300,7 +300,7 @@ export function logSecurityEvent(event: Omit<SecurityEvent, 'timestamp'>): void 
   // Only log to console in development mode
   // In production, this would send to a secure backend logging service
   if (import.meta.env.DEV) {
-    console.info('[Security Event]', { eventType: fullEvent.eventType, riskLevel: fullEvent.riskLevel, timestamp: fullEvent.timestamp });
+    console.info('[Security Event]', fullEvent);
   }
 }
 
