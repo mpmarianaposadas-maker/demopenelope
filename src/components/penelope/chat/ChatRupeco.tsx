@@ -1,9 +1,9 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, Bot, AlertTriangle } from 'lucide-react';
+import { RotateCcw, Bot, AlertTriangle, ChevronDown } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -28,6 +28,9 @@ export function ChatRupeco() {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const requisitosRef = useRef<HTMLDivElement>(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const prevRequisitosRef = useRef(false);
   
   const { 
     messages, 
@@ -54,11 +57,32 @@ export function ChatRupeco() {
     cancelarClasificacion,
   } = useChatRupecoSimulado();
 
+  // Auto-scroll to bottom on new content
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, evaluation, requisitosData, historialAcciones, clasificacionPendiente]);
+
+  // Smooth scroll to requisitos section when it first appears (post-classification)
+  useEffect(() => {
+    if (requisitosData && !prevRequisitosRef.current) {
+      setShowScrollHint(false);
+      setTimeout(() => {
+        requisitosRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+    prevRequisitosRef.current = !!requisitosData;
+  }, [requisitosData]);
+
+  // Show scroll hint when clasificación is pending
+  useEffect(() => {
+    if (clasificacionPendiente) {
+      setShowScrollHint(true);
+    } else if (!requisitosData) {
+      setShowScrollHint(false);
+    }
+  }, [clasificacionPendiente, requisitosData]);
 
   const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
@@ -140,12 +164,21 @@ export function ChatRupeco() {
                 onConfirmar={confirmarClasificacion}
                 onRechazar={cancelarClasificacion}
               />
+              {/* Indicador de scroll: más contenido abajo */}
+              {showScrollHint && (
+                <div className="mt-3 flex flex-col items-center gap-1 text-muted-foreground animate-pulse">
+                  <ChevronDown className="h-5 w-5" />
+                  <p className="text-xs text-center max-w-sm">
+                    Desplazá hacia abajo para ver el informe completo de verificación documental, requisitos, borrador de intimación e historial de acciones.
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
           {/* Panel de verificación de requisitos */}
           {requisitosData && (
-            <div className="mt-4">
+            <div className="mt-4" ref={requisitosRef}>
               <RequisitoVerificacion
                 requisitos={requisitosData.requisitos}
                 onValidarRequisito={validarRequisito}
