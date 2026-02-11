@@ -145,7 +145,7 @@ export function ChatRupeco() {
               {QUICK_ACTIONS.map((action) => (
                 <Button
                   key={action.label}
-                  variant="outline"
+                  variant="default"
                   size="sm"
                   onClick={() => sendMessage(action.message)}
                   disabled={isLoading}
