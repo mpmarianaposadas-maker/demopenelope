@@ -166,9 +166,11 @@ export function ChatRupeco() {
               />
               {/* Indicador de scroll: más contenido abajo */}
               {showScrollHint && (
-                <div className="mt-3 flex flex-col items-center gap-1 text-muted-foreground animate-pulse">
-                  <ChevronDown className="h-5 w-5" />
-                  <p className="text-xs text-center max-w-sm">
+                <div className="mt-3 flex flex-col items-center gap-2 animate-bounce">
+                  <div className="p-2 rounded-full bg-primary text-primary-foreground shadow-md">
+                    <ChevronDown className="h-5 w-5" />
+                  </div>
+                  <p className="text-xs text-center max-w-sm font-medium text-primary">
                     Desplazá hacia abajo para ver el informe completo de verificación documental, requisitos, borrador de intimación e historial de acciones.
                   </p>
                 </div>
