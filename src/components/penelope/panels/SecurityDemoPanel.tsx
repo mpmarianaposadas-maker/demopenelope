@@ -1,8 +1,8 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { ValidationPanel, SecurityRulesPanel } from '../security';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Shield, BookOpen, Info } from 'lucide-react';
-
+import { Shield, BookOpen, Info, ShieldAlert } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 export function SecurityDemoPanel() {
   const { t } = useLanguage();
 
@@ -44,7 +44,18 @@ export function SecurityDemoPanel() {
       
       {/* Security Rules Panel */}
       <SecurityRulesPanel />
-      
+
+      {/* Responsible Security Notice */}
+      <Alert className="border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20 [&>svg]:text-yellow-600">
+        <ShieldAlert className="h-5 w-5" />
+        <AlertTitle className="font-semibold">Nota de seguridad responsable</AlertTitle>
+        <AlertDescription className="text-sm mt-1">
+          Este módulo no incluye ejemplos precargados de inyección de prompt ni datos sensibles (PII). 
+          Proveer patrones de ataque listos para usar podría facilitar su replicación maliciosa en otros sistemas. 
+          El motor de detección está activo: puede probarse ingresando texto libre en el chat del módulo "Demo Interactiva".
+        </AlertDescription>
+      </Alert>
+
       {/* Main Validation Panel with Ledger */}
       <ValidationPanel />
     </div>
