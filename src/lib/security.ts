@@ -70,15 +70,19 @@ const INJECTION_PATTERNS = [
 
 const PII_PATTERNS = [
   // Argentine DNI (7-8 digits, with or without dots)
-  { pattern: /\b\d{2}\.?\d{3}\.?\d{3}\b/, label: 'DNI' },
+  { pattern: /\b\d{1,2}\.?\d{3}\.?\d{3}\b/, label: 'DNI' },
   // Argentine CUIT/CUIL (XX-XXXXXXXX-X format)
   { pattern: /\b\d{2}-?\d{7,8}-?\d\b/, label: 'CUIT/CUIL' },
   // Credit card numbers (13-19 digits, with or without spaces/dashes)
   { pattern: /\b(?:\d[ -]*?){13,19}\b/, label: 'tarjeta de crédito' },
   // Email addresses
   { pattern: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/, label: 'email' },
-  // Phone numbers (Argentine format and international)
+  // Phone numbers (Argentine format with international prefix)
   { pattern: /(?:\+?54\s?)?(?:9\s?)?(?:11|[2-9]\d{2,3})\s?\d{4}[\s-]?\d{4}\b/, label: 'teléfono' },
+  // Phone numbers (local format without international prefix, e.g. 1155443322, 011-4567-8901)
+  { pattern: /\b0?1[1-9][\s-]?\d{4}[\s-]?\d{4}\b/, label: 'teléfono' },
+  // CBU/CVU (22 consecutive digits)
+  { pattern: /\b\d{22}\b/, label: 'CBU/CVU' },
   // Passport numbers
   { pattern: /\b[A-Z]{3}\d{6}\b/, label: 'pasaporte' },
   // Explicit sensitive data keywords
@@ -120,6 +124,7 @@ export function detectPromptInjection(input: string): {
   isInjection: boolean;
   matchedPatterns: string[];
   riskLevel: 'none' | 'low' | 'medium' | 'high';
+  isPIIOnly: boolean;
   sensitiveData?: { hasSensitiveData: boolean; detectedTypes: string[] };
 } {
   const matchedPatterns: string[] = [];
@@ -135,18 +140,17 @@ export function detectPromptInjection(input: string): {
   
   let riskLevel: 'none' | 'low' | 'medium' | 'high' = 'none';
   
-  // PII detected → at least medium risk
+  // Any PII detected → always HIGH (Ley 25.326 compliance)
+  const isPIIOnly = sensitiveData.hasSensitiveData && matchedPatterns.length === 0;
   if (sensitiveData.hasSensitiveData) {
-    riskLevel = sensitiveData.detectedTypes.length >= 2 ? 'high' : 'medium';
+    riskLevel = 'high';
   }
   
-  // Injection patterns override if higher
-  if (matchedPatterns.length >= 4) {
+  // Injection patterns: 1 = medium, 2+ = high
+  if (matchedPatterns.length >= 2) {
     riskLevel = 'high';
-  } else if (matchedPatterns.length >= 2 && riskLevel !== 'high') {
+  } else if (matchedPatterns.length === 1 && riskLevel !== 'high') {
     riskLevel = 'medium';
-  } else if (matchedPatterns.length === 1 && riskLevel === 'none') {
-    riskLevel = 'low';
   }
   
   return {
@@ -156,6 +160,7 @@ export function detectPromptInjection(input: string): {
       ...sensitiveData.detectedTypes.map(t => `PII:${t}`),
     ],
     riskLevel,
+    isPIIOnly,
     sensitiveData,
   };
 }
@@ -310,4 +315,57 @@ export function getSecurityLog(): readonly SecurityEvent[] {
 
 export function clearSecurityLog(): void {
   securityLog.length = 0;
+}
+
+// ============================================
+// PII Anonymization
+// ============================================
+
+/**
+ * Anonymizes detected PII in input text.
+ * DNI: 30.456.789 → XX.XXX.789
+ * CUIT/CUIL: 20-30456789-5 → XX-XXXXXXXX-X
+ * Email: juan@mail.com → j***@m***.com
+ * Phone: replaced with [tel. protegido]
+ * Credit card: keeps last 4 digits ****-****-****-1234
+ * CBU/CVU: replaced with [CBU/CVU protegido]
+ */
+export function anonymizeInput(input: string): string {
+  let result = input;
+
+  // CBU/CVU (22 digits) — must run before credit card pattern
+  result = result.replace(/\b\d{22}\b/g, '[CBU/CVU protegido]');
+
+  // Credit card (13-19 digits with optional spaces/dashes)
+  result = result.replace(/\b((?:\d[ -]*?){9,15})(\d{4})\b/g, (_, _prefix, last4) => {
+    return `****-****-****-${last4}`;
+  });
+
+  // CUIT/CUIL (XX-XXXXXXXX-X)
+  result = result.replace(/\b\d{2}-?\d{7,8}-?\d\b/g, 'XX-XXXXXXXX-X');
+
+  // DNI (7-8 digits with optional dots) — keep last 3
+  result = result.replace(/\b(\d{1,2})\.?(\d{3})\.?(\d{3})\b/g, (_, _a, _b, last3) => {
+    return `XX.XXX.${last3}`;
+  });
+
+  // Email
+  result = result.replace(
+    /\b([A-Za-z0-9._%+-]+)@([A-Za-z0-9.-]+)\.([A-Za-z]{2,})\b/g,
+    (_, user, domain, tld) => {
+      const u = user[0] + '***';
+      const d = domain[0] + '***';
+      return `${u}@${d}.${tld}`;
+    }
+  );
+
+  // Phone (international)
+  result = result.replace(/(?:\+?54\s?)?(?:9\s?)?(?:11|[2-9]\d{2,3})\s?\d{4}[\s-]?\d{4}/g, '[tel. protegido]');
+  // Phone (local)
+  result = result.replace(/\b0?1[1-9][\s-]?\d{4}[\s-]?\d{4}\b/g, '[tel. protegido]');
+
+  // Passport
+  result = result.replace(/\b[A-Z]{3}\d{6}\b/g, '[pasaporte protegido]');
+
+  return result;
 }
