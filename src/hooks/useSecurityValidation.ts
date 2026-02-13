@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react';
 import { 
   validatePromptInput, 
   detectPromptInjection, 
-  logSecurityEvent 
+  logSecurityEvent,
+  anonymizeInput 
 } from '@/lib/security';
 import { useToast } from '@/hooks/use-toast';
 
@@ -11,6 +12,7 @@ interface SecurityValidationResult {
   sanitizedValue: string;
   riskLevel: 'none' | 'low' | 'medium' | 'high';
   showAlert: boolean;
+  isPIIOnly: boolean;
 }
 
 export function useSecurityValidation() {
@@ -20,6 +22,7 @@ export function useSecurityValidation() {
     sanitizedValue: '',
     riskLevel: 'none',
     showAlert: false,
+    isPIIOnly: false,
   });
 
   const validateInput = useCallback((input: string): SecurityValidationResult => {
@@ -31,6 +34,7 @@ export function useSecurityValidation() {
       sanitizedValue: validation.sanitizedInput || '',
       riskLevel: detection.riskLevel,
       showAlert: detection.riskLevel !== 'none',
+      isPIIOnly: detection.isPIIOnly ?? false,
     };
 
     setLastResult(result);
@@ -77,6 +81,10 @@ export function useSecurityValidation() {
     return result;
   }, [toast]);
 
+  const anonymize = useCallback((input: string): string => {
+    return anonymizeInput(input);
+  }, []);
+
   const clearAlert = useCallback(() => {
     setLastResult(prev => ({ ...prev, showAlert: false }));
   }, []);
@@ -85,5 +93,6 @@ export function useSecurityValidation() {
     validateInput,
     lastResult,
     clearAlert,
+    anonymize,
   };
 }

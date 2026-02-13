@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
-import { ShieldCheck, AlertTriangle, ShieldAlert, Edit, Send, AlertOctagon, Loader2 } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, ShieldAlert, Edit, Send, AlertOctagon, Loader2, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export type RiskLevel = 'none' | 'low' | 'medium' | 'high';
@@ -17,6 +17,8 @@ interface RiskLevelCardProps {
   onConfirm: () => void;
   onEscalate?: () => void;
   isLoading?: boolean;
+  isPIIBlock?: boolean;
+  onAnonymize?: () => void;
 }
 
 export function RiskLevelCard({
@@ -27,7 +29,9 @@ export function RiskLevelCard({
   onEdit,
   onConfirm,
   onEscalate,
-  isLoading = false
+  isLoading = false,
+  isPIIBlock = false,
+  onAnonymize,
 }: RiskLevelCardProps) {
   const { t } = useLanguage();
   const { isSystemActive } = useKillSwitch();
@@ -165,6 +169,19 @@ export function RiskLevelCard({
                     ? t('security.risk.confirmWithReview')
                     : t('security.risk.confirm')
                   }
+                </Button>
+              )}
+              
+              {isPIIBlock && onAnonymize && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={onAnonymize}
+                  disabled={isLoading}
+                  className="gap-2"
+                >
+                  <EyeOff className="w-4 h-4" />
+                  Anonimizar datos
                 </Button>
               )}
               
