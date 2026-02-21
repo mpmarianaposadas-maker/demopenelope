@@ -3,13 +3,19 @@ import { logSecurityEvent } from '@/lib/security';
 
 type KillSwitchStatus = 'active' | 'triggered' | 'cooldown';
 
+interface DirectorSignature {
+  nombre: string;
+  cargo: string;
+}
+
 interface KillSwitchContextValue {
   status: KillSwitchStatus;
   isSystemActive: boolean;
   triggerKillSwitch: (reason: string) => void;
-  reactivateSystem: () => void;
+  reactivateSystem: (firmaA: DirectorSignature, firmaB: DirectorSignature) => void;
   lastTriggerReason: string | null;
   lastTriggerTime: Date | null;
+  reactivationSignatures: [DirectorSignature, DirectorSignature] | null;
 }
 
 const KillSwitchContext = createContext<KillSwitchContextValue | undefined>(undefined);
@@ -22,11 +28,13 @@ export function KillSwitchProvider({ children }: KillSwitchProviderProps) {
   const [status, setStatus] = useState<KillSwitchStatus>('active');
   const [lastTriggerReason, setLastTriggerReason] = useState<string | null>(null);
   const [lastTriggerTime, setLastTriggerTime] = useState<Date | null>(null);
+  const [reactivationSignatures, setReactivationSignatures] = useState<[DirectorSignature, DirectorSignature] | null>(null);
 
   const triggerKillSwitch = useCallback((reason: string) => {
     setStatus('triggered');
     setLastTriggerReason(reason);
     setLastTriggerTime(new Date());
+    setReactivationSignatures(null);
     
     logSecurityEvent({
       eventType: 'kill_switch',
@@ -38,24 +46,30 @@ export function KillSwitchProvider({ children }: KillSwitchProviderProps) {
     });
   }, []);
 
-  const reactivateSystem = useCallback(() => {
+  const reactivateSystem = useCallback((firmaA: DirectorSignature, firmaB: DirectorSignature) => {
     setStatus('cooldown');
+    setReactivationSignatures([firmaA, firmaB]);
     
     logSecurityEvent({
       eventType: 'kill_switch',
       details: {
         action: 'reactivation_initiated',
         previousReason: lastTriggerReason,
+        firmaA: `${firmaA.nombre} (${firmaA.cargo})`,
+        firmaB: `${firmaB.nombre} (${firmaB.cargo})`,
       },
     });
     
-    // Simulated cooldown period before full reactivation
     setTimeout(() => {
       setStatus('active');
       logSecurityEvent({
         eventType: 'kill_switch',
         details: {
           action: 'reactivated',
+          authorizedBy: [
+            `${firmaA.nombre} (${firmaA.cargo})`,
+            `${firmaB.nombre} (${firmaB.cargo})`,
+          ],
         },
       });
     }, 3000);
@@ -72,6 +86,7 @@ export function KillSwitchProvider({ children }: KillSwitchProviderProps) {
         reactivateSystem,
         lastTriggerReason,
         lastTriggerTime,
+        reactivationSignatures,
       }}
     >
       {children}

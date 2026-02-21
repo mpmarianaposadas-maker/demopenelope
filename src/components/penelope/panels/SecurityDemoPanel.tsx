@@ -1,8 +1,9 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { ValidationPanel, SecurityRulesPanel } from '../security';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Shield, BookOpen, Info, ShieldAlert } from 'lucide-react';
+import { Shield, BookOpen, Info, ShieldAlert, AlertTriangle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 export function SecurityDemoPanel() {
   const { t } = useLanguage();
 
@@ -55,6 +56,52 @@ export function SecurityDemoPanel() {
           El motor de detección está activo: puede probarse ingresando texto libre en el chat del módulo "Demo Interactiva".
         </AlertDescription>
       </Alert>
+
+      {/* Risk Matrix - Anexo III */}
+      <Card>
+        <div className="flex items-center gap-2 mb-4">
+          <AlertTriangle className="w-5 h-5 text-amber-600" />
+          <CardTitle>Matriz de Riesgos</CardTitle>
+        </div>
+        <CardText className="mb-4">
+          Evaluación de riesgos conforme al Anexo III del trabajo final. Cada riesgo incluye su nivel inicial, la estrategia de mitigación implementada por Penélope y el nivel residual resultante.
+        </CardText>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Riesgo</th>
+                <th className="text-center py-2 px-3 font-semibold text-foreground">Nivel Inicial</th>
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Mitigación</th>
+                <th className="text-center py-2 px-3 font-semibold text-foreground">Residual</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { riesgo: 'Sesgo algorítmico', inicial: 'ALTO', mitigacion: 'Dataset curado + Auditorías periódicas', residual: 'BAJO' },
+                { riesgo: 'Alucinaciones', inicial: 'MEDIO', mitigacion: 'Temperatura 0 + Anclaje normativo', residual: 'BAJO' },
+                { riesgo: 'Prompt Injection', inicial: 'ALTO', mitigacion: 'Sanitización + Prompt defensivo', residual: 'MEDIO' },
+                { riesgo: 'Privacidad (PII)', inicial: 'MEDIO', mitigacion: 'Filtros de entrada + Ley 25.326', residual: 'BAJO' },
+              ].map((row, i) => (
+                <tr key={i} className="border-b border-border/50">
+                  <td className="py-2.5 px-3 font-medium text-foreground">{row.riesgo}</td>
+                  <td className="py-2.5 px-3 text-center">
+                    <Badge variant="outline" className={row.inicial === 'ALTO' ? 'border-red-300 text-red-700 bg-red-50' : 'border-amber-300 text-amber-700 bg-amber-50'}>
+                      {row.inicial}
+                    </Badge>
+                  </td>
+                  <td className="py-2.5 px-3 text-muted-foreground">{row.mitigacion}</td>
+                  <td className="py-2.5 px-3 text-center">
+                    <Badge variant="outline" className={row.residual === 'BAJO' ? 'border-green-300 text-green-700 bg-green-50' : 'border-amber-300 text-amber-700 bg-amber-50'}>
+                      {row.residual}
+                    </Badge>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
       {/* Main Validation Panel with Ledger */}
       <ValidationPanel />

@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { AlertTriangle, Power, ShieldCheck, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useLanguage } from '@/hooks/useLanguage';
 import {
@@ -14,30 +17,45 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 export function KillSwitchPanel() {
   const { status, triggerKillSwitch, reactivateSystem, lastTriggerReason, lastTriggerTime } = useKillSwitch();
   const { t } = useLanguage();
+  const [showReactivationDialog, setShowReactivationDialog] = useState(false);
+  const [firmaA, setFirmaA] = useState({ nombre: '', cargo: '' });
+  const [firmaB, setFirmaB] = useState({ nombre: '', cargo: '' });
+
+  const canSubmitReactivation = firmaA.nombre.trim() && firmaA.cargo.trim() && firmaB.nombre.trim() && firmaB.cargo.trim();
+
+  const handleReactivationSubmit = () => {
+    if (!canSubmitReactivation) return;
+    reactivateSystem(firmaA, firmaB);
+    setShowReactivationDialog(false);
+    setFirmaA({ nombre: '', cargo: '' });
+    setFirmaB({ nombre: '', cargo: '' });
+  };
 
   const getStatusColor = () => {
     switch (status) {
-      case 'active':
-        return 'bg-green-100 border-green-300 text-green-800';
-      case 'triggered':
-        return 'bg-red-100 border-red-300 text-red-800';
-      case 'cooldown':
-        return 'bg-yellow-100 border-yellow-300 text-yellow-800';
+      case 'active': return 'bg-green-100 border-green-300 text-green-800';
+      case 'triggered': return 'bg-red-100 border-red-300 text-red-800';
+      case 'cooldown': return 'bg-yellow-100 border-yellow-300 text-yellow-800';
     }
   };
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'active':
-        return <ShieldCheck className="w-5 h-5 text-green-600" />;
-      case 'triggered':
-        return <AlertTriangle className="w-5 h-5 text-red-600" />;
-      case 'cooldown':
-        return <Loader2 className="w-5 h-5 text-yellow-600 animate-spin" />;
+      case 'active': return <ShieldCheck className="w-5 h-5 text-green-600" />;
+      case 'triggered': return <AlertTriangle className="w-5 h-5 text-red-600" />;
+      case 'cooldown': return <Loader2 className="w-5 h-5 text-yellow-600 animate-spin" />;
     }
   };
 
@@ -52,7 +70,6 @@ export function KillSwitchPanel() {
         </div>
       </div>
 
-      {/* Status indicator */}
       <div className="flex items-center gap-3 mb-4 p-3 bg-secondary/50 rounded-lg">
         {getStatusIcon()}
         <div className="flex-1">
@@ -67,7 +84,6 @@ export function KillSwitchPanel() {
         </div>
       </div>
 
-      {/* Reason display when triggered */}
       <AnimatePresence>
         {status === 'triggered' && lastTriggerReason && (
           <motion.div
@@ -84,16 +100,11 @@ export function KillSwitchPanel() {
         )}
       </AnimatePresence>
 
-      {/* Action buttons */}
       <div className="space-y-2">
         {status === 'active' && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                className="w-full gap-2"
-                size="sm"
-              >
+              <Button variant="destructive" className="w-full gap-2" size="sm">
                 <Power className="w-4 h-4" />
                 {t('killSwitch.triggerButton')}
               </Button>
@@ -122,35 +133,15 @@ export function KillSwitchPanel() {
         )}
 
         {status === 'triggered' && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full gap-2 border-green-300 text-green-700 hover:bg-green-50"
-                size="sm"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                {t('killSwitch.reactivateButton')}
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t('killSwitch.reactivateTitle')}</AlertDialogTitle>
-                <AlertDialogDescription>
-                  {t('killSwitch.reactivateDesc')}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>{t('killSwitch.cancel')}</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={reactivateSystem}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  {t('killSwitch.confirmReactivate')}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <Button
+            variant="outline"
+            className="w-full gap-2 border-green-300 text-green-700 hover:bg-green-50"
+            size="sm"
+            onClick={() => setShowReactivationDialog(true)}
+          >
+            <ShieldCheck className="w-4 h-4" />
+            {t('killSwitch.reactivateButton')}
+          </Button>
         )}
 
         {status === 'cooldown' && (
@@ -161,7 +152,80 @@ export function KillSwitchPanel() {
         )}
       </div>
 
-      {/* Security note */}
+      {/* Reactivation Dialog with dual signature */}
+      <Dialog open={showReactivationDialog} onOpenChange={setShowReactivationDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-green-600" />
+              Reactivación del Sistema
+            </DialogTitle>
+            <DialogDescription>
+              Conforme el Anexo III, la reactivación requiere la firma de dos directores. Complete ambos campos para continuar.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-2">
+            <div className="border border-border rounded-lg p-3 space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Firma 1 — Director/a</p>
+              <div className="space-y-2">
+                <Label htmlFor="firma-a-nombre" className="text-xs">Nombre completo</Label>
+                <Input
+                  id="firma-a-nombre"
+                  placeholder="Ej: María García"
+                  value={firmaA.nombre}
+                  onChange={(e) => setFirmaA(prev => ({ ...prev, nombre: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="firma-a-cargo" className="text-xs">Cargo</Label>
+                <Input
+                  id="firma-a-cargo"
+                  placeholder="Ej: Directora Nacional de Desarrollo de Telecomunicaciones"
+                  value={firmaA.cargo}
+                  onChange={(e) => setFirmaA(prev => ({ ...prev, cargo: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div className="border border-border rounded-lg p-3 space-y-3">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Firma 2 — Director/a</p>
+              <div className="space-y-2">
+                <Label htmlFor="firma-b-nombre" className="text-xs">Nombre completo</Label>
+                <Input
+                  id="firma-b-nombre"
+                  placeholder="Ej: Juan Pérez"
+                  value={firmaB.nombre}
+                  onChange={(e) => setFirmaB(prev => ({ ...prev, nombre: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="firma-b-cargo" className="text-xs">Cargo</Label>
+                <Input
+                  id="firma-b-cargo"
+                  placeholder="Ej: Director Nacional de Servicios Audiovisuales"
+                  value={firmaB.cargo}
+                  onChange={(e) => setFirmaB(prev => ({ ...prev, cargo: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowReactivationDialog(false)}>
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleReactivationSubmit}
+              disabled={!canSubmitReactivation}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Confirmar reactivación
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="mt-4 pt-3 border-t border-border">
         <p className="text-[10px] text-muted-foreground leading-relaxed">
           {t('killSwitch.securityNote')}
