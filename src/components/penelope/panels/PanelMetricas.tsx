@@ -1,7 +1,8 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
 import { useLanguage } from '@/hooks/useLanguage';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Lightbulb, Rocket, Database, FlaskConical, Users } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export function PanelMetricas() {
   const { t } = useLanguage();
@@ -106,6 +107,80 @@ export function PanelMetricas() {
             </TableRow>
           ))}
         </Table>
+      </Card>
+
+      {/* Indicadores de Éxito - Cap. VIII */}
+      <Card>
+        <CardTitle as="h3">Indicadores de Éxito (Cap. VIII)</CardTitle>
+        <CardText>Indicadores cualitativos y cuantitativos definidos en el trabajo final para evaluar el impacto de Penélope:</CardText>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
+          {[
+            { label: 'Tiempo promedio de admisibilidad formal', tipo: 'Cuantitativo' },
+            { label: 'Número de ciclos de subsanación por expediente', tipo: 'Cuantitativo' },
+            { label: 'Porcentaje de reutilización de datos RUPECO', tipo: 'Cuantitativo' },
+            { label: 'Percepción del administrado', tipo: 'Cualitativo' },
+            { label: 'Percepción de los agentes', tipo: 'Cualitativo' },
+          ].map((kpi, i) => (
+            <div key={i} className="border border-border rounded-lg p-3 flex items-start gap-2">
+              <Lightbulb size={16} className="text-primary flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-foreground">{kpi.label}</p>
+                <Badge variant="outline" className="text-xs mt-1">{kpi.tipo}</Badge>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Fases de Implementación - Cap. VIII */}
+      <Card>
+        <CardTitle as="h3">Fases de Implementación</CardTitle>
+        <CardText>Hoja de ruta del trabajo final (Cap. VIII, p. 19-21):</CardText>
+        <div className="space-y-3 my-4">
+          {[
+            { icon: Users, fase: 'Fase 1', titulo: 'Planificación interdisciplinaria', desc: 'Conformación de equipo con perfiles jurídicos, técnicos y de gestión del cambio.' },
+            { icon: Database, fase: 'Fase 2', titulo: 'Golden Dataset (conjunto de datos curado)', desc: 'Construcción de dataset representativo para evitar automatización acrítica de patrones históricos.' },
+            { icon: FlaskConical, fase: 'Fase 3', titulo: 'Piloto controlado', desc: 'Prueba en entorno acotado con expedientes reales y supervisión reforzada.' },
+            { icon: Rocket, fase: 'Fase 4', titulo: 'Despliegue gradual y gestión del cambio', desc: 'Escalado progresivo con modelo ADKAR de acompañamiento institucional.' },
+          ].map((f, i) => (
+            <div key={i} className="flex items-start gap-3 border border-border rounded-lg p-4">
+              <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
+                <f.icon size={18} className="text-primary" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-primary">{f.fase}</span>
+                  <span className="text-sm font-semibold text-foreground">{f.titulo}</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Modelo ADKAR - Anexo IV */}
+      <Card>
+        <CardTitle as="h3">Gestión del Cambio — Modelo ADKAR</CardTitle>
+        <CardText>
+          El Anexo IV del trabajo final propone el modelo ADKAR para la adopción institucional de Penélope:
+        </CardText>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
+          {[
+            { letra: 'A', titulo: 'Awareness', desc: 'Talleres de sensibilización sobre IA responsable en la Administración Pública.' },
+            { letra: 'D', titulo: 'Desire', desc: 'Certificación como «Operadores de IA Pública» para generar incentivo profesional.' },
+            { letra: 'K', titulo: 'Knowledge', desc: 'Capacitación en interpretación de alertas, semáforos y outputs del sistema.' },
+            { letra: 'A', titulo: 'Ability', desc: 'Simulacros en sandbox con expedientes de prueba y retroalimentación supervisada.' },
+          ].map((etapa, i) => (
+            <div key={i} className="border border-border rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{etapa.letra}</span>
+                <span className="text-sm font-semibold text-foreground">{etapa.titulo}</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed ml-8">{etapa.desc}</p>
+            </div>
+          ))}
+        </div>
       </Card>
 
       {/* Nota metodológica */}

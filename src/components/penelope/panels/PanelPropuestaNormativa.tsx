@@ -47,6 +47,14 @@ export function PanelPropuestaNormativa() {
       color: 'green',
       categoria: 'Garantías',
     },
+    {
+      num: 'Art. 6°',
+      titulo: 'Derecho a la trazabilidad',
+      texto: 'El sistema debe permitir al administrado conocer el estado real de su trámite y la secuencia básica de actuaciones relevantes, incluyendo las intervenciones automatizadas convalidadas por agentes humanos.',
+      fundamento: 'Ley 27.275 (Acceso a la Información Pública)',
+      color: 'green',
+      categoria: 'Garantías',
+    },
   ];
 
   const experiencias = [
@@ -54,6 +62,8 @@ export function PanelPropuestaNormativa() {
     { bandera: '🇩🇰', pais: 'Dinamarca', sistema: 'MitID + Registros Base', desc: 'Instrumentado sin reformar derecho sustantivo.' },
     { bandera: '🇪🇺', pais: 'UE', sistema: 'AI Act (Reg. 2024/1689)', desc: 'Paradigma adoptado para Penélope.' },
     { bandera: '🇧🇷', pais: 'Brasil', sistema: 'ANATEL', desc: 'Benchmark sectorial para métricas.' },
+    { bandera: '🇪🇸', pais: 'España', sistema: 'Ley 40/2015', desc: 'Régimen de actuación administrativa automatizada con supervisión humana.' },
+    { bandera: '🇫🇷', pais: 'Francia', sistema: 'Loi 2016-1321', desc: 'Obligación de transparencia en decisiones algorítmicas de la Administración.' },
   ];
 
   const borderColors: Record<string, string> = {
