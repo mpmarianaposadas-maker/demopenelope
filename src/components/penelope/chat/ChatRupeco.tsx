@@ -167,7 +167,7 @@ export function ChatRupeco() {
               {/* Indicador de scroll: más contenido abajo */}
               {showScrollHint && (
                 <div className="mt-3 flex flex-col items-center gap-2 animate-bounce">
-                  <div className="p-2 rounded-full bg-primary text-primary-foreground shadow-md">
+                  <div className="p-2 rounded-full bg-gray-900 text-white shadow-md">
                     <ChevronDown className="h-5 w-5" />
                   </div>
                   <p className="text-xs text-center max-w-sm font-medium text-primary">

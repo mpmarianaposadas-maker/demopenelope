@@ -10,7 +10,7 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   es: {
     // Header
-    'title.principal': 'Automatización Asistida e IA Responsable para la Prevención del Silencio Positivo',
+    'title.principal': 'El viaje de Penélope: automatización asistida e inteligencia artificial responsable en etapas preliminares del procedimiento administrativo',
     'subtitle.organismo': 'ENACOM · Proyecto Penélope',
     'badge.demo': 'DEMO INTERACTIVA',
     
@@ -480,7 +480,7 @@ export const translations: Record<Language, Translations> = {
   },
   en: {
     // Header
-    'title.principal': 'AI-Assisted Automation for Positive Silence Prevention',
+    'title.principal': 'The Journey of Penelope: AI-assisted automation and responsible artificial intelligence in preliminary stages of administrative procedure',
     'subtitle.organismo': 'ENACOM · Penélope Project',
     'badge.demo': 'INTERACTIVE DEMO',
     
