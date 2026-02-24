@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { SecurityIndicator } from '../SecurityAlert';
 import { RiskLevelCard, RiskLevel } from './RiskLevelCard';
-import { SecurityLedger, LedgerEntry } from './SecurityLedger';
+import { SecurityLedger } from './SecurityLedger';
 import { useSecurityValidation } from '@/hooks/useSecurityValidation';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
@@ -31,7 +31,7 @@ export function ValidationPanel() {
   const { tipoTramite, setTipoTramite } = useTipoTramite();
   
   const [inputValue, setInputValue] = useState('');
-  const [ledgerEntries, setLedgerEntries] = useState<LedgerEntry[]>([]);
+  const [ledgerEntries, setLedgerEntries] = useState<any[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
   const [showHelp, setShowHelp] = useState(true);
   const [validationCount, setValidationCount] = useState(0);
@@ -51,19 +51,19 @@ export function ValidationPanel() {
   // Add entry to ledger
   const addLedgerEntry = useCallback((
     riskLevel: 'BAJO' | 'MEDIO' | 'ALTO',
-    result: LedgerEntry['result'],
+    result: string,
     details?: string
   ) => {
-    const entry: LedgerEntry = {
+    const entry = {
       id: crypto.randomUUID(),
       caseId: generateCaseId(),
       promptId: generatePromptId(),
-      taskType: 'VALIDACION_SEGURIDAD',
-      riskLevel,
-      result,
-      operator: 'agente_demo',
+      taskType: 'VERIFICACION_VIGENCIA',
+      inputHash: 'demo-hash',
+      outputIA: details || 'Resultado de validación',
+      validadorId: 'agente_demo',
       timestamp: new Date(),
-      details
+      estado: result === 'Bloqueado' ? 'corregido' as const : 'convalidado' as const,
     };
     
     setLedgerEntries(prev => [entry, ...prev]);
@@ -92,7 +92,7 @@ export function ValidationPanel() {
     
     const riskLevel = lastResult.riskLevel;
     let ledgerRisk: 'BAJO' | 'MEDIO' | 'ALTO' = 'BAJO';
-    let result: LedgerEntry['result'] = 'Permitido';
+    let result = 'Permitido';
     
     if (riskLevel === 'high') {
       ledgerRisk = 'ALTO';
