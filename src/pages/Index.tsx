@@ -67,6 +67,16 @@ const Index = () => {
       <Header language={language} onToggleLanguage={toggleLanguage} t={t} />
 
       <main className="container mx-auto px-4 py-6 md:py-8" role="main">
+        {/* Bloque institucional permanente */}
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-6 flex items-start gap-3">
+          <span className="text-xl flex-shrink-0">⚖️</span>
+          <div>
+            <p className="font-semibold text-foreground text-sm mb-1">Sistema de apoyo no decisorio.</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Esta plataforma no emite actos administrativos. Genera preanálisis sujetos a validación humana obligatoria.
+            </p>
+          </div>
+        </div>
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Main column */}
           <section 
