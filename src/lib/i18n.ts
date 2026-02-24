@@ -444,7 +444,7 @@ export const translations: Record<Language, Translations> = {
 
     // Trazabilidad Ciudadana
     'trazabilidad.ciudadana.title': 'Estado de mi Trámite',
-    'trazabilidad.ciudadana.subtitle': 'Consulta el estado de tu expediente de forma segura',
+    'trazabilidad.ciudadana.subtitle': 'Consulta el estado de tu expediente con trazabilidad institucional',
     'trazabilidad.ciudadana.placeholder': 'Ingrese su ID de seguimiento o número de expediente',
     'trazabilidad.ciudadana.formato': 'Formato: EX-2026-XXXXXXXX o ID de seguimiento',
     'trazabilidad.ciudadana.buscar': 'Buscar',
@@ -462,7 +462,10 @@ export const translations: Record<Language, Translations> = {
     'trazabilidad.ciudadana.fechaEstimada': 'Fecha estimada de resolución',
     'trazabilidad.ciudadana.documentos': 'Documentos adjuntos',
     'trazabilidad.ciudadana.historial': 'Historial del trámite',
-    'trazabilidad.ciudadana.disclaimer': 'Esta consulta muestra el estado público del expediente. Las decisiones internas y análisis técnicos no son visibles por motivos de confidencialidad del proceso administrativo.',
+    'trazabilidad.ciudadana.rupeco': 'Ref. RUPECO',
+    'trazabilidad.ciudadana.etapaActual': 'Etapa del procedimiento',
+    'trazabilidad.ciudadana.disclaimer': 'Esta consulta refleja las actuaciones registradas en el sistema de trazabilidad institucional. La información corresponde a la capa pública del procedimiento. Las etapas de análisis sustantivo y decisión se gestionan en una capa interna del flujo administrativo, conforme a la diferenciación funcional del Sistema Penélope.',
+    'trazabilidad.ciudadana.vinculoHistorial': 'Ver historial institucional completo',
 
     // Intervención Manual
     'intervencion.boton': 'Intervenir manualmente',
@@ -913,7 +916,7 @@ export const translations: Record<Language, Translations> = {
 
     // Citizen Traceability
     'trazabilidad.ciudadana.title': 'My Case Status',
-    'trazabilidad.ciudadana.subtitle': 'Check your case file status securely',
+    'trazabilidad.ciudadana.subtitle': 'Check your case file status with institutional traceability',
     'trazabilidad.ciudadana.placeholder': 'Enter your tracking ID or case file number',
     'trazabilidad.ciudadana.formato': 'Format: EX-2026-XXXXXXXX or tracking ID',
     'trazabilidad.ciudadana.buscar': 'Search',
@@ -931,7 +934,10 @@ export const translations: Record<Language, Translations> = {
     'trazabilidad.ciudadana.fechaEstimada': 'Estimated resolution date',
     'trazabilidad.ciudadana.documentos': 'Attached documents',
     'trazabilidad.ciudadana.historial': 'Case history',
-    'trazabilidad.ciudadana.disclaimer': 'This query shows the public status of the case file. Internal decisions and technical analysis are not visible for confidentiality reasons of the administrative process.',
+    'trazabilidad.ciudadana.rupeco': 'RUPECO Ref.',
+    'trazabilidad.ciudadana.etapaActual': 'Procedure stage',
+    'trazabilidad.ciudadana.disclaimer': 'This query reflects the actions recorded in the institutional traceability system. The information corresponds to the public layer of the procedure. Substantive analysis and decision stages are managed in an internal layer of the administrative workflow, in accordance with the functional differentiation of the Penelope System.',
+    'trazabilidad.ciudadana.vinculoHistorial': 'View full institutional history',
 
     // Manual Intervention
     'intervencion.boton': 'Intervene manually',

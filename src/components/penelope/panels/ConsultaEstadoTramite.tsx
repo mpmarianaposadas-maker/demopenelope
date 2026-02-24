@@ -11,25 +11,30 @@ import {
   CheckCircle2, 
   AlertCircle,
   Loader2,
-  ArrowRight,
   User,
   FileCheck,
-  Eye
+  Eye,
+  Building2,
+  ExternalLink
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
 
 type EstadoTramite = 'verificado' | 'enRevision' | 'enEspera' | 'completado';
 
+type EtapaProcedimiento = 'ingreso' | 'verificacion' | 'analisis' | 'decision' | 'notificacion';
+
 interface TramiteInfo {
   id: string;
   expediente: string;
   estado: EstadoTramite;
+  etapa: EtapaProcedimiento;
   fechaIngreso: Date;
   fechaEstimada: Date;
   tipoTramite: string;
+  rupecoRef: string | null;
   documentos: string[];
-  historial: { fecha: Date; evento: string }[];
+  historial: { fecha: Date; evento: string; actor: string }[];
 }
 
 const estadoConfig: Record<EstadoTramite, { color: string; icon: React.ReactNode; bgClass: string }> = {
@@ -55,15 +60,33 @@ const estadoConfig: Record<EstadoTramite, { color: string; icon: React.ReactNode
   }
 };
 
-// Simulated data generator
+const etapaLabels: Record<string, Record<EtapaProcedimiento, string>> = {
+  es: {
+    ingreso: 'Ingreso y caratulación',
+    verificacion: 'Verificación documental',
+    analisis: 'Análisis sustantivo',
+    decision: 'Decisión',
+    notificacion: 'Notificación',
+  },
+  en: {
+    ingreso: 'Entry and filing',
+    verificacion: 'Document verification',
+    analisis: 'Substantive analysis',
+    decision: 'Decision',
+    notificacion: 'Notification',
+  }
+};
+
 function generarTramiteSimulado(id: string): TramiteInfo | null {
-  // Only return data for valid-looking IDs
   if (!id.match(/^(EX-|TRA-|SEG-)/i) && id.length < 8) {
     return null;
   }
 
   const estados: EstadoTramite[] = ['verificado', 'enRevision', 'enEspera', 'completado'];
   const estado = estados[Math.floor(Math.random() * estados.length)];
+  
+  const etapas: EtapaProcedimiento[] = ['ingreso', 'verificacion', 'analisis', 'decision', 'notificacion'];
+  const etapaIdx = estado === 'completado' ? 4 : estado === 'verificado' ? 2 : Math.floor(Math.random() * 3);
   
   const fechaIngreso = new Date();
   fechaIngreso.setDate(fechaIngreso.getDate() - Math.floor(Math.random() * 30) - 5);
@@ -75,9 +98,11 @@ function generarTramiteSimulado(id: string): TramiteInfo | null {
     id,
     expediente: id.startsWith('EX-') ? id : `EX-2026-${Math.floor(Math.random() * 90000000 + 10000000)}-APN-ENACOM`,
     estado,
+    etapa: etapas[etapaIdx],
     fechaIngreso,
     fechaEstimada,
     tipoTramite: 'Licencia TIC - Alta',
+    rupecoRef: estado !== 'enEspera' ? `RUPECO-2026-${Math.floor(Math.random() * 9000 + 1000)}` : null,
     documentos: [
       'Formulario de solicitud',
       'Estatuto social',
@@ -85,10 +110,10 @@ function generarTramiteSimulado(id: string): TramiteInfo | null {
       'Constancia AFIP'
     ],
     historial: [
-      { fecha: fechaIngreso, evento: 'Trámite ingresado por TAD' },
-      { fecha: new Date(fechaIngreso.getTime() + 2 * 60 * 60 * 1000), evento: 'Documentación recibida - 4 archivos' },
-      { fecha: new Date(fechaIngreso.getTime() + 24 * 60 * 60 * 1000), evento: 'Verificación formal iniciada' },
-      { fecha: new Date(fechaIngreso.getTime() + 48 * 60 * 60 * 1000), evento: estado === 'verificado' ? 'Documentación verificada - sin observaciones' : 'En proceso de revisión' }
+      { fecha: fechaIngreso, evento: 'Trámite ingresado por TAD', actor: 'Sistema TAD' },
+      { fecha: new Date(fechaIngreso.getTime() + 2 * 60 * 60 * 1000), evento: 'Documentación recibida — 4 archivos', actor: 'Sistema Penélope' },
+      { fecha: new Date(fechaIngreso.getTime() + 24 * 60 * 60 * 1000), evento: 'Verificación formal iniciada', actor: 'Sistema Penélope' },
+      { fecha: new Date(fechaIngreso.getTime() + 48 * 60 * 60 * 1000), evento: estado === 'verificado' ? 'Verificación completada — derivado a análisis sustantivo' : 'En proceso de verificación formal', actor: estado === 'verificado' ? 'Agente validador' : 'Sistema Penélope' }
     ]
   };
 }
@@ -110,7 +135,6 @@ export function ConsultaEstadoTramite() {
     setNoEncontrado(false);
     setTramite(null);
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1200));
 
     const resultado = generarTramiteSimulado(idBusqueda.trim());
@@ -133,6 +157,8 @@ export function ConsultaEstadoTramite() {
       minute: '2-digit'
     });
   };
+
+  const lang = language === 'es' ? 'es' : 'en';
 
   return (
     <div className="space-y-6">
@@ -175,7 +201,7 @@ export function ConsultaEstadoTramite() {
             </Button>
           </div>
 
-          {/* IDs de ejemplo para demo */}
+          {/* IDs de ejemplo */}
           <div className="mt-4 flex flex-wrap gap-2">
             <span className="text-xs text-muted-foreground">{t('trazabilidad.ciudadana.ejemplos')}:</span>
             {['EX-2026-12345678', 'SEG-ABC123', 'TRA-987654'].map(ejemplo => (
@@ -184,9 +210,7 @@ export function ConsultaEstadoTramite() {
                 variant="ghost"
                 size="sm"
                 className="h-6 px-2 text-xs"
-                onClick={() => {
-                  setIdBusqueda(ejemplo);
-                }}
+                onClick={() => setIdBusqueda(ejemplo)}
               >
                 {ejemplo}
               </Button>
@@ -195,7 +219,7 @@ export function ConsultaEstadoTramite() {
         </CardContent>
       </Card>
 
-      {/* Estado de no encontrado */}
+      {/* No encontrado */}
       {noEncontrado && (
         <Card className="border-destructive/30 bg-destructive/5">
           <CardContent className="pt-6">
@@ -210,7 +234,7 @@ export function ConsultaEstadoTramite() {
         </Card>
       )}
 
-      {/* Resultado de la búsqueda */}
+      {/* Resultado */}
       {tramite && (
         <div className="space-y-4">
           {/* Estado principal */}
@@ -237,7 +261,7 @@ export function ConsultaEstadoTramite() {
             </CardContent>
           </Card>
 
-          {/* Información del trámite */}
+          {/* Info del trámite con RUPECO y etapa */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card>
               <CardContent className="pt-4">
@@ -249,6 +273,35 @@ export function ConsultaEstadoTramite() {
               </CardContent>
             </Card>
 
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Building2 className="h-4 w-4" />
+                  <span className="text-xs">{t('trazabilidad.ciudadana.rupeco')}</span>
+                </div>
+                <p className="font-medium text-sm font-mono">
+                  {tramite.rupecoRef ?? (
+                    <span className="text-muted-foreground italic text-xs">
+                      {language === 'es' ? 'Pendiente de asignación' : 'Pending assignment'}
+                    </span>
+                  )}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-4">
+                <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                  <Clock className="h-4 w-4" />
+                  <span className="text-xs">{t('trazabilidad.ciudadana.etapaActual')}</span>
+                </div>
+                <p className="font-medium text-sm">{etapaLabels[lang]?.[tramite.etapa] ?? tramite.etapa}</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Fechas */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card>
               <CardContent className="pt-4">
                 <div className="flex items-center gap-2 text-muted-foreground mb-1">
@@ -270,7 +323,7 @@ export function ConsultaEstadoTramite() {
             </Card>
           </div>
 
-          {/* Documentos adjuntos */}
+          {/* Documentos */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -290,7 +343,7 @@ export function ConsultaEstadoTramite() {
             </CardContent>
           </Card>
 
-          {/* Historial de pasos */}
+          {/* Historial con actor */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
@@ -311,6 +364,9 @@ export function ConsultaEstadoTramite() {
                     <div className="flex-1 pb-3">
                       <p className="text-xs text-muted-foreground">{formatFecha(paso.fecha)}</p>
                       <p className="text-sm">{paso.evento}</p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                        {language === 'es' ? 'Registrado por' : 'Recorded by'}: {paso.actor}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -318,9 +374,9 @@ export function ConsultaEstadoTramite() {
             </CardContent>
           </Card>
 
-          {/* Disclaimer */}
-          <div className="p-3 bg-muted/50 rounded-lg text-xs text-muted-foreground text-center">
-            {t('trazabilidad.ciudadana.disclaimer')}
+          {/* Disclaimer institucional — sin referencia a confidencialidad */}
+          <div className="p-4 bg-secondary/50 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-2">
+            <p>{t('trazabilidad.ciudadana.disclaimer')}</p>
           </div>
         </div>
       )}
