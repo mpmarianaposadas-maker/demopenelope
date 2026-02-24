@@ -85,7 +85,13 @@ export function PanelPropuestaNormativa() {
       {/* Sección 2: Articulado Propuesto */}
       <Card>
         <CardTitle as="h3">Articulado Propuesto</CardTitle>
-        <div className="space-y-4 my-4">
+        <p className="text-sm font-medium text-foreground mt-2">
+          Síntesis del articulado mínimo y lineamientos regulatorios propuestos en el trabajo.
+        </p>
+        <p className="text-xs text-muted-foreground mt-1 mb-4">
+          Incluye bases normativas y contenidos sugeridos para un eventual reglamento de implementación.
+        </p>
+        <div className="space-y-4">
           {articulos.map((art, i) => (
             <div key={i} className={`border-l-4 ${borderColors[art.color]} border border-border rounded-r-lg p-4`}>
               <div className="flex items-center gap-2 mb-2">
