@@ -31,12 +31,21 @@ export function ChatRupeco() {
   const [showScrollHint, setShowScrollHint] = useState(false);
   const [showFade, setShowFade] = useState(true);
   const prevRequisitosRef = useRef(false);
+  const historialRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
     setShowFade(!atBottom);
+
+    // Hide hint when historial is visible in viewport
+    if (historialRef.current) {
+      const rect = historialRef.current.getBoundingClientRect();
+      const containerRect = el.getBoundingClientRect();
+      const historialVisible = rect.top < containerRect.bottom;
+      if (historialVisible) setShowScrollHint(false);
+    }
   }, []);
   
   const { 
@@ -183,15 +192,19 @@ export function ChatRupeco() {
                 onRechazar={cancelarClasificacion}
               />
               {/* Indicador de scroll: más contenido abajo */}
-              {showScrollHint && (
-                <div className="mt-3 flex flex-col items-center gap-2 animate-bounce">
-                  <div className="p-2 rounded-full bg-gray-900 text-white shadow-md">
+              {showScrollHint && historialAcciones.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => historialRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  className="mt-3 flex flex-col items-center gap-2 cursor-pointer bg-transparent border-none w-full"
+                >
+                  <div className="p-2 rounded-full bg-primary text-primary-foreground shadow-md">
                     <ChevronDown className="h-5 w-5" />
                   </div>
                   <p className="text-xs text-center max-w-sm font-medium text-primary">
-                    Desplazá hacia abajo para ver el informe completo de verificación documental, requisitos, borrador de intimación e historial de acciones.
+                    Ir al Historial de Acciones
                   </p>
-                </div>
+                </button>
               )}
             </div>
           )}
@@ -223,7 +236,7 @@ export function ChatRupeco() {
           )}
 
           {evaluation && (
-            <div className="mt-4">
+            <div className="mt-4" ref={historialRef}>
               <RupecoEvaluation data={evaluation} />
             </div>
           )}
