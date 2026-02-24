@@ -173,6 +173,9 @@ export function PanelPropuestaNormativa() {
         <p className="text-xs text-muted-foreground italic">
           El articulado es una propuesta académica.
         </p>
+        <p className="text-xs text-muted-foreground italic mt-2 border-t border-border/40 pt-2">
+          *Ejemplos ilustrativos de experiencias comparadas. Algunas referencias no se mencionan en el cuerpo principal del trabajo.
+        </p>
       </Card>
 
       <SiguientePaso
