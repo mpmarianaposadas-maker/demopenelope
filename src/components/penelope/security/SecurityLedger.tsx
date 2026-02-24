@@ -11,12 +11,20 @@ export interface LedgerEntry {
   id: string;
   caseId: string;
   promptId: string;
-  taskType: 'VALIDACION_SEGURIDAD' | 'KILL_SWITCH' | 'ACTUALIZACION_SISTEMA';
+  taskType: 'VALIDACION_SEGURIDAD' | 'KILL_SWITCH' | 'ACTUALIZACION_SISTEMA' | 'OVERRIDE_HUMANO';
   riskLevel: 'BAJO' | 'MEDIO' | 'ALTO';
   result: 'Permitido' | 'Permitido con revisión manual' | 'Bloqueado';
   operator: string;
   timestamp: Date;
   details?: string;
+  // Human override fields
+  humanOverride?: {
+    originalValue?: string;
+    adjustedValue?: string;
+    author: string;
+    role?: string;
+    justification?: string;
+  };
 }
 
 interface SecurityLedgerProps {
@@ -138,6 +146,34 @@ export function SecurityLedger({ entries, maxVisible = 5 }: SecurityLedgerProps)
                 {entry.details && (
                   <div className="text-muted-foreground italic pt-1">
                     {entry.details}
+                  </div>
+                )}
+                
+                {/* Human override visualization */}
+                {entry.humanOverride && (
+                  <div className="pt-2 mt-1 border-t border-border/30 space-y-1.5">
+                    <div className="flex items-center gap-1 text-xs font-medium text-primary">
+                      <User className="w-3 h-3" />
+                      Modificación humana — {entry.humanOverride.author}
+                      {entry.humanOverride.role && <span className="text-muted-foreground">({entry.humanOverride.role})</span>}
+                    </div>
+                    {entry.humanOverride.originalValue && (
+                      <div className="text-xs">
+                        <span className="text-muted-foreground">Original:</span>{' '}
+                        <span className="line-through text-muted-foreground/70">{entry.humanOverride.originalValue}</span>
+                      </div>
+                    )}
+                    {entry.humanOverride.adjustedValue && (
+                      <div className="text-xs">
+                        <span className="text-muted-foreground">Ajustado:</span>{' '}
+                        <span className="font-medium text-foreground">{entry.humanOverride.adjustedValue}</span>
+                      </div>
+                    )}
+                    {entry.humanOverride.justification && (
+                      <div className="text-xs text-muted-foreground italic">
+                        Motivo: {entry.humanOverride.justification}
+                      </div>
+                    )}
                   </div>
                 )}
               </motion.div>

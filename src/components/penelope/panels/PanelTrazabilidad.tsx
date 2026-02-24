@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
+import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/useLanguage';
+import { Shield, UserCheck, Power, FileText, Clock } from 'lucide-react';
 
 export function PanelTrazabilidad() {
   const { t } = useLanguage();
@@ -67,6 +70,76 @@ export function PanelTrazabilidad() {
           <CardText>{t('traz.footer1')}</CardText>
           <CardText>{t('traz.footer2')}</CardText>
         </div>
+      </Card>
+
+      {/* Integrated Audit Event Log */}
+      <Card>
+        <div className="flex items-center gap-2 mb-4">
+          <FileText className="w-5 h-5 text-primary" />
+          <CardTitle as="h3">Registro integrado de eventos auditables</CardTitle>
+        </div>
+        <CardText className="mb-4">
+          Visualización unificada de los eventos de validación humana, ajustes de prompt y activaciones del Kill Switch registrados durante la sesión demostrativa.
+        </CardText>
+
+        <div className="space-y-3">
+          {[
+            {
+              tipo: 'Validación humana',
+              icon: <UserCheck className="w-4 h-4 text-green-600" />,
+              badge: 'VALIDACIÓN',
+              badgeClass: 'bg-green-100 text-green-800 border-green-300',
+              responsable: 'agente_demo',
+              fecha: '24/02/2026 — 10:32:15',
+              justificacion: 'Confirmación de clasificación "Licencia TIC - Alta Nueva" tras revisión manual del tipo de trámite.',
+            },
+            {
+              tipo: 'Ajuste de prompt',
+              icon: <Shield className="w-4 h-4 text-primary" />,
+              badge: 'OVERRIDE PROMPT',
+              badgeClass: 'bg-blue-100 text-blue-800 border-blue-300',
+              responsable: 'agente_demo',
+              fecha: '24/02/2026 — 10:35:42',
+              justificacion: 'Modificación del valor original "Lic. TIC" a "Licencia TIC - Alta Nueva" para adecuación al catálogo normativo vigente.',
+            },
+            {
+              tipo: 'Kill Switch',
+              icon: <Power className="w-4 h-4 text-red-600" />,
+              badge: 'KILL SWITCH',
+              badgeClass: 'bg-red-100 text-red-800 border-red-300',
+              responsable: 'Dir. Nac. Telecomunicaciones',
+              fecha: '24/02/2026 — 11:02:08',
+              justificacion: 'Suspensión cautelar del procesamiento automático por detección de anomalía en clasificación. Requiere doble firma para reactivación.',
+            },
+          ].map((event, i) => (
+            <div key={i} className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-sm space-y-2">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  {event.icon}
+                  <span className="font-medium text-foreground">{event.tipo}</span>
+                </div>
+                <Badge variant="outline" className={`text-[10px] ${event.badgeClass}`}>
+                  {event.badge}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <UserCheck className="w-3 h-3" />
+                  <span>Responsable: <span className="font-medium text-foreground">{event.responsable}</span></span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  <span>{event.fecha}</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">{event.justificacion}</p>
+            </div>
+          ))}
+        </div>
+
+        <p className="text-[10px] text-muted-foreground mt-4 italic">
+          Datos ilustrativos de la sesión demostrativa. En producción, estos eventos se registran en un ledger inmutable conforme al Anexo III.
+        </p>
       </Card>
     </>
   );
