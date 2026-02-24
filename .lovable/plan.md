@@ -1,147 +1,84 @@
 
 
-# Diagnostico: ajustes de la demo respecto del trabajo final
+# Ajustes de layout y scroll del Verificador RUPECO
 
-## Estado actual
-
-El titulo y el boton de scroll ya fueron corregidos. A continuacion se detallan los desajustes restantes entre la demo y el trabajo final, organizados por prioridad.
+Cambios exclusivamente de CSS/layout, sin tocar logica ni componentes funcionales.
 
 ---
 
-## PRIORIDAD ALTA (afectan la coherencia juridica)
+## Cambio 1: Altura del contenedor principal
 
-### 1. Kill Switch: reactivacion inconsistente
+**Archivo:** `src/components/penelope/chat/ChatRupeco.tsx` (linea 91)
 
-**Trabajo (Anexo III, p.32):** "Reactivacion: Requiere auditoria y firma de dos directores."
+Reemplazar `h-[600px] max-h-[70vh]` por clases responsive:
+- Desktop: `h-[min(85vh,900px)]`
+- Mobile: `h-[85vh]`
 
-**Demo actual:** Se reactiva con un cooldown de 3 segundos y un solo clic de confirmacion.
+Se usa estilo inline con CSS `min()` para desktop y clase condicional para mobile (ya existe `useIsMobile`).
 
-**Ajuste:** Modificar el flujo de reactivacion para simular la firma de dos directores (formulario con dos campos de nombre/cargo obligatorios). El cooldown puede mantenerse, pero debe exigir la doble firma antes.
-
-**Archivos:** `src/contexts/KillSwitchContext.tsx`, `src/components/penelope/KillSwitchPanel.tsx`
-
----
-
-### 2. Propuesta Normativa: falta el derecho a trazabilidad
-
-**Trabajo (Cap. VII, p.18):** Enumera tres derechos del administrado:
-1. Derecho a la informacion (Art. 4 actual de la demo, OK)
-2. Derecho a revision humana (Art. 5 actual de la demo, OK)
-3. **Derecho a la trazabilidad** (no esta en la demo)
-
-**Ajuste:** Agregar un Art. 6 al panel de Propuesta Normativa:
-- Titulo: "Derecho a la trazabilidad"
-- Texto: "El sistema debe permitir al administrado conocer el estado real de su tramite y la secuencia basica de actuaciones relevantes, incluyendo las intervenciones automatizadas convalidadas por agentes humanos."
-- Fundamento: Ley 27.275 (Acceso a la Informacion Publica)
-- Categoria: Garantias (verde)
-
-**Archivo:** `src/components/penelope/panels/PanelPropuestaNormativa.tsx`
+Ademas, se reemplaza el `<ScrollArea>` de Radix por un `div` con `overflow-y: auto` nativo para tener control directo del scrollbar y el fade. El ScrollArea de Radix oculta el scrollbar nativo y lo reemplaza por uno propio dificil de estilizar con alto contraste.
 
 ---
 
-### 3. Matriz de Riesgos ausente
+## Cambio 2: Progress indicator sticky
 
-**Trabajo (Anexo III, p.33):** Presenta una Matriz de Riesgos con 4 categorias:
+**Archivo:** `src/components/penelope/chat/ChatRupeco.tsx` (lineas 128-132)
 
-| Riesgo | Nivel Inicial | Mitigacion | Residual |
-|---|---|---|---|
-| Sesgo | ALTO | Dataset curado + Auditorias | BAJO |
-| Alucinaciones | MEDIO | Temperatura 0 + Anclaje | BAJO |
-| Prompt Injection | ALTO | Sanitizacion + Prompt defensivo | MEDIO |
-| Privacidad | MEDIO | Filtros de entrada | BAJO |
-
-**Demo actual:** No tiene esta matriz. El panel de Seguridad tiene validacion en tiempo real y reglas, pero no muestra la matriz de riesgos del trabajo.
-
-**Ajuste:** Agregar una seccion "Matriz de Riesgos" al panel de Seguridad (`SecurityDemoPanel.tsx`) con la tabla de 4 riesgos, niveles con semaforo, mitigaciones y riesgo residual.
-
-**Archivo:** `src/components/penelope/panels/SecurityDemoPanel.tsx`
+Mover el bloque del `RupecoProgressIndicator` DENTRO del area scrollable pero como elemento sticky:
+- `position: sticky; top: 0; z-index: 20;`
+- Fondo solido blanco (`bg-card`) para que tape el contenido al hacer scroll
+- Borde inferior suave (`border-b border-border/50`)
+- Padding ajustado
 
 ---
 
-## PRIORIDAD MEDIA (mejoran la fidelidad)
+## Cambio 3: Scrollbar visible con alto contraste
 
-### 4. Experiencias internacionales incompletas
+**Archivo:** `src/index.css`
 
-**Trabajo (Cap. III y VII):** Menciona Espana (Ley 40/2015 - actuacion administrativa automatizada) y Francia (Loi 2016-1321 - decisiones algoritmicas) como referentes.
+Agregar reglas CSS para el contenedor del verificador usando una clase especifica (`.rupeco-scroll`):
 
-**Demo actual:** Solo muestra Estonia, Dinamarca, UE y Brasil.
-
-**Ajuste:** Agregar Espana y Francia al array `experiencias` en PanelPropuestaNormativa.
-
-**Archivo:** `src/components/penelope/panels/PanelPropuestaNormativa.tsx`
-
----
-
-### 5. Estrategia de gestion del cambio (ADKAR) ausente
-
-**Trabajo (Anexo IV, p.35-36):** Describe el modelo ADKAR con 4 etapas:
-- Awareness: talleres de sensibilizacion
-- Desire: certificacion como "Operadores de IA Publica"
-- Knowledge y Ability: interpretacion de alertas y simulacros en sandbox
-
-**Demo actual:** No tiene referencia a ADKAR.
-
-**Ajuste:** Agregar una seccion informativa al panel de Metricas o crear una subseccion en "Acerca de" que mencione las fases de implementacion y el modelo ADKAR. Alternativa: agregarlo al final del PanelMetricas como tarjeta informativa.
-
-**Archivo:** `src/components/penelope/panels/PanelMetricas.tsx`
-
----
-
-### 6. Fases de implementacion ausentes
-
-**Trabajo (Cap. VIII, p.19-21):** Describe 4 fases:
-1. Planificacion interdisciplinaria
-2. Golden dataset (conjunto de datos curado)
-3. Piloto controlado
-4. Despliegue gradual y gestion del cambio
-
-**Demo actual:** No menciona las fases de implementacion.
-
-**Ajuste:** Agregar una tarjeta o seccion al panel de Arquitectura o Metricas con las 4 fases como un timeline visual simple.
-
-**Archivo:** `src/components/penelope/panels/PanelArquitectura.tsx` o `PanelMetricas.tsx`
+```css
+.rupeco-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.rupeco-scroll::-webkit-scrollbar-track {
+  background: hsl(210 15% 94%);
+  border-radius: 5px;
+}
+.rupeco-scroll::-webkit-scrollbar-thumb {
+  background: hsl(215 15% 55%);
+  border-radius: 5px;
+  border: 2px solid hsl(210 15% 94%);
+}
+.rupeco-scroll::-webkit-scrollbar-thumb:hover {
+  background: hsl(215 15% 40%);
+}
+/* Firefox */
+.rupeco-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(215 15% 55%) hsl(210 15% 94%);
+}
+```
 
 ---
 
-## PRIORIDAD BAJA (detalles menores)
+## Cambio 4: Fade inferior (gradiente indicador de scroll)
 
-### 7. Indicadores de exito (KPIs) del trabajo
+**Archivo:** `src/components/penelope/chat/ChatRupeco.tsx`
 
-**Trabajo (Cap. VIII, p.20):** Lista 5 indicadores cualitativos/cuantitativos:
-- Tiempo promedio de admisibilidad formal
-- Numero de ciclos de subsanacion por expediente
-- Porcentaje de reutilizacion de datos RUPECO
-- Percepcion del administrado
-- Percepcion de los agentes
+Agregar un `div` posicionado absolute en la parte inferior del contenedor scrollable con un gradiente de transparente a blanco (`bg-gradient-to-t from-card to-transparent`), con `pointer-events-none` para no interferir con clicks. Se oculta con state cuando el usuario llega al final del scroll.
 
-**Demo actual:** Tiene KPIs numericos pero no estos indicadores textuales especificos.
-
-**Ajuste menor:** Alinear las etiquetas de KPIs del PanelMetricas con los nombres exactos del trabajo. Cambio cosmético en textos.
+Se agrega un pequeno hook de scroll listener para detectar si hay contenido oculto abajo y mostrar/ocultar el fade.
 
 ---
 
-### 8. Referencia a "golden dataset"
+## Resumen de archivos
 
-**Trabajo (Cap. VI, p.15 y Cap. VIII):** Menciona la necesidad de un "conjunto de datos curado" para evitar automatizacion acritica de patrones historicos.
+| Archivo | Tipo de cambio |
+|---|---|
+| `src/components/penelope/chat/ChatRupeco.tsx` | Altura, scroll nativo, sticky progress, fade inferior |
+| `src/index.css` | Estilos de scrollbar con alto contraste |
 
-**Demo actual:** No hay referencia.
-
-**Ajuste:** Agregar una mencion breve en el panel de Arquitectura o Trazabilidad como nota contextual.
-
----
-
-## Resumen de impacto
-
-| Cambio | Archivos | Complejidad |
-|---|---|---|
-| Kill Switch doble firma | 2 archivos | Media |
-| Art. 6 Trazabilidad | 1 archivo | Baja |
-| Matriz de Riesgos | 1 archivo | Baja |
-| Espana y Francia | 1 archivo | Minima |
-| ADKAR | 1 archivo | Baja |
-| Fases implementacion | 1 archivo | Baja |
-| KPIs textuales | 1 archivo (i18n) | Minima |
-| Golden dataset | 1 archivo | Minima |
-
-Total estimado: 6-8 archivos con cambios puntuales, sin nuevas dependencias.
+No se modifican: logica, textos, componentes funcionales, ni arquitectura.
 
