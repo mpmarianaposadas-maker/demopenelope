@@ -1,5 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,7 +29,15 @@ export function ChatRupeco() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const requisitosRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
+  const [showFade, setShowFade] = useState(true);
   const prevRequisitosRef = useRef(false);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
+    setShowFade(!atBottom);
+  }, []);
   
   const { 
     messages, 
@@ -88,7 +95,10 @@ export function ChatRupeco() {
   const showProgress = currentStep !== 'inicio';
 
   return (
-    <Card className="flex flex-col h-[600px] max-h-[70vh]">
+    <Card
+      className="flex flex-col"
+      style={{ height: isMobile ? '85vh' : 'min(85vh, 900px)' }}
+    >
       <CardHeader className="flex-shrink-0 pb-3 border-b">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -125,14 +135,19 @@ export function ChatRupeco() {
         </div>
       )}
 
-      {showProgress && (
-        <div className="flex-shrink-0 px-4 pt-3">
-          <RupecoProgressIndicator currentStep={currentStep} esPJ={esPJ} />
-        </div>
-      )}
+      <div className="relative flex-1 min-h-0">
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className="h-full overflow-y-auto p-4 rupeco-scroll"
+        >
+          {showProgress && (
+            <div className="sticky top-0 z-20 bg-card border-b border-border/50 -mx-4 px-4 py-3 mb-4">
+              <RupecoProgressIndicator currentStep={currentStep} esPJ={esPJ} />
+            </div>
+          )}
 
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-        <div className="space-y-4">
+          <div className="space-y-4">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
@@ -220,7 +235,15 @@ export function ChatRupeco() {
             </div>
           )}
         </div>
-      </ScrollArea>
+        </div>
+
+        {/* Fade inferior indicador de scroll */}
+        {showFade && (
+          <div
+            className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-card to-transparent pointer-events-none z-10"
+          />
+        )}
+      </div>
 
       <ChatInput
         onSend={sendMessage}
