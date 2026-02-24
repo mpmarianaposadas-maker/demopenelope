@@ -1,184 +1,175 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useLanguage } from '@/hooks/useLanguage';
-import { FileText, Clock, User, AlertTriangle, Check, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, Clock, User, ChevronDown, ChevronUp, CheckCircle2, PenLine, Hash, Link2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export interface LedgerEntry {
   id: string;
   caseId: string;
   promptId: string;
-  taskType: 'VALIDACION_SEGURIDAD' | 'KILL_SWITCH' | 'ACTUALIZACION_SISTEMA' | 'OVERRIDE_HUMANO';
-  riskLevel: 'BAJO' | 'MEDIO' | 'ALTO';
-  result: 'Permitido' | 'Permitido con revisión manual' | 'Bloqueado';
-  operator: string;
+  taskType: 'VERIFICACION_VIGENCIA' | 'CLASIFICACION_PRELIMINAR' | 'GENERACION_PROVIDENCIA' | 'DETECCION_FALTANTES' | 'CONTROL_PLAZOS';
+  inputHash: string;
+  outputIA: string;
+  validadorId: string;
   timestamp: Date;
-  details?: string;
-  // Human override fields
-  humanOverride?: {
-    originalValue?: string;
-    adjustedValue?: string;
-    author: string;
-    role?: string;
-    justification?: string;
-  };
+  estado: 'convalidado' | 'corregido';
 }
 
 interface SecurityLedgerProps {
   entries: LedgerEntry[];
   maxVisible?: number;
+  onViewExpediente?: (caseId: string) => void;
 }
 
-export function SecurityLedger({ entries, maxVisible = 5 }: SecurityLedgerProps) {
-  const { t } = useLanguage();
+const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
+  VERIFICACION_VIGENCIA: 'Verificación de vigencia documental',
+  CLASIFICACION_PRELIMINAR: 'Clasificación preliminar del trámite',
+  GENERACION_PROVIDENCIA: 'Generación de borrador de providencia',
+  DETECCION_FALTANTES: 'Detección de documentación faltante',
+  CONTROL_PLAZOS: 'Control activo de plazos perentorios',
+};
+
+export function SecurityLedger({ entries, maxVisible = 5, onViewExpediente }: SecurityLedgerProps) {
   const [expanded, setExpanded] = useState(false);
-  
+
   const visibleEntries = expanded ? entries : entries.slice(0, maxVisible);
-  
-  const getRiskBadge = (level: LedgerEntry['riskLevel']) => {
-    switch (level) {
-      case 'ALTO':
-        return <Badge variant="destructive" className="text-xs">ALTO</Badge>;
-      case 'MEDIO':
-        return <Badge className="bg-orange-500 text-white text-xs">MEDIO</Badge>;
-      case 'BAJO':
-        return <Badge className="bg-green-600 text-white text-xs">BAJO</Badge>;
-    }
-  };
-  
-  const getResultIcon = (result: LedgerEntry['result']) => {
-    switch (result) {
-      case 'Permitido':
-        return <Check className="w-4 h-4 text-green-600" />;
-      case 'Permitido con revisión manual':
-        return <AlertTriangle className="w-4 h-4 text-orange-500" />;
-      case 'Bloqueado':
-        return <XCircle className="w-4 h-4 text-destructive" />;
-    }
-  };
-  
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('es-AR', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit' 
-    });
-  };
-  
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString('es-AR', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
-    });
-  };
+
+  const formatTime = (date: Date) =>
+    date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   return (
     <Card>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-primary" />
-          <CardTitle>{t('security.ledger.title')}</CardTitle>
+          <CardTitle>Registro de Interacciones Algorítmicas</CardTitle>
         </div>
         <Badge variant="outline" className="text-xs">
-          {entries.length} {t('security.ledger.entries')}
+          {entries.length} registros
         </Badge>
       </div>
-      
-      <CardText className="text-xs mb-2">
-        {t('security.ledger.description')}
+
+      <CardText className="text-xs mb-1">
+        Registro probatorio de cada interacción entre el sistema y los modelos de IA, conforme al modelo de trazabilidad del Anexo III.
       </CardText>
       <p className="text-xs text-muted-foreground italic mb-4 border-l-2 border-primary/30 pl-2">
-        Panel de monitoreo técnico del uso de modelos, conforme lo desarrollado en el trabajo.
+        Panel de monitoreo técnico del uso de modelos, conforme lo desarrollado en el trabajo. Finalidad probatoria, no analítica.
       </p>
-      
-      <ScrollArea className={expanded ? 'max-h-96' : 'max-h-64'}>
-        <div className="space-y-3">
-          <AnimatePresence mode="popLayout">
-            {visibleEntries.map((entry, index) => (
-              <motion.div
-                key={entry.id}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: index * 0.05 }}
-                className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-xs space-y-2"
+
+      {entries.length === 0 ? (
+        <div className="text-center py-8 text-muted-foreground text-sm">
+          No hay registros de interacciones algorítmicas aún.
+        </div>
+      ) : (
+        <>
+          <ScrollArea className={expanded ? 'max-h-[28rem]' : 'max-h-72'}>
+            <div className="space-y-3">
+              <AnimatePresence mode="popLayout">
+                {visibleEntries.map((entry, index) => (
+                  <motion.div
+                    key={entry.id}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ delay: index * 0.04 }}
+                    className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-xs space-y-2"
+                  >
+                    {/* Header: PromptID + Estado */}
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="font-mono font-semibold text-foreground">{entry.promptId}</span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          entry.estado === 'convalidado'
+                            ? 'border-green-400 text-green-700 bg-green-50'
+                            : 'border-amber-400 text-amber-700 bg-amber-50'
+                        }
+                      >
+                        {entry.estado === 'convalidado' ? (
+                          <><CheckCircle2 className="w-3 h-3 mr-1" />Convalidado</>
+                        ) : (
+                          <><PenLine className="w-3 h-3 mr-1" />Corregido</>
+                        )}
+                      </Badge>
+                    </div>
+
+                    {/* Tipo de tarea */}
+                    <div className="text-muted-foreground">
+                      {TASK_LABELS[entry.taskType]}
+                    </div>
+
+                    {/* Grid de campos */}
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <FileText className="w-3 h-3 shrink-0" />
+                        <span className="font-medium text-foreground/80">CaseID:</span>
+                        <span className="truncate font-mono">{entry.caseId}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <User className="w-3 h-3 shrink-0" />
+                        <span className="font-medium text-foreground/80">Validador:</span>
+                        <span>{entry.validadorId}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-3 h-3 shrink-0" />
+                        <span>{formatDate(entry.timestamp)} {formatTime(entry.timestamp)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Hash className="w-3 h-3 shrink-0" />
+                        <span className="font-medium text-foreground/80">Hash:</span>
+                        <span className="font-mono truncate">{entry.inputHash}</span>
+                      </div>
+                    </div>
+
+                    {/* Output IA */}
+                    <div className="pt-1.5 border-t border-border/30">
+                      <span className="font-medium text-foreground/80 block mb-0.5">Output del modelo:</span>
+                      <p className="text-muted-foreground leading-relaxed">{entry.outputIA}</p>
+                    </div>
+
+                    {/* Link al expediente */}
+                    {onViewExpediente && (
+                      <div className="pt-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 text-xs text-primary gap-1 px-1"
+                          onClick={() => onViewExpediente(entry.caseId)}
+                        >
+                          <Link2 className="w-3 h-3" />
+                          Ver historial del expediente
+                        </Button>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </ScrollArea>
+
+          {entries.length > maxVisible && (
+            <div className="mt-3 pt-3 border-t border-border">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setExpanded(!expanded)}
+                className="w-full gap-2 text-xs"
               >
-                {/* Header row */}
-                <div className="flex items-center justify-between gap-2 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    {getResultIcon(entry.result)}
-                    <span className="font-mono font-medium">{entry.promptId}</span>
-                  </div>
-                  {getRiskBadge(entry.riskLevel)}
-                </div>
-                
-                {/* Details grid */}
-                <div className="grid grid-cols-2 gap-2 text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <FileText className="w-3 h-3" />
-                    <span className="truncate">{entry.caseId}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <User className="w-3 h-3" />
-                    <span>{entry.operator}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    <span>{formatTime(entry.timestamp)}</span>
-                  </div>
-                  <div className="text-xs">
-                    {formatDate(entry.timestamp)}
-                  </div>
-                </div>
-                
-                {/* Task type and result */}
-                <div className="flex items-center justify-between pt-1 border-t border-border/30">
-                  <span className="text-muted-foreground">{entry.taskType}</span>
-                  <span className={`font-medium ${
-                    entry.result === 'Permitido' ? 'text-green-600' :
-                    entry.result === 'Bloqueado' ? 'text-destructive' : 'text-orange-500'
-                  }`}>
-                    {entry.result}
-                  </span>
-                </div>
-                
-                {entry.details && (
-                  <div className="text-muted-foreground italic pt-1">
-                    {entry.details}
-                  </div>
+                {expanded ? (
+                  <><ChevronUp className="w-4 h-4" />Contraer</>
+                ) : (
+                  <><ChevronDown className="w-4 h-4" />Ver todos ({entries.length - maxVisible} más)</>
                 )}
-                
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </ScrollArea>
-      
-      {entries.length > maxVisible && (
-        <div className="mt-3 pt-3 border-t border-border">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setExpanded(!expanded)}
-            className="w-full gap-2 text-xs"
-          >
-            {expanded ? (
-              <>
-                <ChevronUp className="w-4 h-4" />
-                {t('security.ledger.collapse')}
-              </>
-            ) : (
-              <>
-                <ChevronDown className="w-4 h-4" />
-                {t('security.ledger.showAll')} ({entries.length - maxVisible} {t('security.ledger.more')})
-              </>
-            )}
-          </Button>
-        </div>
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </Card>
   );
