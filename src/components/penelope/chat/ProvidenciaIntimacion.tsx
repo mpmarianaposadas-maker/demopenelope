@@ -56,7 +56,7 @@ function generarTextoNota(
   return `
 ═══════════════════════════════════════════════════════════════════
           ENTE NACIONAL DE COMUNICACIONES - ENACOM
-          NOTA - BORRADOR PARA CARGA EN GDE
+          NOTA DE INTIMACIÓN
 ═══════════════════════════════════════════════════════════════════
 
 Expediente: ${expediente.numero}
@@ -97,24 +97,7 @@ bajo apercibimiento de archivo (Art. 5°, Decreto N° 1759/72 T.O. 2017).
 La documentación requerida deberá ser presentada a través del sistema
 de Trámites a Distancia (TAD), citando el número de expediente.
 
-══════════════════════════════════════════════════════════════════
-⚠️  CONTROL SILENCIO POSITIVO (Decreto 971/2024)
-    Plazo máximo: ${expediente.plazoSilencioPositivo} días | Vence: ${fechaLimiteSilencio}
-══════════════════════════════════════════════════════════════════
-
 Sin otro particular, saludo a Ud. atentamente.
-
-───────────────────────────────────────────────────────────────────
- BORRADOR - REQUIERE VALIDACIÓN Y CARGA MANUAL EN GDE
- 
- Validado por: _________________________  Fecha: ___________
- 
- □ Verificar datos del destinatario
- □ Verificar documentación faltante
- □ Cargar en sistema GDE como NOTA (NO)
-───────────────────────────────────────────────────────────────────
-
-          Sistema Penélope v1.0 - Generación automática
 `.trim();
 }
 
