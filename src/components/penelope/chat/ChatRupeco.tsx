@@ -245,11 +245,6 @@ export function ChatRupeco() {
         )}
       </div>
 
-      <ChatInput
-        onSend={sendMessage}
-        isLoading={isLoading}
-        disabled={!isSystemActive || !!clasificacionPendiente}
-      />
     </Card>
   );
 }
