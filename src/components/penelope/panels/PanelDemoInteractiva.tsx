@@ -17,6 +17,13 @@ export function PanelDemoInteractiva() {
         <CardText>{t('demo.intro2')}</CardText>
       </Card>
 
+      {/* Rótulos de supervisión humana */}
+      <div className="bg-muted/50 border border-border rounded-lg p-3 space-y-1.5">
+        <p className="text-sm text-foreground flex items-center gap-2"><span className="text-green-600">✔</span> Revisión por analista responsable</p>
+        <p className="text-sm text-foreground flex items-center gap-2"><span className="text-green-600">✔</span> Validación humana previa obligatoria</p>
+        <p className="text-sm text-foreground flex items-center gap-2"><span className="text-green-600">✔</span> Firma y responsabilidad institucional</p>
+      </div>
+
       <Tabs defaultValue="verificacion" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="verificacion">
