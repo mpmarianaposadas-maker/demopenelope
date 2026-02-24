@@ -1,5 +1,5 @@
 import { Card, CardTitle, CardText } from '../Card';
-import { ValidationPanel, SecurityRulesPanel } from '../security';
+import { SecurityRulesPanel } from '../security';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Shield, BookOpen, Info, ShieldAlert, AlertTriangle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
@@ -103,8 +103,6 @@ export function SecurityDemoPanel() {
         </div>
       </Card>
 
-      {/* Main Validation Panel with Ledger */}
-      <ValidationPanel />
     </div>
   );
 }
