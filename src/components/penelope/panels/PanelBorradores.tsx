@@ -1,49 +1,29 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { useLanguage } from '@/hooks/useLanguage';
+import { Badge } from '@/components/ui/badge';
+import { FileText, Send, Info } from 'lucide-react';
 
 export function PanelBorradores() {
   const { t } = useLanguage();
 
   return (
     <>
-      {/* Providencia */}
-      <Card as="article">
-        <CardTitle>{t('borr.pv.title')}</CardTitle>
-        <div className="space-y-2 mb-4">
-          <CardText>
-            <strong>{t('borr.tipoDoc')}</strong> Providencia (PV)
-          </CardText>
-          <CardText>
-            <strong>{t('borr.estado')}</strong>{' '}
-            <span className="status-pending">{t('borr.estadoPendiente')}</span>
-          </CardText>
-          <CardText>
-            <strong>{t('borr.generadoPor')}</strong> {t('borr.pv.generador')}
-          </CardText>
-        </div>
-        
-        <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
-          <p className="font-semibold">EX-2026-00123456-APN-ENACOM</p>
-          <p>{t('borr.pv.fecha')}</p>
-          <p className="leading-relaxed">{t('borr.pv.texto1')}</p>
-          <p className="leading-relaxed">
-            {t('borr.pv.texto2')}{' '}
-            <strong>COOPERATIVA DEL VALLE LTDA.</strong> (CUIT XX-XXXXXXXX-X).
-          </p>
-          <p className="leading-relaxed">
-            {t('borr.pv.texto3')}{' '}
-            <strong>{t('borr.pv.pase')}</strong> {t('borr.pv.destino')}
-          </p>
-          <p>{t('borr.pv.cierre')}</p>
-          <p className="italic text-muted-foreground text-sm border-t border-dashed border-border pt-3 mt-4">
-            {t('borr.pv.disclaimer')}
-          </p>
-        </div>
-      </Card>
+      {/* ═══ SECCIÓN 1: Comunicaciones dirigidas al administrado ═══ */}
+      <div className="flex items-center gap-2 mb-2">
+        <Send className="w-5 h-5 text-primary" />
+        <h3 className="font-serif font-semibold text-foreground text-base">
+          {t('borr.seccion.administrado') || 'Comunicaciones dirigidas al administrado'}
+        </h3>
+      </div>
 
-      {/* Nota de Intimación para peticionantes (carga en GDE) */}
+      {/* Nota de Intimación */}
       <Card as="article">
-        <CardTitle>{t('borr.nota.title')}</CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+          <CardTitle>{t('borr.nota.title')}</CardTitle>
+          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
+            Tipo documento GDE: Nota (NO)
+          </Badge>
+        </div>
         <div className="space-y-2 mb-4">
           <CardText>
             <strong>{t('borr.tipoDoc')}</strong> Nota (NO) - {t('borr.nota.destino')}
@@ -54,6 +34,9 @@ export function PanelBorradores() {
           </CardText>
           <CardText>
             <strong>{t('borr.generadoPor')}</strong> {t('borr.nota.generador')}
+          </CardText>
+          <CardText>
+            <strong>Ref. RUPECO:</strong> RUPECO-2024-00892 (vigente)
           </CardText>
         </div>
 
@@ -100,7 +83,12 @@ export function PanelBorradores() {
 
       {/* Versión alternativa de intimación */}
       <Card as="article">
-        <CardTitle as="h3">{t('borr.alt.title')}</CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+          <CardTitle as="h3">{t('borr.alt.title')}</CardTitle>
+          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
+            Tipo documento GDE: Nota (NO)
+          </Badge>
+        </div>
         
         <div className="border-l-4 border-accent pl-4 space-y-3 text-sm md:text-base">
           <p className="font-semibold">{t('borr.co.docFaltante')}</p>
@@ -116,6 +104,67 @@ export function PanelBorradores() {
           <p>{t('borr.alt.cierre')}</p>
           <p className="italic text-muted-foreground text-sm border-t border-dashed border-border pt-3 mt-4">
             {t('borr.alt.disclaimer')}
+          </p>
+        </div>
+      </Card>
+
+      {/* ═══ SECCIÓN 2: Información interna de gestión (GDE) ═══ */}
+      <div className="flex items-center gap-2 mb-2 mt-6">
+        <FileText className="w-5 h-5 text-primary" />
+        <h3 className="font-serif font-semibold text-foreground text-base">
+          {t('borr.seccion.interna') || 'Actos internos de gestión (GDE)'}
+        </h3>
+      </div>
+
+      {/* Providencia */}
+      <Card as="article">
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
+          <CardTitle>{t('borr.pv.title')}</CardTitle>
+          <Badge variant="outline" className="text-[10px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800">
+            Tipo documento GDE: Providencia (PV)
+          </Badge>
+        </div>
+        <div className="space-y-2 mb-4">
+          <CardText>
+            <strong>{t('borr.tipoDoc')}</strong> Providencia (PV)
+          </CardText>
+          <CardText>
+            <strong>{t('borr.estado')}</strong>{' '}
+            <span className="status-pending">{t('borr.estadoPendiente')}</span>
+          </CardText>
+          <CardText>
+            <strong>{t('borr.generadoPor')}</strong> {t('borr.pv.generador')}
+          </CardText>
+          <CardText>
+            <strong>Ref. RUPECO:</strong> RUPECO-2024-00892 (vigente)
+          </CardText>
+        </div>
+
+        {/* Nota condicional para inscripciones RUPECO */}
+        <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+          <div className="flex items-start gap-2">
+            <Info className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+            <p className="text-xs text-amber-800 dark:text-amber-300">
+              <strong>Nota:</strong> En trámites de inscripción RUPECO en curso, el número RUPECO será asignado tras el otorgamiento formal. El presente ejemplo corresponde a un administrado con registro RUPECO vigente.
+            </p>
+          </div>
+        </div>
+        
+        <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
+          <p className="font-semibold">EX-2026-00123456-APN-ENACOM</p>
+          <p>{t('borr.pv.fecha')}</p>
+          <p className="leading-relaxed">{t('borr.pv.texto1')}</p>
+          <p className="leading-relaxed">
+            {t('borr.pv.texto2')}{' '}
+            <strong>COOPERATIVA DEL VALLE LTDA.</strong> (CUIT XX-XXXXXXXX-X).
+          </p>
+          <p className="leading-relaxed">
+            {t('borr.pv.texto3')}{' '}
+            <strong>{t('borr.pv.pase')}</strong> {t('borr.pv.destino')}
+          </p>
+          <p>{t('borr.pv.cierre')}</p>
+          <p className="italic text-muted-foreground text-sm border-t border-dashed border-border pt-3 mt-4">
+            {t('borr.pv.disclaimer')}
           </p>
         </div>
       </Card>

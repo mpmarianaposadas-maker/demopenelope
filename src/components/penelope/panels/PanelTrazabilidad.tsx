@@ -79,7 +79,7 @@ export function PanelTrazabilidad() {
           <CardTitle as="h3">Registro integrado de eventos auditables</CardTitle>
         </div>
         <CardText className="mb-4">
-          Visualización unificada de los eventos de validación humana, ajustes de prompt y activaciones del Kill Switch registrados durante la sesión demostrativa.
+          Visualización unificada de los eventos de validación humana y activaciones del Kill Switch registrados durante la sesión demostrativa.
         </CardText>
 
         <div className="space-y-3">
@@ -92,15 +92,6 @@ export function PanelTrazabilidad() {
               responsable: 'agente_demo',
               fecha: '24/02/2026 — 10:32:15',
               justificacion: 'Confirmación de clasificación "Licencia TIC - Alta Nueva" tras revisión manual del tipo de trámite.',
-            },
-            {
-              tipo: 'Ajuste de prompt',
-              icon: <Shield className="w-4 h-4 text-primary" />,
-              badge: 'OVERRIDE PROMPT',
-              badgeClass: 'bg-blue-100 text-blue-800 border-blue-300',
-              responsable: 'agente_demo',
-              fecha: '24/02/2026 — 10:35:42',
-              justificacion: 'Modificación del valor original "Lic. TIC" a "Licencia TIC - Alta Nueva" para adecuación al catálogo normativo vigente.',
             },
             {
               tipo: 'Kill Switch',

@@ -1,111 +1,58 @@
 import { useLanguage } from '@/hooks/useLanguage';
-import { Brain, Zap, Clock, Shield } from 'lucide-react';
-
-interface MetricItemProps {
-  icon: React.ElementType;
-  label: string;
-  value: string;
-  subValue?: string;
-  color: 'primary' | 'green' | 'amber' | 'blue';
-}
-
-function MetricItem({ icon: Icon, label, value, subValue, color }: MetricItemProps) {
-  const colorClasses = {
-    primary: 'bg-primary/10 text-primary',
-    green: 'bg-green-100 text-green-700',
-    amber: 'bg-amber-100 text-amber-700',
-    blue: 'bg-blue-100 text-blue-700',
-  };
-
-  return (
-    <div className="flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-secondary/50 group cursor-default">
-      <div className={`w-9 h-9 rounded-lg flex items-center justify-center transition-transform duration-300 group-hover:scale-110 ${colorClasses[color]}`}>
-        <Icon className="w-4 h-4" />
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="text-xs text-muted-foreground truncate">{label}</div>
-        <div className="text-sm font-semibold text-foreground flex items-baseline gap-1">
-          {value}
-          {subValue && <span className="text-xs font-normal text-muted-foreground">{subValue}</span>}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { FileText, CheckCircle, Clock, Shield } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export function PanelMetricasPrompts() {
   const { t } = useLanguage();
 
   return (
     <div className="card-institutional p-4 transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 hover:border-primary/30">
-      <h3 className="font-serif font-semibold text-foreground text-sm mb-4">
-        {t('aside.prompts.title')}
-      </h3>
-
-      <div className="space-y-1">
-        <MetricItem 
-          icon={Brain}
-          label={t('aside.prompts.totalPrompts')}
-          value="47"
-          subValue={t('aside.prompts.hoy')}
-          color="primary"
-        />
-        <MetricItem 
-          icon={Zap}
-          label={t('aside.prompts.tokens')}
-          value="12.4K"
-          subValue={t('aside.prompts.consumidos')}
-          color="amber"
-        />
-        <MetricItem 
-          icon={Clock}
-          label={t('aside.prompts.latencia')}
-          value="1.2s"
-          subValue={t('aside.prompts.promedio')}
-          color="blue"
-        />
-        <MetricItem 
-          icon={Shield}
-          label={t('aside.prompts.confianza')}
-          value="97.3%"
-          color="green"
-        />
+      <div className="flex items-center gap-2 mb-4">
+        <FileText className="w-4 h-4 text-primary" />
+        <h3 className="font-serif font-semibold text-foreground text-sm">
+          {t('aside.prompts.title') !== 'aside.prompts.title' ? t('aside.prompts.title') : 'Registro de Trazabilidad'}
+        </h3>
       </div>
 
-      {/* Recent activity */}
-      <div className="mt-4 pt-3 border-t border-border">
-        <div className="text-xs font-medium text-muted-foreground mb-2">
-          {t('aside.prompts.ultimaActividad')}
+      {/* Resumen compacto */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50">
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
+            <FileText className="w-4 h-4" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-xs text-muted-foreground">Interacciones registradas</div>
+            <div className="text-sm font-semibold text-foreground">5</div>
+          </div>
         </div>
-        <div className="space-y-2">
-          <div className="text-xs p-2 bg-secondary/50 rounded-lg">
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-medium text-foreground">{t('aside.prompts.modulo.verificacion')}</span>
-              <span className="text-muted-foreground">2m</span>
+
+        {/* Última interacción */}
+        <div className="p-2 rounded-lg bg-secondary/30 space-y-2">
+          <div className="text-xs font-medium text-muted-foreground">Última interacción</div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-foreground font-medium">VERIFICACIÓN_VIGENCIA</span>
+              <Badge variant="outline" className="text-[9px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300">
+                Convalidado
+              </Badge>
             </div>
-            <div className="text-muted-foreground">235 tokens · 0.8s</div>
-          </div>
-          <div className="text-xs p-2 bg-secondary/50 rounded-lg">
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-medium text-foreground">{t('aside.prompts.modulo.redactor')}</span>
-              <span className="text-muted-foreground">5m</span>
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Clock className="w-3 h-3" />
+              <span>24/02/2026 — 10:32:15</span>
             </div>
-            <div className="text-muted-foreground">1,847 tokens · 2.1s</div>
-          </div>
-          <div className="text-xs p-2 bg-secondary/50 rounded-lg">
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-medium text-foreground">{t('aside.prompts.modulo.clasificador')}</span>
-              <span className="text-muted-foreground">8m</span>
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <CheckCircle className="w-3 h-3" />
+              <span>Validador: agente_demo</span>
             </div>
-            <div className="text-muted-foreground">156 tokens · 0.4s</div>
           </div>
         </div>
       </div>
 
-      {/* Footer badge */}
+      {/* Indicador de estado del ledger */}
       <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground bg-secondary/30 rounded-lg py-2">
+        <Shield className="w-3 h-3 text-green-600" />
         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-        <span>{t('aside.prompts.ledgerActivo')}</span>
+        <span>{t('aside.prompts.ledgerActivo') !== 'aside.prompts.ledgerActivo' ? t('aside.prompts.ledgerActivo') : 'Ledger activo · Registro inmutable'}</span>
       </div>
     </div>
   );
