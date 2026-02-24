@@ -88,9 +88,12 @@ export function SecurityLedger({ entries, maxVisible = 5 }: SecurityLedgerProps)
         </Badge>
       </div>
       
-      <CardText className="text-xs mb-4">
+      <CardText className="text-xs mb-2">
         {t('security.ledger.description')}
       </CardText>
+      <p className="text-xs text-muted-foreground italic mb-4 border-l-2 border-primary/30 pl-2">
+        Panel de monitoreo técnico del uso de modelos, conforme lo desarrollado en el trabajo.
+      </p>
       
       <ScrollArea className={expanded ? 'max-h-96' : 'max-h-64'}>
         <div className="space-y-3">
@@ -149,33 +152,6 @@ export function SecurityLedger({ entries, maxVisible = 5 }: SecurityLedgerProps)
                   </div>
                 )}
                 
-                {/* Human override visualization */}
-                {entry.humanOverride && (
-                  <div className="pt-2 mt-1 border-t border-border/30 space-y-1.5">
-                    <div className="flex items-center gap-1 text-xs font-medium text-primary">
-                      <User className="w-3 h-3" />
-                      Modificación humana — {entry.humanOverride.author}
-                      {entry.humanOverride.role && <span className="text-muted-foreground">({entry.humanOverride.role})</span>}
-                    </div>
-                    {entry.humanOverride.originalValue && (
-                      <div className="text-xs">
-                        <span className="text-muted-foreground">Original:</span>{' '}
-                        <span className="line-through text-muted-foreground/70">{entry.humanOverride.originalValue}</span>
-                      </div>
-                    )}
-                    {entry.humanOverride.adjustedValue && (
-                      <div className="text-xs">
-                        <span className="text-muted-foreground">Ajustado:</span>{' '}
-                        <span className="font-medium text-foreground">{entry.humanOverride.adjustedValue}</span>
-                      </div>
-                    )}
-                    {entry.humanOverride.justification && (
-                      <div className="text-xs text-muted-foreground italic">
-                        Motivo: {entry.humanOverride.justification}
-                      </div>
-                    )}
-                  </div>
-                )}
               </motion.div>
             ))}
           </AnimatePresence>
