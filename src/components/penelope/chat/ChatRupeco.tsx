@@ -142,7 +142,7 @@ export function ChatRupeco() {
           className="h-full overflow-y-auto p-4 rupeco-scroll"
         >
           {showProgress && (
-            <div className="sticky top-0 z-20 bg-card border-b border-border/50 -mx-4 px-4 py-3 mb-4">
+            <div className="bg-muted/60 border border-border/50 rounded-lg px-4 py-3 mb-4">
               <RupecoProgressIndicator currentStep={currentStep} esPJ={esPJ} />
             </div>
           )}
@@ -157,6 +157,9 @@ export function ChatRupeco() {
               <span className="text-xs text-muted-foreground w-full mb-1">
                 Seleccioná el tipo de trámite:
               </span>
+              <p className="text-[11px] text-muted-foreground/80 italic w-full mb-2 leading-snug">
+                Ejemplos simulados. Incluyen supuestos actualmente no contemplados reglamentariamente, solo a efectos demostrativos de la propuesta de ampliación del RUPECO.
+              </p>
               {QUICK_ACTIONS.map((action) => (
                 <Button
                   key={action.label}
