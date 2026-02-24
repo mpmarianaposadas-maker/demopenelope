@@ -86,16 +86,6 @@ export function PanelAcercaDe() {
         </div>
       )}
 
-      {/* Bloque institucional permanente */}
-      <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 mb-4 flex items-start gap-3">
-        <span className="text-xl flex-shrink-0">⚖️</span>
-        <div>
-          <p className="font-semibold text-foreground text-sm mb-1">Sistema de apoyo no decisorio.</p>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Esta plataforma no emite actos administrativos. Genera preanálisis sujetos a validación humana obligatoria.
-          </p>
-        </div>
-      </div>
 
       {/* Sección 1: El Viaje de Penélope */}
       <Card>
