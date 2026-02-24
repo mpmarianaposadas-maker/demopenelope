@@ -32,6 +32,7 @@ export function KillSwitchPanel() {
   const [showReactivationDialog, setShowReactivationDialog] = useState(false);
   const [firmaA, setFirmaA] = useState({ nombre: '', cargo: '' });
   const [firmaB, setFirmaB] = useState({ nombre: '', cargo: '' });
+  const [triggerAgent, setTriggerAgent] = useState({ nombre: '', rol: '', motivo: '' });
 
   const canSubmitReactivation = firmaA.nombre.trim() && firmaA.cargo.trim() && firmaB.nombre.trim() && firmaB.cargo.trim();
 
@@ -119,11 +120,51 @@ export function KillSwitchPanel() {
                   {t('killSwitch.confirmDesc')}
                 </AlertDialogDescription>
               </AlertDialogHeader>
+              
+              <div className="space-y-3 py-2">
+                <div className="space-y-2">
+                  <Label htmlFor="ks-agent-nombre" className="text-xs font-semibold">Nombre del agente *</Label>
+                  <Input
+                    id="ks-agent-nombre"
+                    placeholder="Ej: María García"
+                    value={triggerAgent.nombre}
+                    onChange={(e) => setTriggerAgent(prev => ({ ...prev, nombre: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ks-agent-rol" className="text-xs font-semibold">Rol / Cargo *</Label>
+                  <Input
+                    id="ks-agent-rol"
+                    placeholder="Ej: Operador de Gobernanza"
+                    value={triggerAgent.rol}
+                    onChange={(e) => setTriggerAgent(prev => ({ ...prev, rol: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ks-agent-motivo" className="text-xs font-semibold">Motivo de activación *</Label>
+                  <Input
+                    id="ks-agent-motivo"
+                    placeholder="Ej: Detección de anomalía en clasificación"
+                    value={triggerAgent.motivo}
+                    onChange={(e) => setTriggerAgent(prev => ({ ...prev, motivo: e.target.value }))}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">
+                  No se permite la activación anónima. Todos los campos son obligatorios.
+                </p>
+              </div>
+
               <AlertDialogFooter>
-                <AlertDialogCancel>{t('killSwitch.cancel')}</AlertDialogCancel>
+                <AlertDialogCancel onClick={() => setTriggerAgent({ nombre: '', rol: '', motivo: '' })}>
+                  {t('killSwitch.cancel')}
+                </AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={() => triggerKillSwitch('Activación manual por operador')}
+                  onClick={() => {
+                    triggerKillSwitch(`${triggerAgent.motivo} — Agente: ${triggerAgent.nombre} (${triggerAgent.rol})`);
+                    setTriggerAgent({ nombre: '', rol: '', motivo: '' });
+                  }}
                   className="bg-red-600 hover:bg-red-700"
+                  disabled={!triggerAgent.nombre.trim() || !triggerAgent.rol.trim() || !triggerAgent.motivo.trim()}
                 >
                   {t('killSwitch.confirm')}
                 </AlertDialogAction>

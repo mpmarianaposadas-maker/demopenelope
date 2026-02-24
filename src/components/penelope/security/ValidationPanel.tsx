@@ -34,6 +34,7 @@ export function ValidationPanel() {
   const [ledgerEntries, setLedgerEntries] = useState<LedgerEntry[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
   const [showHelp, setShowHelp] = useState(true);
+  const [validationCount, setValidationCount] = useState(0);
   
   // Generate unique IDs
   const generatePromptId = () => `PNL-SEG-${String(ledgerEntries.length + 1).padStart(4, '0')}`;
@@ -101,8 +102,9 @@ export function ValidationPanel() {
       result = 'Permitido con revisión manual';
     }
     
-    // Add to ledger
+    // Add to ledger and increment validation counter
     addLedgerEntry(ledgerRisk, result);
+    setValidationCount(prev => prev + 1);
     
     // Update system value if allowed
     if (result !== 'Bloqueado' && isSystemActive) {
@@ -307,6 +309,25 @@ export function ValidationPanel() {
         />
       )}
       
+      {/* Validation counter */}
+      {validationCount > 0 && (
+        <Card>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-green-600" />
+              <CardTitle as="h4" className="text-sm">Validaciones humanas registradas</CardTitle>
+            </div>
+            <Badge className="bg-primary text-primary-foreground text-sm px-3">
+              {validationCount}
+            </Badge>
+          </div>
+          <div className="text-xs text-muted-foreground space-y-1">
+            <p>Última validación: <span className="font-medium text-foreground">{new Date().toLocaleString('es-AR')}</span></p>
+            <p>Responsable: <span className="font-medium text-foreground">agente_demo</span></p>
+          </div>
+        </Card>
+      )}
+
       {/* Current system value */}
       <Card>
         <div className="flex items-center justify-between mb-2">
