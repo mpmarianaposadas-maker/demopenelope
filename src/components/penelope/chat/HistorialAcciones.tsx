@@ -234,14 +234,7 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
                           </Badge>
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {accion.timestamp.toLocaleString('es-AR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit'
-                            })}
+                            {formatFechaHoraSegAR(accion.timestamp)}
                           </span>
                         </div>
                         
