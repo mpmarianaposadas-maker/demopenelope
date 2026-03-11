@@ -300,7 +300,7 @@ export function ConsultaEstadoTramite() {
                   <Calendar className="h-4 w-4" />
                   <span className="text-xs">{t('trazabilidad.ciudadana.fechaIngreso')}</span>
                 </div>
-                <p className="font-medium text-sm">{tramite.fechaIngreso.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US')}</p>
+                <p className="font-medium text-sm">{formatFechaAR(tramite.fechaIngreso)}</p>
               </CardContent>
             </Card>
 
