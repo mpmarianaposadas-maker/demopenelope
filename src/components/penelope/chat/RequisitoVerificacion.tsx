@@ -412,7 +412,7 @@ export function RequisitoVerificacion({
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span><strong>Fecha:</strong> {aprobacion.timestamp.toLocaleString('es-AR')}</span>
+                      <span><strong>Fecha:</strong> {formatFechaHoraAR(aprobacion.timestamp)}</span>
                     </div>
                     {aprobacion.observaciones && (
                       <div className="mt-2 p-2 bg-background/50 rounded text-xs">
