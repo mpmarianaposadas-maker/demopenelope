@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

@@ -1,4 +1,5 @@
 // Utility for exporting data to CSV format for administrative reports
+import { formatFechaAR } from '@/lib/formatDate';
 
 export interface MetricaRow {
   fecha: string;

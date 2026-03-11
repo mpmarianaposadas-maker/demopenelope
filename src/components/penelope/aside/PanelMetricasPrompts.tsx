@@ -3,6 +3,7 @@ import { FileText, CheckCircle, Clock, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
 import { DEMO_LEDGER_ENTRIES } from '@/components/penelope/security/demoLedgerEntries';
+import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 
 const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
   VERIFICACION_VIGENCIA: 'Verificación de vigencia',

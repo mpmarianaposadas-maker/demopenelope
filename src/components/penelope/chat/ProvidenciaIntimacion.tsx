@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { formatFechaAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { FileText, Download, Copy, Check, AlertTriangle, Clock } from 'lucide-react';
