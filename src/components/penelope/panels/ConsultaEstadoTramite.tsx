@@ -148,15 +148,7 @@ export function ConsultaEstadoTramite() {
     setIsSearching(false);
   };
 
-  const formatFecha = (fecha: Date) => {
-    return fecha.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  const formatFecha = (fecha: Date) => formatFechaHoraAR(fecha);
 
   const lang = language === 'es' ? 'es' : 'en';
 
