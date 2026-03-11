@@ -106,9 +106,13 @@ export function PanelBorradores() {
           <p className="leading-relaxed">{t('borr.alt.texto4')}</p>
           <p className="leading-relaxed">{t('borr.alt.texto5')}</p>
           <p>{t('borr.alt.cierre')}</p>
-          <p className="italic text-muted-foreground text-sm border-t border-dashed border-border pt-3 mt-4">
-            {t('borr.alt.disclaimer')}
-          </p>
+          <hr className="border-border mt-4 mb-0" />
+          <div className="bg-gray-100 dark:bg-gray-800/40 border-l-4 border-amber-400 pl-3 pr-3 py-2 mt-2 rounded-r">
+            <span className="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 font-medium">Marca de sistema — no forma parte del instrumento</span>
+            <p className="italic text-muted-foreground text-sm">
+              {t('borr.alt.disclaimer')}
+            </p>
+          </div>
         </div>
       </Card>
 
