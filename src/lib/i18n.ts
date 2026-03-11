@@ -154,7 +154,7 @@ export const translations: Record<Language, Translations> = {
     'traz.norm1': 'Ley 25.326 / Ética Pública',
     'traz.pilar2': 'Supervisión Humana',
     'traz.sol2': 'Flujo Human-in-the-Loop obligatorio antes de firma',
-    'traz.norm2': 'AI Act (Art. 14) / LNPA',
+     'traz.norm2': 'AI Act (Art. 14) / Ley N° 19.549 (LNPA)',
     'traz.pilar3': 'No Discrecionalidad',
     'traz.sol3': 'Opera solo sobre reglas binarias (Cumple/No Cumple) predefinidas',
     'traz.norm3': 'Doctrina del Acto Administrativo',
