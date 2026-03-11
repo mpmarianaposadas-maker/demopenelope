@@ -3,6 +3,7 @@ import { FileText, CheckCircle, Clock, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
 import { DEMO_LEDGER_ENTRIES } from '@/components/penelope/security/demoLedgerEntries';
+import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 
 const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
   VERIFICACION_VIGENCIA: 'Verificación de vigencia',
@@ -21,11 +22,7 @@ export function PanelMetricasPrompts({ entries = DEMO_LEDGER_ENTRIES }: PanelMet
 
   const last = entries.length > 0 ? entries[entries.length - 1] : null;
 
-  const formatTimestamp = (date: Date) => {
-    const d = date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const time = date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    return `${d} — ${time}`;
-  };
+  const formatTimestamp = (date: Date) => `${formatFechaAR(date)} — ${formatHoraSegAR(date)}`;
 
   return (
     <div className="card-institutional p-4 transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 hover:border-primary/30">

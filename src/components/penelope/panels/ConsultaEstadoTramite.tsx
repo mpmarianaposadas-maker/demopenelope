@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaAR, formatFechaHoraAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -148,15 +149,7 @@ export function ConsultaEstadoTramite() {
     setIsSearching(false);
   };
 
-  const formatFecha = (fecha: Date) => {
-    return fecha.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  const formatFecha = (fecha: Date) => formatFechaHoraAR(fecha);
 
   const lang = language === 'es' ? 'es' : 'en';
 
@@ -308,7 +301,7 @@ export function ConsultaEstadoTramite() {
                   <Calendar className="h-4 w-4" />
                   <span className="text-xs">{t('trazabilidad.ciudadana.fechaIngreso')}</span>
                 </div>
-                <p className="font-medium text-sm">{tramite.fechaIngreso.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US')}</p>
+                <p className="font-medium text-sm">{formatFechaAR(tramite.fechaIngreso)}</p>
               </CardContent>
             </Card>
 
@@ -318,7 +311,7 @@ export function ConsultaEstadoTramite() {
                   <Clock className="h-4 w-4" />
                   <span className="text-xs">{t('trazabilidad.ciudadana.fechaEstimada')}</span>
                 </div>
-                <p className="font-medium text-sm">{tramite.fechaEstimada.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US')}</p>
+                <p className="font-medium text-sm">{formatFechaAR(tramite.fechaEstimada)}</p>
               </CardContent>
             </Card>
           </div>

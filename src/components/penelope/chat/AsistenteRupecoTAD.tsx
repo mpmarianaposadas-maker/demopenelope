@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -133,7 +134,7 @@ export function AsistenteRupecoTAD({
   const generarBorradorSubsanacion = (): string => {
     if (!categoriaInfo) return '';
 
-    const fecha = new Date().toLocaleDateString('es-AR');
+    const fecha = formatFechaAR(new Date());
     const pasos = categoriaInfo.pasosAdministrado.map((p, i) => `${i + 1}. ${p}`).join('\n');
 
     return `NOTA DE SUBSANACIÓN

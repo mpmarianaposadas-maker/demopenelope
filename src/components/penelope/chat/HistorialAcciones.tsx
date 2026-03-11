@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaHoraSegAR, formatFechaHoraAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -234,14 +235,7 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
                           </Badge>
                           <span className="text-xs text-muted-foreground flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {accion.timestamp.toLocaleString('es-AR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                              second: '2-digit'
-                            })}
+                            {formatFechaHoraSegAR(accion.timestamp)}
                           </span>
                         </div>
                         
@@ -283,9 +277,9 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 {filtroActivo !== 'todos' && `Mostrando ${accionesOrdenadas.length} de ${acciones.length} • `}
-                Primera: {accionesOrdenadas[accionesOrdenadas.length - 1]?.timestamp.toLocaleString('es-AR')}
+                Primera: {accionesOrdenadas[accionesOrdenadas.length - 1] ? formatFechaHoraAR(accionesOrdenadas[accionesOrdenadas.length - 1].timestamp) : ''}
               </span>
-              <span>Última: {accionesOrdenadas[0]?.timestamp.toLocaleString('es-AR')}</span>
+              <span>Última: {accionesOrdenadas[0] ? formatFechaHoraAR(accionesOrdenadas[0].timestamp) : ''}</span>
             </div>
           </div>
         </CardContent>

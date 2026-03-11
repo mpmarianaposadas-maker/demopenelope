@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,11 +38,8 @@ export function SecurityLedger({ entries, maxVisible = 5, onViewExpediente }: Se
 
   const visibleEntries = expanded ? entries : entries.slice(0, maxVisible);
 
-  const formatTime = (date: Date) =>
-    date.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-  const formatDate = (date: Date) =>
-    date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const formatTime = (date: Date) => formatHoraSegAR(date);
+  const formatDate = (date: Date) => formatFechaAR(date);
 
   return (
     <Card>

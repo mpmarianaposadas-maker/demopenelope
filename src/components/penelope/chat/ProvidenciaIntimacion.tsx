@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { formatFechaAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { FileText, Download, Copy, Check, AlertTriangle, Clock } from 'lucide-react';
@@ -218,7 +219,7 @@ export function ProvidenciaIntimacion({
           <div className="text-right">
             <div className="text-xs text-muted-foreground">Vence</div>
             <div className="text-sm font-bold text-red-700 dark:text-red-300">
-              {fechaLimiteSilencio.toLocaleDateString('es-AR')}
+              {formatFechaAR(fechaLimiteSilencio)}
             </div>
           </div>
         </div>

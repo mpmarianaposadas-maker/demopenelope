@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatFechaAR } from '@/lib/formatDate';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -127,7 +128,7 @@ export function ClasificacionConfirmacion({
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">Vencimiento tentativo (demo)</TableCell>
-                    <TableCell>{clasificacion.fechaVencimientoEstimado.toLocaleDateString('es-AR')}</TableCell>
+                    <TableCell>{formatFechaAR(clasificacion.fechaVencimientoEstimado)}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
