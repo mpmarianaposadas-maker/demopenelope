@@ -93,7 +93,7 @@ export function generateDemoData(count: number = 50): MetricaRow[] {
     const silencioEvitado = diasGestion <= 15 && Math.random() > 0.2;
     
     data.push({
-      fecha: fecha.toLocaleDateString('es-AR'),
+      fecha: formatFechaAR(fecha),
       expediente: `EX-2026-${(10000000 + Math.floor(Math.random() * 90000000)).toString()}-APN-ENACOM`,
       tipoTramite: tiposTramite[Math.floor(Math.random() * tiposTramite.length)],
       diasGestion,

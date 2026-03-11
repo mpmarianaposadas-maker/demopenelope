@@ -276,9 +276,9 @@ export function HistorialAcciones({ acciones, expedienteNumero }: HistorialAccio
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span>
                 {filtroActivo !== 'todos' && `Mostrando ${accionesOrdenadas.length} de ${acciones.length} • `}
-                Primera: {accionesOrdenadas[accionesOrdenadas.length - 1]?.timestamp.toLocaleString('es-AR')}
+                Primera: {accionesOrdenadas[accionesOrdenadas.length - 1] ? formatFechaHoraAR(accionesOrdenadas[accionesOrdenadas.length - 1].timestamp) : ''}
               </span>
-              <span>Última: {accionesOrdenadas[0]?.timestamp.toLocaleString('es-AR')}</span>
+              <span>Última: {accionesOrdenadas[0] ? formatFechaHoraAR(accionesOrdenadas[0].timestamp) : ''}</span>
             </div>
           </div>
         </CardContent>

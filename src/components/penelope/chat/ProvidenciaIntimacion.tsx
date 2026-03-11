@@ -218,7 +218,7 @@ export function ProvidenciaIntimacion({
           <div className="text-right">
             <div className="text-xs text-muted-foreground">Vence</div>
             <div className="text-sm font-bold text-red-700 dark:text-red-300">
-              {fechaLimiteSilencio.toLocaleDateString('es-AR')}
+              {formatFechaAR(fechaLimiteSilencio)}
             </div>
           </div>
         </div>

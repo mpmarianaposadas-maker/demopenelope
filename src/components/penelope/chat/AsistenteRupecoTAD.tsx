@@ -133,7 +133,7 @@ export function AsistenteRupecoTAD({
   const generarBorradorSubsanacion = (): string => {
     if (!categoriaInfo) return '';
 
-    const fecha = new Date().toLocaleDateString('es-AR');
+    const fecha = formatFechaAR(new Date());
     const pasos = categoriaInfo.pasosAdministrado.map((p, i) => `${i + 1}. ${p}`).join('\n');
 
     return `NOTA DE SUBSANACIÓN

@@ -310,7 +310,7 @@ export function ConsultaEstadoTramite() {
                   <Clock className="h-4 w-4" />
                   <span className="text-xs">{t('trazabilidad.ciudadana.fechaEstimada')}</span>
                 </div>
-                <p className="font-medium text-sm">{tramite.fechaEstimada.toLocaleDateString(language === 'es' ? 'es-AR' : 'en-US')}</p>
+                <p className="font-medium text-sm">{formatFechaAR(tramite.fechaEstimada)}</p>
               </CardContent>
             </Card>
           </div>

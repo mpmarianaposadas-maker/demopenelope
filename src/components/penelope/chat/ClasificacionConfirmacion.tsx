@@ -127,7 +127,7 @@ export function ClasificacionConfirmacion({
                   </TableRow>
                   <TableRow>
                     <TableCell className="font-medium">Vencimiento tentativo (demo)</TableCell>
-                    <TableCell>{clasificacion.fechaVencimientoEstimado.toLocaleDateString('es-AR')}</TableCell>
+                    <TableCell>{formatFechaAR(clasificacion.fechaVencimientoEstimado)}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
