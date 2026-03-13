@@ -252,17 +252,17 @@ export function useChatRupecoSimulado() {
       };
     };
 
-    // Simular orden en el expediente (fojas estimadas)
+    // Simular número de orden en el expediente electrónico (Decreto 336/17)
     const generarOrdenExpediente = (index: number, detectado: boolean): string => {
       if (!detectado) return 'No localizado';
-      const fojaInicio = index * 3 + 1;
-      const fojaFin = fojaInicio + Math.floor(Math.random() * 5) + 1;
+      const ordenNum = index + 1;
+      const anio = 2026;
+      const numDoc = String(Math.floor(Math.random() * 90000) + 10000).padStart(8, '0');
       const ubicaciones = [
-        `Fojas ${fojaInicio}–${fojaFin}`,
-        `PDF ${index + 1}`,
-        `Anexo ${index + 1}`,
-        `Carátula / fojas ${fojaInicio}–${fojaFin}`,
-        `Fojas ${fojaInicio}–${fojaFin} / PDF ${index + 1}`,
+        `Orden N° ${ordenNum}`,
+        `IF-${anio}-${numDoc}-APN-ENACOM#JGM`,
+        `Orden N° ${ordenNum} (IF-${anio}-${numDoc}-APN-ENACOM#JGM)`,
+        `Anexo ${ordenNum}`,
       ];
       return ubicaciones[Math.floor(Math.random() * ubicaciones.length)];
     };
