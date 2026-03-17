@@ -49,7 +49,7 @@ const tooltips: Record<string, string> = {
   'arquitectura': 'Diagramas de flujo y modelo de fiabilidad por diseño',
   'brecha-rupeco': 'Hallazgo central: cobertura del 57% y principio Once-Only',
   'demo-interactiva': 'Simule un trámite completo con verificación RUPECO',
-  'borradores': 'Providencia de pase y nota de intimación generadas por IA',
+  'borradores': 'Borradores de providencia de pase y nota de intimación, sin efectos hasta su aprobación humana',
   'simulador': 'Simulación del flujo interno paso a paso',
   'trazabilidad': 'Pilares de compliance y registro de auditoría',
   'propuesta-normativa': 'Articulado propuesto y experiencias comparadas',
