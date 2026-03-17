@@ -128,7 +128,7 @@ export const translations: Record<Language, Translations> = {
     'borr.co.cierre': 'Notifíquese, cúmplase y agréguese.',
     'borr.co.disclaimer': '[BORRADOR GENERADO AUTOMÁTICAMENTE - Sistema Penélope v1.0 - Requiere validación del agente humano antes de firma digital y notificación oficial]',
     
-    'borr.alt.title': 'Versión alternativa de intimación',
+    'borr.alt.title': 'Variante normativa de intimación — documentación subsanable con plazo próximo a vencer',
     'borr.alt.texto1': 'En consecuencia, y de conformidad con lo dispuesto por el artículo 1° inciso f) apartado 1) de la Ley Nacional de Procedimientos Administrativos N° 19.549 (Reglamentaria de las Normas de Procedimientos Administrativos) y el Decreto N° 894/2017 sobre simplificación de trámites, se',
     'borr.alt.plazo': 'DIEZ (10) días hábiles administrativos',
     'borr.alt.texto2': 'a la entidad peticionante a subsanar el defecto formal detectado dentro del plazo de',
