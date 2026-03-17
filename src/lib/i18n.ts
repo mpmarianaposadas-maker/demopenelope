@@ -128,7 +128,7 @@ export const translations: Record<Language, Translations> = {
     'borr.co.cierre': 'Notifíquese, cúmplase y agréguese.',
     'borr.co.disclaimer': '[BORRADOR GENERADO AUTOMÁTICAMENTE - Sistema Penélope v1.0 - Requiere validación del agente humano antes de firma digital y notificación oficial]',
     
-    'borr.alt.title': 'Versión alternativa de intimación',
+    'borr.alt.title': 'Variante normativa de intimación — documentación subsanable con plazo próximo a vencer',
     'borr.alt.texto1': 'En consecuencia, y de conformidad con lo dispuesto por el artículo 1° inciso f) apartado 1) de la Ley Nacional de Procedimientos Administrativos N° 19.549 (Reglamentaria de las Normas de Procedimientos Administrativos) y el Decreto N° 894/2017 sobre simplificación de trámites, se',
     'borr.alt.plazo': 'DIEZ (10) días hábiles administrativos',
     'borr.alt.texto2': 'a la entidad peticionante a subsanar el defecto formal detectado dentro del plazo de',
@@ -600,7 +600,7 @@ export const translations: Record<Language, Translations> = {
     'borr.co.cierre': 'Notify, comply and attach.',
     'borr.co.disclaimer': '[AUTOMATICALLY GENERATED DRAFT - Penélope System v1.0 - Requires human agent validation before digital signature and official notification]',
     
-    'borr.alt.title': 'Alternative summons version',
+    'borr.alt.title': 'Regulatory summons variant — remediable documentation with upcoming deadline',
     'borr.alt.texto1': 'Consequently, and in accordance with article 1, paragraph f), section 1) of the National Administrative Procedures Law No. 19.549 (Regulatory of Administrative Procedures Norms) and Decree No. 894/2017 on procedure simplification,',
     'borr.alt.plazo': 'TEN (10) administrative business days',
     'borr.alt.texto2': 'the petitioning entity to correct the detected formal defect within',
