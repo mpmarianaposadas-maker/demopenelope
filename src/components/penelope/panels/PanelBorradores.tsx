@@ -183,7 +183,13 @@ export function PanelBorradores() {
           <p className="leading-relaxed">{t('borr.pv.texto1')}</p>
           <p className="leading-relaxed">
             {t('borr.pv.texto2')}{' '}
-            <strong>COOPERATIVA DEL VALLE LTDA.</strong> (CUIT XX-XXXXXXXX-X).
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
+              [el/la peticionante — completar según corresponda: persona humana o jurídica]
+            </span>{' '}
+            (CUIT XX-XXXXXXXX-X · RUPECO N° XXXX-XXXX).
+          </p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
+            ⚑ Campo a completar por el agente: verificar denominación (persona humana o jurídica), CUIT y número de inscripción RUPECO antes de cargar en GDE.
           </p>
           <p className="leading-relaxed">
             {t('borr.pv.texto3')}{' '}
