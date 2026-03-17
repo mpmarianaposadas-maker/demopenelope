@@ -45,7 +45,14 @@ export function PanelBorradores() {
           <p>{t('borr.nota.ref')} EX-2026-00123456-APN-ENACOM</p>
           <p>{t('borr.nota.fecha')}</p>
           <p>{t('borr.nota.destinatario')}</p>
-          <p><strong>COOPERATIVA DEL VALLE LTDA.</strong></p>
+          <p>
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
+              [el/la peticionante — completar según corresponda: persona humana o jurídica]
+            </span>
+          </p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
+            ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
+          </p>
           <p>{t('borr.nota.domicilio')}</p>
           <p>{t('borr.nota.presente')}</p>
           <p className="font-semibold">{t('borr.nota.refIntimacion')}</p>
@@ -56,9 +63,15 @@ export function PanelBorradores() {
           <p className="leading-relaxed">
             {t('borr.nota.texto3')}{' '}
             <strong>{t('borr.co.intima')}</strong>{' '}
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
+              [el/la peticionante — completar según corresponda: persona humana o jurídica]
+            </span>{' '}
             {t('borr.nota.texto4')}{' '}
             <strong>{t('borr.co.plazo')}</strong>{' '}
             {t('borr.nota.texto5')}
+          </p>
+          <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
+            ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
           </p>
           <p className="leading-relaxed">{t('borr.nota.texto6')}</p>
           <p className="leading-relaxed">{t('borr.nota.texto7')}</p>
