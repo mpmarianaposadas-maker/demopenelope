@@ -600,7 +600,7 @@ export const translations: Record<Language, Translations> = {
     'borr.co.cierre': 'Notify, comply and attach.',
     'borr.co.disclaimer': '[AUTOMATICALLY GENERATED DRAFT - Penélope System v1.0 - Requires human agent validation before digital signature and official notification]',
     
-    'borr.alt.title': 'Alternative summons version',
+    'borr.alt.title': 'Regulatory summons variant — remediable documentation with upcoming deadline',
     'borr.alt.texto1': 'Consequently, and in accordance with article 1, paragraph f), section 1) of the National Administrative Procedures Law No. 19.549 (Regulatory of Administrative Procedures Norms) and Decree No. 894/2017 on procedure simplification,',
     'borr.alt.plazo': 'TEN (10) administrative business days',
     'borr.alt.texto2': 'the petitioning entity to correct the detected formal defect within',
