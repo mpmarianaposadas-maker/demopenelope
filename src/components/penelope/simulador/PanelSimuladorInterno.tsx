@@ -1,16 +1,13 @@
 import { useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Shield, Play, RotateCcw, Info } from 'lucide-react';
+import { Shield, Play, RotateCcw } from 'lucide-react';
 import { FlujoProcedimiento } from './FlujoProcedimiento';
 import { AlertaVencimiento, BotonAlertaVencimiento } from './AlertaVencimiento';
-import { EstadoExpedienteResult } from './EstadoExpedienteResult';
 import { useSimuladorFlujo } from '@/hooks/useSimuladorFlujo';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function PanelSimuladorInterno() {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -74,80 +71,44 @@ export function PanelSimuladorInterno() {
         </CardContent>
       </Card>
 
-      {/* Main simulation area */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Timeline column */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              {t('simulador.flujo.title')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FlujoProcedimiento pasos={pasos} t={t} />
+      {/* Flujo de procedimiento */}
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            {t('simulador.flujo.title')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FlujoProcedimiento pasos={pasos} t={t} />
+          
+          <Separator className="my-4" />
+          
+          {/* Action buttons */}
+          <div className="flex flex-wrap gap-2">
+            {expediente.estado === 'sin_iniciar' ? (
+              <Button onClick={iniciarSimulacion} disabled={simulando}>
+                <Play className="w-4 h-4 mr-2" />
+                {t('simulador.boton.iniciar')}
+              </Button>
+            ) : (
+              <Button 
+                variant="outline" 
+                onClick={reiniciarSimulacion} 
+                disabled={simulando}
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                {t('simulador.boton.reiniciar')}
+              </Button>
+            )}
             
-            <Separator className="my-4" />
-            
-            {/* Action buttons */}
-            <div className="flex flex-wrap gap-2">
-              {expediente.estado === 'sin_iniciar' ? (
-                <Button onClick={iniciarSimulacion} disabled={simulando}>
-                  <Play className="w-4 h-4 mr-2" />
-                  {t('simulador.boton.iniciar')}
-                </Button>
-              ) : (
-                <Button 
-                  variant="outline" 
-                  onClick={reiniciarSimulacion} 
-                  disabled={simulando}
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  {t('simulador.boton.reiniciar')}
-                </Button>
-              )}
-              
-              <BotonAlertaVencimiento 
-                onClick={simularAlerta}
-                disabled={!puedeSimularAlerta}
-                t={t}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Result column */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">
-                {t('simulador.resultado.title')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {expediente.estado === 'sin_iniciar' ? (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-8 text-muted-foreground"
-                >
-                  <Info className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p className="text-sm">{t('simulador.resultado.esperando')}</p>
-                </motion.div>
-              ) : (
-                <EstadoExpedienteResult expediente={expediente} t={t} />
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Restriction notice */}
-          <Alert variant="default" className="bg-muted/50">
-            <Info className="h-4 w-4" />
-            <AlertDescription className="text-xs">
-              {t('simulador.restriccion')}
-            </AlertDescription>
-          </Alert>
-        </div>
-      </div>
+            <BotonAlertaVencimiento 
+              onClick={simularAlerta}
+              disabled={!puedeSimularAlerta}
+              t={t}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Alert dialog */}
       <AlertaVencimiento
