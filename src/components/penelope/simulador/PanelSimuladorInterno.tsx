@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,6 +13,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function PanelSimuladorInterno() {
+  const panelRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
   const {
     pasos,
