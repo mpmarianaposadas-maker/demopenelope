@@ -84,7 +84,7 @@ export function useSimuladorFlujo() {
   });
   const [simulando, setSimulando] = useState(false);
   const [alertaVisible, setAlertaVisible] = useState(false);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
+  const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const limpiarTimeouts = useCallback(() => {
     timeoutsRef.current.forEach(clearTimeout);
