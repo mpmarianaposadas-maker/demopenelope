@@ -30,20 +30,7 @@ export function PanelSimuladorInterno() {
 
   useEffect(() => {
     if (pasoActivo) {
-      const el = panelRef.current;
-      if (!el) return;
-      // Busca el ancestro scrolleable más cercano
-      let parent = el.parentElement;
-      while (parent) {
-        const { overflow, overflowY } = window.getComputedStyle(parent);
-        if (/(auto|scroll)/.test(overflow + overflowY)) {
-          parent.scrollTo({ top: 0, behavior: 'smooth' });
-          return;
-        }
-        parent = parent.parentElement;
-      }
-      // Fallback: scroll de window
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [pasoActivo?.id]);
 
