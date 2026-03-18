@@ -26,10 +26,18 @@ export function PanelSimuladorInterno() {
     cerrarAlerta,
   } = useSimuladorFlujo();
 
+  const pasoActivo = pasos.find(p => p.estado === 'activo');
+
+  useEffect(() => {
+    if (pasoActivo) {
+      panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [pasoActivo?.id]);
+
   const puedeSimularAlerta = expediente.estado !== 'sin_iniciar' && !simulando;
 
   return (
-    <div className="space-y-6">
+    <div ref={panelRef} className="space-y-6">
       {/* Header Card */}
       <Card>
         <CardHeader className="pb-3">
