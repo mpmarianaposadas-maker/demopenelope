@@ -33,9 +33,8 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
               </h1>
               <p 
                 className="text-sm opacity-80 mt-1"
-                data-i18n="subtitle.organismo"
               >
-                {t('subtitle.organismo')}
+                ENACOM
               </p>
             </div>
           </div>
