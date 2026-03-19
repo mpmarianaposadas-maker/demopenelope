@@ -70,7 +70,7 @@ export function PanelAcercaDe() {
           <ol className="space-y-1.5 ml-9 mb-4">
             {pasos.map((paso, i) => (
               <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                <span>{paso.emoji}</span>
+                <span>{paso.icon}</span>
                 <span><strong>{paso.tab}</strong> — {paso.desc}</span>
               </li>
             ))}
