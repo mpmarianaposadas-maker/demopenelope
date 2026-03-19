@@ -370,7 +370,7 @@ export function RequisitoVerificacion({
 
           {/* Leyenda de política "Cuatro Ojos" */}
           <div className="p-2 bg-cream/50 rounded-lg text-xs border border-cream-dark">
-            <div className="font-medium mb-1 text-cream-foreground flex items-center gap-1"><Scale size={14} className="text-current" /> Política de "Cuatro Ojos"</div>
+            <div className="font-medium mb-1 text-cream-foreground">⚖️ Política de "Cuatro Ojos"</div>
             <p className="text-cream-foreground/80">
               Cada requisito detectado por IA debe ser verificado por el agente. 
               Use los controles para validar o rechazar la detección automática.
