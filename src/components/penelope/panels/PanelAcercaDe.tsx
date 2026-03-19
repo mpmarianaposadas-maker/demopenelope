@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Check, X, BookOpen, GraduationCap, ArrowRight, Compass } from 'lucide-react';
+import { Check, X, BookOpen, GraduationCap, ArrowRight, Compass, Search, GitBranch, BarChart2, Scale, TrendingUp } from 'lucide-react';
 import { SiguientePaso } from './SiguientePaso';
 import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
