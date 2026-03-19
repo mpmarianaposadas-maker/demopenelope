@@ -26,10 +26,10 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
             </div>
             <div className="flex-1">
               <h1 
-                className="text-lg md:text-xl font-serif font-semibold leading-tight"
+                className="text-2xl md:text-3xl font-serif font-bold leading-tight"
                 data-i18n="title.principal"
               >
-                {t('title.principal')}
+                Sistema Penélope
               </h1>
               <p 
                 className="text-sm opacity-80 mt-1"
