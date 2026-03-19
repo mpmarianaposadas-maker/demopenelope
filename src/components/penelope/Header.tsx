@@ -14,15 +14,18 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
           {/* Left side - Logo and text */}
           <div className="flex items-center gap-4">
             <div 
-              className="w-20 h-20 rounded-full overflow-hidden border-2 border-cream/40 flex-shrink-0" 
-              aria-label="Logo ENACOM Sistema Penélope"
-            >
-              <img 
-                src="https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png" 
-                alt="Penélope - Sistema de Verificación Documental"
-                className="w-full h-full object-cover object-[50%_5%]"
-              />
-            </div>
+              className="flex-shrink-0 rounded-full"
+              style={{
+                width: '80px',
+                height: '80px',
+                backgroundImage: "url('https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png')",
+                backgroundSize: '400px auto',
+                backgroundPosition: '-160px -10px',
+                backgroundRepeat: 'no-repeat',
+              }}
+              role="img"
+              aria-label="Penélope - Sistema de Verificación Documental"
+            />
             <div className="flex-1">
               <h1 
                 className="text-2xl md:text-3xl font-serif font-bold leading-tight"
