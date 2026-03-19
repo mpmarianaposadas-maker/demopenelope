@@ -46,7 +46,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
               aria-label="Demo interactiva en desarrollo"
               data-i18n="badge.demo"
             >
-              {t('badge.demo')}
+              POC — Prueba de Concepto
             </span>
             
             {/* Language toggle - optional, hidden by default */}
