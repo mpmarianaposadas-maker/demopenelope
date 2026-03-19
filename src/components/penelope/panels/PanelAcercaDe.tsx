@@ -36,12 +36,12 @@ export function PanelAcercaDe() {
   ];
 
   const pasos = [
-    { emoji: '📖', tab: 'Acerca de', desc: 'Conozca el marco conceptual y la pregunta de investigación' },
-    { emoji: '🔍', tab: 'Demo Interactiva', desc: 'Simule el procesamiento de un expediente real' },
-    { emoji: '🏗️', tab: 'Arquitectura', desc: 'Explore los diagramas de flujo y el modelo de fiabilidad' },
-    { emoji: '📊', tab: 'Brecha RUPECO', desc: 'Visualice el hallazgo central: la brecha del 57%' },
-    { emoji: '⚖️', tab: 'Propuesta Normativa', desc: 'Revise el articulado propuesto' },
-    { emoji: '📈', tab: 'Métricas', desc: 'Consulte las proyecciones de impacto (Tabla 4)' },
+    { icon: <BookOpen size={15} className="inline mr-1" />, tab: 'Acerca de', desc: 'Conozca el marco conceptual y la pregunta de investigación' },
+    { icon: <Search size={15} className="inline mr-1" />, tab: 'Demo Interactiva', desc: 'Simule el procesamiento de un expediente real' },
+    { icon: <GitBranch size={15} className="inline mr-1" />, tab: 'Arquitectura', desc: 'Explore los diagramas de flujo y el modelo de fiabilidad' },
+    { icon: <BarChart2 size={15} className="inline mr-1" />, tab: 'Brecha RUPECO', desc: 'Visualice el hallazgo central: la brecha del 57%' },
+    { icon: <Scale size={15} className="inline mr-1" />, tab: 'Propuesta Normativa', desc: 'Revise el articulado propuesto' },
+    { icon: <TrendingUp size={15} className="inline mr-1" />, tab: 'Métricas', desc: 'Consulte las proyecciones de impacto (Tabla 4)' },
   ];
 
   return (
