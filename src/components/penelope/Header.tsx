@@ -15,7 +15,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
           {/* Left side - Logo and text */}
           <div className="flex items-center gap-4">
             <div 
-              className="w-14 h-14 rounded-lg overflow-hidden bg-cream/20 border-2 border-cream/40 flex items-center justify-center" 
+              className="w-20 h-20 rounded-xl overflow-hidden border-2 border-cream/40 flex items-center justify-center" 
               aria-label="Logo ENACOM Sistema Penélope"
             >
               <img 
@@ -26,16 +26,15 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
             </div>
             <div className="flex-1">
               <h1 
-                className="text-lg md:text-xl font-serif font-semibold leading-tight"
+                className="text-2xl md:text-3xl font-serif font-bold leading-tight"
                 data-i18n="title.principal"
               >
-                {t('title.principal')}
+                Sistema Penélope
               </h1>
               <p 
                 className="text-sm opacity-80 mt-1"
-                data-i18n="subtitle.organismo"
               >
-                {t('subtitle.organismo')}
+                ENACOM
               </p>
             </div>
           </div>
@@ -47,7 +46,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
               aria-label="Demo interactiva en desarrollo"
               data-i18n="badge.demo"
             >
-              {t('badge.demo')}
+              POC — Prueba de Concepto
             </span>
             
             {/* Language toggle - optional, hidden by default */}
