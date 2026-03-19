@@ -21,7 +21,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
               <img 
                 src={penelopeImage} 
                 alt="Penélope - Sistema de Verificación Documental"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover brightness-0 invert opacity-90"
               />
             </div>
             <div className="flex-1">
