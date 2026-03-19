@@ -1,5 +1,4 @@
 import { Globe } from 'lucide-react';
-import penelopeImage from '@/assets/penelope-art-nouveau.png';
 
 interface HeaderProps {
   language: 'es' | 'en';
