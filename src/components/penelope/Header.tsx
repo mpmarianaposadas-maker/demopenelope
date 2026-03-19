@@ -20,7 +20,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
               <img 
                 src="https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png" 
                 alt="Penélope - Sistema de Verificación Documental"
-                className="w-[200%] h-[200%] object-cover object-[50%_15%]"
+                className="w-full h-full object-cover object-[50%_25%]"
               />
             </div>
             <div className="flex-1">
