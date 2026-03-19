@@ -1,3 +1,4 @@
+import { Scale } from 'lucide-react';
 import { Header } from '@/components/penelope/Header';
 import { AccessibleTabs } from '@/components/penelope/AccessibleTabs';
 import { KillSwitchPanel } from '@/components/penelope/KillSwitchPanel';
@@ -69,7 +70,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-6 md:py-8" role="main">
         {/* Bloque institucional permanente — única mención */}
         <div className="bg-primary/5 border-l-4 border-l-primary border border-primary/20 rounded-r-lg p-5 mb-6 flex items-start gap-4">
-          <span className="text-2xl flex-shrink-0 mt-0.5">⚖️</span>
+          <Scale size={24} className="text-primary flex-shrink-0 mt-0.5" />
           <div>
             <h2 className="text-base font-semibold text-foreground mb-1 tracking-tight" style={{ fontFamily: "'Source Serif 4', Georgia, serif" }}>
               Sistema de apoyo no decisorio
