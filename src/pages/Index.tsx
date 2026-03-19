@@ -1,3 +1,4 @@
+import { Scale } from 'lucide-react';
 import { Header } from '@/components/penelope/Header';
 import { AccessibleTabs } from '@/components/penelope/AccessibleTabs';
 import { KillSwitchPanel } from '@/components/penelope/KillSwitchPanel';
