@@ -15,7 +15,7 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
           {/* Left side - Logo and text */}
           <div className="flex items-center gap-4">
             <div 
-              className="w-14 h-14 rounded-lg overflow-hidden bg-cream/20 border-2 border-cream/40 flex items-center justify-center" 
+              className="w-20 h-20 rounded-xl overflow-hidden border-2 border-cream/40 flex items-center justify-center" 
               aria-label="Logo ENACOM Sistema Penélope"
             >
               <img 
