@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback, useEffect, KeyboardEvent, ReactNode } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo, KeyboardEvent, ReactNode } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { TabNavigationContext } from '@/contexts/TabNavigationContext';
 import { Progress } from '@/components/ui/progress';
-import { Check } from 'lucide-react';
+import { Check, ChevronRight } from 'lucide-react';
 
 interface Tab {
   id: string;
