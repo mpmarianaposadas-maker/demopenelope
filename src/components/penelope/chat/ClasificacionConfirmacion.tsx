@@ -158,7 +158,7 @@ export function ClasificacionConfirmacion({
               <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-amber-800">
-                  ⚠️ No fue posible clasificar el trámite con suficiente claridad
+                  No fue posible clasificar el trámite con suficiente claridad
                 </p>
                 <p className="text-sm text-amber-700 mt-1">
                   La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.
