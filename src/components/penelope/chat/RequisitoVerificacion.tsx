@@ -347,7 +347,7 @@ export function RequisitoVerificacion({
             <div className="flex items-start gap-2">
               <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
               <p className="text-xs text-blue-800">
-               <strong>ℹ️</strong> El campo "Orden en el expediente" indica el número de orden del documento 
+               <strong><Info size={14} className="inline mr-1" /></strong> El campo "Orden en el expediente" indica el número de orden del documento 
                 dentro del expediente electrónico (conforme Decreto 336/17 y nomenclatura GDE), 
                 donde se detectó cada requisito en esta demo.
               </p>
