@@ -1,5 +1,6 @@
-import { CheckCircle2, Circle, Loader2, UserCheck } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, UserCheck, Inbox, Bot, User, Search, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 
 // Tipos sincronizados con el hook
 export type RupecoStep = 
@@ -15,17 +16,17 @@ interface StepConfig {
   id: RupecoStep;
   label: string;
   shortLabel: string;
-  icon: string;
+  icon: ReactNode;
 }
 
 // Pasos según el diagrama de flujo del documento
 const STEPS: StepConfig[] = [
-  { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: '📥' },
-  { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: '🤖' },
-  { id: 'confirmacion_clasificacion', label: 'Confirmación Operador', shortLabel: 'Confirm.', icon: '👤' },
-  { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: '🔍' },
-  { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: '📋' },
-  { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: '✅' },
+  { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: <Inbox size={16} /> },
+  { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: <Bot size={16} /> },
+  { id: 'confirmacion_clasificacion', label: 'Confirmación Operador', shortLabel: 'Confirm.', icon: <User size={16} /> },
+  { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: <Search size={16} /> },
+  { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: <ClipboardList size={16} /> },
+  { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: <CheckCircle2 size={16} /> },
 ];
 
 interface RupecoProgressIndicatorProps {
