@@ -193,6 +193,15 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
           {renderTabs()}
         </div>
 
+        {/* Breadcrumb */}
+        {activeGroup && (
+          <div className="flex items-center gap-1.5 px-4 py-2 text-xs text-muted-foreground border-x border-border bg-muted/30">
+            <span className="font-medium uppercase tracking-wide text-primary">{activeGroup.label}</span>
+            <ChevronRight size={12} className="text-muted-foreground/50" />
+            <span className="text-foreground font-medium">{t(tabs[activeIndex]?.i18nKey)}</span>
+          </div>
+        )}
+
         {/* Tab panels */}
         <div className="border border-t-0 border-border rounded-b-lg bg-card overflow-hidden">
           {/* Tour progress indicator */}
