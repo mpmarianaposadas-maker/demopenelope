@@ -112,7 +112,7 @@ export function PanelArquitectura() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
               <div className="border border-green-200 bg-green-50/50 rounded-lg p-4 text-center">
                 <CheckCircle size={20} className="text-green-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-green-800">✓ Completo</p>
+                <p className="text-sm font-semibold text-green-800"><CheckCircle size={14} className="inline mr-1" />Completo</p>
                 <p className="text-xs text-green-700 mt-1">Pase a Área Técnica (borrador de PV)</p>
               </div>
               <div className="border border-red-200 bg-red-50/50 rounded-lg p-4 text-center">
