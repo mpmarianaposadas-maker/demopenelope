@@ -54,7 +54,7 @@ export function PasoFlujo({ paso, t, isLast = false }: PasoFlujoProps) {
                 ) : estado === 'activo' ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
-                  <span>{icono}</span>
+                  STEP_ICONS[paso.id] || <FileInput size={18} />
                 )}
               </motion.div>
             </TooltipTrigger>
