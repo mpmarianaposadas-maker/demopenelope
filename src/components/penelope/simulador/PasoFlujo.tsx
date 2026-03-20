@@ -65,7 +65,14 @@ export function PasoFlujo({ paso, t, isLast = false }: PasoFlujoProps) {
               className="max-w-xs text-sm"
               aria-describedby={`tooltip-${paso.id}`}
             >
-              <p id={`tooltip-${paso.id}`}>{t(tooltipKey)}</p>
+              <p id={`tooltip-${paso.id}`}>
+                {t(tooltipKey)}
+                {STEPS_WITH_SUPERVISION.has(paso.id) && (
+                  <span className="block mt-1 text-xs text-blue-600 font-medium">
+                    Supervisión humana obligatoria — art. 3 Reglamento propuesto
+                  </span>
+                )}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
