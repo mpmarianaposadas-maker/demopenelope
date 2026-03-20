@@ -45,7 +45,7 @@ const pasosIniciales: PasoFlujo[] = [
     numero: 3,
     tituloKey: 'simulador.paso3.titulo',
     tooltipKey: 'simulador.paso3.tooltip',
-    icono: '🗂️',
+    icono: 'tag',
     estado: 'pendiente',
   },
   {

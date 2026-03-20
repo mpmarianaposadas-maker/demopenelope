@@ -419,19 +419,14 @@ export function useChatRupecoSimulado() {
         };
         setClasificacionPendiente(clasificacion);
 
-        // Generar mensaje de clasificación
-        let mensajeClasificacion = `## Clasificación Asistida del Trámite\n\n`;
+        // Generar mensaje de clasificación — solo prosa, sin tablas ni duplicación con la tarjeta
+        let mensajeClasificacion: string;
         
         if (!ambiguo) {
-          mensajeClasificacion += `Trámite clasificado como **${tramite.nombre}** con confianza **${nivelConfianzaCualitativo}**. `;
-          mensajeClasificacion += `Silencio positivo ${alcanzadoPorSilencioPositivo ? 'aplicable' : 'no aplicable'}. `;
-          mensajeClasificacion += `Plazo: ${tramite.plazoSilencioPositivo} días hábiles.\n\n`;
+          mensajeClasificacion = `Trámite clasificado como **${tramite.nombre}** (confianza: ${nivelConfianzaCualitativo}). ${alcanzadoPorSilencioPositivo ? 'Alcanzado por silencio positivo.' : 'No alcanzado por silencio positivo.'} Plazo estimado: ${tramite.plazoSilencioPositivo} días hábiles. Vencimiento tentativo: ${fechaVencimiento.toLocaleDateString('es-AR')}. Revisando el detalle a continuación.`;
         } else {
-          mensajeClasificacion += `No fue posible clasificar el trámite con suficiente claridad. La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
+          mensajeClasificacion = `No fue posible clasificar el trámite con suficiente claridad. La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.`;
         }
-
-        mensajeClasificacion += `Requiere confirmación del operador antes de continuar con la verificación documental.\n\n`;
-        mensajeClasificacion += `*Esta clasificación es una asistencia automatizada. La categoría definitiva la determina el operador humano.*`;
 
         setMessages(prev => [
           ...prev,
