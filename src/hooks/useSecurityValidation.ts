@@ -72,7 +72,7 @@ export function useSecurityValidation() {
         });
       } else if (detection.riskLevel === 'low') {
         toast({
-          title: '🔍 Verificación de seguridad',
+          title: 'Verificación de seguridad',
           description: 'Se detectó contenido inusual. Revisando...',
         });
       }

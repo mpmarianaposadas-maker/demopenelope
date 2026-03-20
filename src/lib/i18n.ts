@@ -711,7 +711,7 @@ export const translations: Record<Language, Translations> = {
     'security.alert.high.description': 'A prompt injection attempt was detected. The input has been rejected for security.',
     'security.alert.medium.title': '⚠️ Suspicious Content',
     'security.alert.medium.description': 'Unusual patterns detected. Content has been automatically sanitized.',
-    'security.alert.low.title': '🔍 Security Check',
+    'security.alert.low.title': 'Security Check',
     'security.alert.low.description': 'Unusual content detected and being reviewed.',
     'security.alert.patternsDetected': 'Patterns detected',
     'security.alert.dismiss': 'Dismiss alert',
