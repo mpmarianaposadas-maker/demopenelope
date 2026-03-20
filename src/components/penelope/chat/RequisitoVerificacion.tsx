@@ -228,16 +228,16 @@ export function RequisitoVerificacion({
         {/* Resumen con semáforos */}
         <div className="flex flex-wrap gap-2 mt-2">
           <Badge variant="outline" className="bg-success/10 text-success border-success/30">
-            🟢 {verdes.length} verdes
+            <CircleDot size={12} className="inline mr-1" />{verdes.length} verdes
           </Badge>
           <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-            🟡 {amarillos.length} amarillos
+            <CircleDot size={12} className="inline mr-1" />{amarillos.length} amarillos
           </Badge>
           <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
-            🔴 {rojos.length} rojos
+            <CircleDot size={12} className="inline mr-1" />{rojos.length} rojos
           </Badge>
           <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/30">
-            📋 {totalRevisados}/{requisitos.length} revisados
+            <ClipboardList size={12} className="inline mr-1" />{totalRevisados}/{requisitos.length} revisados
           </Badge>
         </div>
       </CardHeader>
