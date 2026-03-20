@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, Bot, AlertTriangle, ChevronDown } from 'lucide-react';
+import { RotateCcw, Bot, AlertTriangle, ChevronDown, Radio, Tv, Mail, RefreshCw, ClipboardList } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
