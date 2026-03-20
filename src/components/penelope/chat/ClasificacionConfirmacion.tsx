@@ -139,7 +139,7 @@ export function ClasificacionConfirmacion({
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
                 <div className="text-xs text-blue-800 space-y-1">
-                  <p className="font-semibold">ℹ️ ¿Qué significa "confianza técnica"?</p>
+                  <p className="font-semibold">¿Qué significa "confianza técnica"?</p>
                   <p>
                     Es una medida interna de la IA sobre cuán probable considera que su clasificación 
                     técnica sea correcta (por ejemplo, que se trate efectivamente de "{clasificacion.tramite.nombre}").
