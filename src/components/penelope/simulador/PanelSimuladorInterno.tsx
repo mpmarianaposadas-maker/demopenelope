@@ -45,6 +45,30 @@ export function PanelSimuladorInterno() {
 
   const pasoActivo = pasos.find(p => p.estado === 'activo');
 
+  // Track completed steps and add ledger entries
+  useEffect(() => {
+    const completedIds = new Set(pasos.filter(p => p.estado === 'completado').map(p => p.id));
+    completedIds.forEach(id => {
+      if (!prevCompletedRef.current.has(id) && expediente.numero) {
+        const taskType = STEP_TASK_MAP[id];
+        if (taskType) {
+          const promptNum = String(Math.floor(Math.random() * 900000) + 100000);
+          agregarEntrada({
+            caseId: expediente.numero,
+            promptId: `PNL-${new Date().getFullYear()}-${promptNum}`,
+            taskType,
+            inputHash: `${Math.random().toString(36).substring(2, 10)}...${Math.random().toString(36).substring(2, 6)}`,
+            outputIA: STEP_OUTPUTS[id] || 'Paso completado.',
+            validadorId: 'AGT-López, M.',
+            timestamp: new Date(),
+            estado: 'convalidado',
+          });
+        }
+      }
+    });
+    prevCompletedRef.current = completedIds;
+  }, [pasos, expediente.numero, agregarEntrada]);
+
   useEffect(() => {
     if (pasoActivo) {
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
