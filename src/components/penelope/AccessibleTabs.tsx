@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback, useEffect, KeyboardEvent, ReactNode } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo, KeyboardEvent, ReactNode } from 'react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { TabNavigationContext } from '@/contexts/TabNavigationContext';
 import { Progress } from '@/components/ui/progress';
-import { Check } from 'lucide-react';
+import { Check, ChevronRight } from 'lucide-react';
 
 interface Tab {
   id: string;
@@ -38,6 +38,12 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const [showComplete, setShowComplete] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const activeTabId = tabs[activeIndex]?.id;
+  const activeGroup = useMemo(() => {
+    if (!groups) return null;
+    return groups.find(g => g.tabIds.includes(activeTabId)) ?? null;
+  }, [groups, activeTabId]);
 
   const goToTab = useCallback((tabId: string) => {
     const idx = tabs.findIndex(tab => tab.id === tabId);
@@ -124,7 +130,8 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         {t(tab.i18nKey)}
         {activeIndex === index && (
           <motion.div
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+            className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-sm"
+            style={{ backgroundColor: 'hsl(var(--badge-demo-bg))' }}
             layoutId="activeTabIndicator"
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
@@ -142,6 +149,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
   const renderTabs = () => {
     if (groups && groups.length > 0) {
       return groups.map((group, gi) => {
+        const isActiveGroup = activeGroup?.label === group.label;
         const groupTabs = group.tabIds
           .map(id => ({ tab: tabs.find(t => t.id === id)!, index: tabs.findIndex(t => t.id === id) }))
           .filter(({ tab }) => tab);
@@ -152,7 +160,13 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
               <div className="hidden md:block w-px self-stretch bg-border mx-1.5 my-1" />
             )}
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wider px-1 leading-tight">
+              <span className={cn(
+                "text-[10px] uppercase tracking-wider px-1 leading-tight inline-flex items-center gap-1 transition-colors duration-200",
+                isActiveGroup ? "text-primary font-semibold" : "text-muted-foreground/70"
+              )}>
+                {isActiveGroup && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                )}
                 {group.label}
               </span>
               <div className="flex flex-wrap gap-0.5">
@@ -178,6 +192,15 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         >
           {renderTabs()}
         </div>
+
+        {/* Breadcrumb */}
+        {activeGroup && (
+          <div className="flex items-center gap-1.5 px-4 py-2 text-xs text-muted-foreground border-x border-border bg-muted/30">
+            <span className="font-medium uppercase tracking-wide text-primary">{activeGroup.label}</span>
+            <ChevronRight size={12} className="text-muted-foreground/50" />
+            <span className="text-foreground font-medium">{t(tabs[activeIndex]?.i18nKey)}</span>
+          </div>
+        )}
 
         {/* Tab panels */}
         <div className="border border-t-0 border-border rounded-b-lg bg-card overflow-hidden">
