@@ -124,7 +124,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
       {!isComplete && currentIndex >= 0 && (
         <div className="mt-3 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-lg">{STEPS[currentIndex]?.icon || '📋'}</span>
+            <span className="text-lg">{STEPS[currentIndex]?.icon || <ClipboardList size={16} />}</span>
             <span className="text-muted-foreground">
               <strong className="text-foreground">{STEPS[currentIndex]?.label}</strong>
               {STEPS[currentIndex]?.id === 'confirmacion_clasificacion' && (
