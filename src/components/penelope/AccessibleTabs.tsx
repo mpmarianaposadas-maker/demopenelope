@@ -53,7 +53,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
     }
   }, [tabs]);
 
-  // Track visited tabs
+  // Track visited tabs & scroll to top on tab change
   useEffect(() => {
     const currentTabId = tabs[activeIndex]?.id;
     if (currentTabId) {
@@ -62,6 +62,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         return new Set(prev).add(currentTabId);
       });
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeIndex, tabs]);
 
   // Show completion message
