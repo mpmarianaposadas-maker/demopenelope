@@ -1,83 +1,94 @@
 import { useLanguage } from '@/hooks/useLanguage';
-import { FileText, CheckCircle, Clock, Shield } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Shield, Hash, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
 import { useLedger } from '@/contexts/LedgerContext';
 import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 
 const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
-  VERIFICACION_VIGENCIA: 'Verificación de vigencia',
-  CLASIFICACION_PRELIMINAR: 'Clasificación preliminar',
-  GENERACION_PROVIDENCIA: 'Generación de providencia',
-  DETECCION_FALTANTES: 'Detección de faltantes',
-  CONTROL_PLAZOS: 'Control de plazos',
+  VERIFICACION_VIGENCIA: 'VERIFICACIÓN-VIGENCIA',
+  CLASIFICACION_PRELIMINAR: 'CLASIFICACIÓN-PRELIMINAR',
+  GENERACION_PROVIDENCIA: 'GENERACIÓN-PROVIDENCIA',
+  DETECCION_FALTANTES: 'DETECCIÓN-FALTANTES',
+  CONTROL_PLAZOS: 'CONTROL-PLAZOS',
 };
 
 export function PanelMetricasPrompts() {
   const { t } = useLanguage();
   const { entries } = useLedger();
 
-  const last = entries.length > 0 ? entries[entries.length - 1] : null;
-
   const formatTimestamp = (date: Date) => `${formatFechaAR(date)} — ${formatHoraSegAR(date)}`;
 
   return (
     <div className="card-institutional p-4 transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1 hover:border-primary/30">
-      <div className="flex items-center gap-2 mb-4">
-        <FileText className="w-4 h-4 text-primary" />
-        <h3 className="font-serif font-semibold text-foreground text-sm">
-          {t('aside.prompts.title') !== 'aside.prompts.title' ? t('aside.prompts.title') : 'Registro de Trazabilidad'}
-        </h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <FileText className="w-4 h-4 text-primary" />
+          <h3 className="font-serif font-semibold text-foreground text-sm">
+            Prompt Net Ledger
+          </h3>
+        </div>
+        <Badge variant="outline" className="text-[9px]">
+          {entries.length} interacciones
+        </Badge>
       </div>
 
-      {/* Resumen compacto */}
+      {/* Entries */}
       <div className="space-y-3">
-        <div className="flex items-center gap-3 p-2 rounded-lg bg-secondary/50">
-          <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-primary/10 text-primary">
-            <FileText className="w-4 h-4" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs text-muted-foreground">Interacciones registradas</div>
-            <div className="text-sm font-semibold text-foreground">{entries.length}</div>
-          </div>
-        </div>
+        {entries.slice(-3).map((entry) => (
+          <div key={entry.id} className="p-2.5 rounded-lg bg-secondary/40 border border-border/40 space-y-1.5 text-xs">
+            {/* PromptID + Estado */}
+            <div className="flex items-center justify-between">
+              <span className="font-mono font-semibold text-foreground text-[11px]">{entry.promptId}</span>
+              <Badge
+                variant="outline"
+                className={
+                  entry.estado === 'convalidado'
+                    ? 'text-[8px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300'
+                    : 'text-[8px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300'
+                }
+              >
+                {entry.estado === 'convalidado' ? 'Convalidado' : 'Corregido'}
+              </Badge>
+            </div>
 
-        {/* Última interacción */}
-        {last && (
-          <div className="p-2 rounded-lg bg-secondary/30 space-y-2">
-            <div className="text-xs font-medium text-muted-foreground">Última interacción</div>
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-foreground font-medium">{TASK_LABELS[last.taskType]}</span>
-                <Badge
-                  variant="outline"
-                  className={
-                    last.estado === 'convalidado'
-                      ? 'text-[9px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300'
-                      : 'text-[9px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300'
-                  }
-                >
-                  {last.estado === 'convalidado' ? 'Convalidado' : 'Corregido'}
-                </Badge>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                <Clock className="w-3 h-3" />
-                <span>{formatTimestamp(last.timestamp)}</span>
-              </div>
-              <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                <CheckCircle className="w-3 h-3" />
-                <span>Validador: {last.validadorId}</span>
-              </div>
+            {/* CaseID */}
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <FileText className="w-3 h-3 shrink-0" />
+              <span className="font-mono truncate text-[10px]">{entry.caseId}</span>
+            </div>
+
+            {/* Tipo de tarea */}
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Hash className="w-3 h-3 shrink-0" />
+              <span className="font-medium text-[10px]">{TASK_LABELS[entry.taskType]}</span>
+            </div>
+
+            {/* Output IA */}
+            <div className="text-[10px] text-muted-foreground leading-relaxed pl-4 border-l-2 border-primary/20">
+              {entry.outputIA}
+            </div>
+
+            {/* Validación */}
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <User className="w-3 h-3 shrink-0" />
+              <span>{entry.validadorId} — {entry.estado === 'convalidado' ? 'Convalidado' : 'Corregido'}</span>
+            </div>
+
+            {/* Timestamp */}
+            <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <Clock className="w-3 h-3 shrink-0" />
+              <span>{formatTimestamp(entry.timestamp)}</span>
             </div>
           </div>
-        )}
+        ))}
       </div>
 
-      {/* Indicador de estado del ledger */}
+      {/* Footer: Registro inmutable */}
       <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground bg-secondary/30 rounded-lg py-2">
         <Shield className="w-3 h-3 text-green-600" />
         <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-        <span>{t('aside.prompts.ledgerActivo') !== 'aside.prompts.ledgerActivo' ? t('aside.prompts.ledgerActivo') : 'Ledger activo · Registro inmutable'}</span>
+        <span>Registro inmutable · {entries.length} interacciones</span>
       </div>
     </div>
   );
