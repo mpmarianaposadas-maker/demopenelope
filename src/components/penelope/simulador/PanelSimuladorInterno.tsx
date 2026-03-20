@@ -8,10 +8,30 @@ import { FlujoProcedimiento } from './FlujoProcedimiento';
 import { AlertaVencimiento, BotonAlertaVencimiento } from './AlertaVencimiento';
 import { useSimuladorFlujo } from '@/hooks/useSimuladorFlujo';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useLedger } from '@/contexts/LedgerContext';
+import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
+
+const STEP_TASK_MAP: Record<string, LedgerEntry['taskType']> = {
+  ingreso: 'VERIFICACION_VIGENCIA',
+  verificacion: 'DETECCION_FALTANTES',
+  clasificacion: 'CLASIFICACION_PRELIMINAR',
+  plazos: 'CONTROL_PLAZOS',
+  estado_final: 'GENERACION_PROVIDENCIA',
+};
+
+const STEP_OUTPUTS: Record<string, string> = {
+  ingreso: 'Expediente ingresado correctamente. Carátula generada con número de actuación asignado.',
+  verificacion: 'Documentación verificada contra RUPECO. Se comprobó vigencia de certificados y completitud formal.',
+  clasificacion: 'Trámite clasificado preliminarmente según matriz normativa. Área competente identificada.',
+  plazos: 'Plazo legal perentorio calculado. Cronograma de alertas configurado (10, 5 y 2 días hábiles).',
+  estado_final: 'Evaluación formal completada. Borrador de providencia de pase generado para revisión humana.',
+};
 
 export function PanelSimuladorInterno() {
   const panelRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const { agregarEntrada, reiniciarLedger } = useLedger();
+  const prevCompletedRef = useRef<Set<string>>(new Set());
   const {
     pasos,
     expediente,
@@ -24,6 +44,30 @@ export function PanelSimuladorInterno() {
   } = useSimuladorFlujo();
 
   const pasoActivo = pasos.find(p => p.estado === 'activo');
+
+  // Track completed steps and add ledger entries
+  useEffect(() => {
+    const completedIds = new Set(pasos.filter(p => p.estado === 'completado').map(p => p.id));
+    completedIds.forEach(id => {
+      if (!prevCompletedRef.current.has(id) && expediente.numero) {
+        const taskType = STEP_TASK_MAP[id];
+        if (taskType) {
+          const promptNum = String(Math.floor(Math.random() * 900000) + 100000);
+          agregarEntrada({
+            caseId: expediente.numero,
+            promptId: `PNL-${new Date().getFullYear()}-${promptNum}`,
+            taskType,
+            inputHash: `${Math.random().toString(36).substring(2, 10)}...${Math.random().toString(36).substring(2, 6)}`,
+            outputIA: STEP_OUTPUTS[id] || 'Paso completado.',
+            validadorId: 'AGT-López, M.',
+            timestamp: new Date(),
+            estado: 'convalidado',
+          });
+        }
+      }
+    });
+    prevCompletedRef.current = completedIds;
+  }, [pasos, expediente.numero, agregarEntrada]);
 
   useEffect(() => {
     if (pasoActivo) {
@@ -93,7 +137,7 @@ export function PanelSimuladorInterno() {
             ) : (
               <Button 
                 variant="outline" 
-                onClick={reiniciarSimulacion} 
+                onClick={() => { reiniciarSimulacion(); reiniciarLedger(); }} 
                 disabled={simulando}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
