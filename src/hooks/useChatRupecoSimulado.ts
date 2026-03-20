@@ -420,22 +420,18 @@ export function useChatRupecoSimulado() {
         setClasificacionPendiente(clasificacion);
 
         // Generar mensaje de clasificación
-        let mensajeClasificacion = `## 🤖 Clasificación Asistida del Trámite\n\n`;
+        let mensajeClasificacion = `## Clasificación Asistida del Trámite\n\n`;
         
         if (!ambiguo) {
-          mensajeClasificacion += `**Trámite probable:** ${tramite.nombre} *(confianza: ${nivelConfianzaCualitativo})*\n\n`;
-          mensajeClasificacion += `| Parámetro | Valor |\n|:----------|:------|\n`;
-          mensajeClasificacion += `| Alcanzado por silencio positivo | ${alcanzadoPorSilencioPositivo ? '✅ Sí' : '❌ No'} |\n`;
-          mensajeClasificacion += `| Plazo estimado (demo) | ${tramite.plazoSilencioPositivo} días |\n`;
-          mensajeClasificacion += `| Vencimiento tentativo | ${fechaVencimiento.toLocaleDateString('es-AR')} |\n\n`;
+          mensajeClasificacion += `Trámite clasificado como **${tramite.nombre}** con confianza **${nivelConfianzaCualitativo}**. `;
+          mensajeClasificacion += `Silencio positivo ${alcanzadoPorSilencioPositivo ? 'aplicable' : 'no aplicable'}. `;
+          mensajeClasificacion += `Plazo: ${tramite.plazoSilencioPositivo} días hábiles.\n\n`;
         } else {
-          mensajeClasificacion += `⚠️ **No fue posible clasificar el trámite con suficiente claridad.**\n\n`;
-          mensajeClasificacion += `La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
+          mensajeClasificacion += `No fue posible clasificar el trámite con suficiente claridad. La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
         }
 
-        mensajeClasificacion += `> 📌 **Requiere confirmación del operador antes de continuar con la verificación documental.**\n\n`;
-        mensajeClasificacion += `---\n\n`;
-        mensajeClasificacion += `*Nota: Esta clasificación es una asistencia automatizada. La categoría definitiva del trámite la determina el operador humano.*`;
+        mensajeClasificacion += `Requiere confirmación del operador antes de continuar con la verificación documental.\n\n`;
+        mensajeClasificacion += `*Esta clasificación es una asistencia automatizada. La categoría definitiva la determina el operador humano.*`;
 
         setMessages(prev => [
           ...prev,
