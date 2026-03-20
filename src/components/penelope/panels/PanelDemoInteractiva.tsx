@@ -1,4 +1,5 @@
 import { Card, CardTitle, CardText } from '../Card';
+import { FolderOpen, Wrench } from 'lucide-react';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
