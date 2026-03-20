@@ -87,9 +87,9 @@ function RequisitoCardMobile({
   onValidarRequisito: (id: string, validado: boolean) => void;
 }) {
   const estadoConfig = {
-    verde: { bg: 'bg-success/10 border-success/30', text: 'text-success', emoji: '🟢' },
-    amarillo: { bg: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600', emoji: '🟡' },
-    rojo: { bg: 'bg-destructive/10 border-destructive/30', text: 'text-destructive', emoji: '🔴' }
+    verde: { bg: 'bg-success/10 border-success/30', text: 'text-success', emoji: <CircleDot size={14} className="text-success" /> },
+    amarillo: { bg: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600', emoji: <CircleDot size={14} className="text-amber-600" /> },
+    rojo: { bg: 'bg-destructive/10 border-destructive/30', text: 'text-destructive', emoji: <CircleDot size={14} className="text-destructive" /> }
   };
 
   const config = estadoConfig[req.estadoIA];
