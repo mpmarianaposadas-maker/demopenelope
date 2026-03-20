@@ -16,11 +16,11 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
             <div 
               className="flex-shrink-0 rounded-full"
               style={{
-                width: '100px',
-                height: '100px',
+                width: '130px',
+                height: '130px',
                 backgroundImage: "url('https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png')",
-                backgroundSize: '700px auto',
-                backgroundPosition: '-275px -20px',
+                backgroundSize: '520px auto',
+                backgroundPosition: '-195px -30px',
                 backgroundRepeat: 'no-repeat',
               }}
               role="img"
