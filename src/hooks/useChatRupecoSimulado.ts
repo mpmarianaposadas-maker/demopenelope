@@ -470,7 +470,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
+        content: `## Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
         timestamp: new Date(),
       },
     ]);
