@@ -76,6 +76,32 @@ export function PanelEstadoExpediente() {
         <div className="text-sm text-foreground font-medium transition-all duration-300">{tipoTramite}</div>
       </div>
 
+      {/* Control de Plazo */}
+      <div className={`rounded-lg p-3 mb-4 border-l-4 ${semaforoClasses.border} ${semaforoClasses.bg}`}>
+        <div className={`flex items-center gap-1.5 text-xs font-semibold ${semaforoClasses.text} mb-2`}>
+          <AlertTriangle size={14} />
+          <span>Plazo legal de resolución</span>
+        </div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs mb-2">
+          <div className="text-muted-foreground">Ingreso:</div>
+          <div className="font-medium text-foreground flex items-center gap-1">
+            <CalendarDays size={12} className="text-muted-foreground" />
+            05/03/2026
+          </div>
+          <div className="text-muted-foreground">Límite:</div>
+          <div className="font-medium text-foreground flex items-center gap-1">
+            <CalendarDays size={12} className="text-muted-foreground" />
+            04/04/2026
+          </div>
+        </div>
+        <div className={`text-sm font-bold ${semaforoClasses.text} tabular-nums`}>
+          {diasRestantes} días hábiles restantes
+        </div>
+        <div className="text-[10px] text-muted-foreground mt-1 italic">
+          Silencio positivo: Decreto 971/2024
+        </div>
+      </div>
+
       {/* Timeline — Pasos dentro del alcance */}
       <div className="space-y-1">
         {steps.map((step, index) => {
