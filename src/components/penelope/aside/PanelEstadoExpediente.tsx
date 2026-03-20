@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
-import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays } from 'lucide-react';
+import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 function calcularDiasHabilesRestantes(): number {
@@ -137,12 +137,16 @@ export function PanelEstadoExpediente() {
       </div>
 
       {/* Línea divisoria */}
-      <div className="my-3 flex items-center gap-2">
+      <div className="my-3 relative group flex items-center gap-2 cursor-help">
         <div className="flex-1 border-t border-dashed border-muted-foreground/30" />
-        <span className="text-[10px] text-muted-foreground/50 italic whitespace-nowrap">
+        <span className="text-[10px] text-muted-foreground/50 italic whitespace-nowrap flex items-center gap-1">
           Límite de intervención de Penélope
+          <Info size={12} className="text-muted-foreground/40" />
         </span>
         <div className="flex-1 border-t border-dashed border-muted-foreground/30" />
+        <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1 max-w-xs z-10 text-center">
+          Penélope interviene exclusivamente en etapas preliminares no discrecionales — art. 2 Reglamento propuesto
+        </div>
       </div>
 
       {/* Pasos fuera del alcance */}
