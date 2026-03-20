@@ -6,7 +6,7 @@ import {
   TooltipProvider, 
   TooltipTrigger 
 } from '@/components/ui/tooltip';
-import { Check, Loader2, FileInput, FolderSearch, Tag, Clock, CheckCircle } from 'lucide-react';
+import { Check, Loader2, FileInput, FolderSearch, Tag, Clock, CheckCircle, UserCheck } from 'lucide-react';
 import type { PasoFlujo as PasoFlujoType } from '@/hooks/useSimuladorFlujo';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
@@ -16,6 +16,8 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
   plazos: <Clock size={18} />,
   estado_final: <CheckCircle size={18} />,
 };
+
+const STEPS_WITH_SUPERVISION = new Set(['verificacion', 'clasificacion', 'plazos']);
 
 interface PasoFlujoProps {
   paso: PasoFlujoType;
@@ -63,7 +65,14 @@ export function PasoFlujo({ paso, t, isLast = false }: PasoFlujoProps) {
               className="max-w-xs text-sm"
               aria-describedby={`tooltip-${paso.id}`}
             >
-              <p id={`tooltip-${paso.id}`}>{t(tooltipKey)}</p>
+              <p id={`tooltip-${paso.id}`}>
+                {t(tooltipKey)}
+                {STEPS_WITH_SUPERVISION.has(paso.id) && (
+                  <span className="block mt-1 text-xs text-blue-600 font-medium">
+                    Supervisión humana obligatoria — art. 3 Reglamento propuesto
+                  </span>
+                )}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -108,9 +117,17 @@ export function PasoFlujo({ paso, t, isLast = false }: PasoFlujoProps) {
               estado === 'completado' && 'text-foreground'
             )}
           >
-            {t(tituloKey)}
+          {t(tituloKey)}
           </h4>
         </div>
+
+        {/* Human supervision badge */}
+        {STEPS_WITH_SUPERVISION.has(paso.id) && (estado === 'activo' || estado === 'completado') && (
+          <div className="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs">
+            <UserCheck size={12} />
+            <span>Supervisión humana requerida</span>
+          </div>
+        )}
         
         {/* Tooltip text shown on mobile */}
         <p className="text-xs text-muted-foreground mt-1 md:hidden">
