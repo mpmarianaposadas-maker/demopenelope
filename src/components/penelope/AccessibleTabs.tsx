@@ -130,7 +130,8 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         {t(tab.i18nKey)}
         {activeIndex === index && (
           <motion.div
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
+            className="absolute bottom-0 left-0 right-0 h-[3px] rounded-t-sm"
+            style={{ backgroundColor: 'hsl(var(--badge-demo-bg))' }}
             layoutId="activeTabIndicator"
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
