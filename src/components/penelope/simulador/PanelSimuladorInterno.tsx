@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Shield, Play, RotateCcw } from 'lucide-react';
+import { Shield, Play, RotateCcw, Info } from 'lucide-react';
 import { FlujoProcedimiento } from './FlujoProcedimiento';
 import { AlertaVencimiento, BotonAlertaVencimiento } from './AlertaVencimiento';
 import { useSimuladorFlujo } from '@/hooks/useSimuladorFlujo';
