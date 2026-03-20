@@ -4,14 +4,14 @@ import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send } from 'luc
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const steps = [
-  { id: 'ingreso', label: 'Ingreso y caratulación', icon: FileInput, status: 'completed' as const, scope: 'penelope' as const },
-  { id: 'verificacion', label: 'Verificación documental', icon: FolderSearch, status: 'completed' as const, scope: 'penelope' as const },
-  { id: 'clasificacion', label: 'Clasificación preliminar', icon: Tag, status: 'current' as const, scope: 'penelope' as const },
-  { id: 'plazos', label: 'Control de plazos', icon: Clock, status: 'pending' as const, scope: 'penelope' as const },
-  { id: 'analisis', label: 'Análisis sustantivo — Área técnica', icon: UserCheck, status: 'pending' as const, scope: 'externo' as const },
+  { id: 'ingreso', label: 'Ingreso y caratulación', icon: FileInput, status: 'completed' as const },
+  { id: 'verificacion', label: 'Verificación documental', icon: FolderSearch, status: 'completed' as const },
+  { id: 'clasificacion', label: 'Clasificación preliminar', icon: Tag, status: 'current' as const },
+  { id: 'plazos', label: 'Control de plazos', icon: Clock, status: 'pending' as const },
 ];
 
 const stepsExternos = [
+  { id: 'analisis', label: 'Análisis sustantivo — Área técnica', icon: UserCheck, tag: 'Acto humano' },
   { id: 'decision', label: 'Decisión administrativa', icon: Scale, tag: 'Acto humano' },
   { id: 'notificacion', label: 'Notificación al administrado', icon: Send, tag: 'Acto humano' },
 ];
