@@ -253,7 +253,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="pasos">
                 <AccordionTrigger className="text-sm font-medium">
-                  📋 Pasos para el administrado ({categoriaInfo.pasosAdministrado.length} acciones)
+                  <ClipboardList size={14} className="inline mr-1" /> Pasos para el administrado ({categoriaInfo.pasosAdministrado.length} acciones)
                 </AccordionTrigger>
                 <AccordionContent>
                   <ol className="space-y-2 text-sm">
