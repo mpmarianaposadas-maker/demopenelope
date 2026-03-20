@@ -161,6 +161,14 @@ export function PanelSimuladorInterno() {
         expedienteNumero={expediente.numero}
         t={t}
       />
+
+      {/* Nota al pie */}
+      <div className="border-t border-border pt-2 mt-3 flex items-start gap-1.5">
+        <Info size={12} className="text-muted-foreground/40 mt-0.5 flex-shrink-0" />
+        <p className="text-xs text-muted-foreground/40">
+          Esta demo ilustra el diseño conceptual del sistema. No procesa datos reales ni produce efectos jurídicos. · Anexo II, El viaje de Penélope (2026)
+        </p>
+      </div>
     </div>
   );
 }

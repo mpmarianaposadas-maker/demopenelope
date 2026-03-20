@@ -170,7 +170,10 @@ export function PanelEstadoExpediente() {
                     </div>
                     <div className="pt-1.5">
                       <div className="text-xs font-medium text-muted-foreground">{step.label}</div>
-                      <div className="text-[10px] text-muted-foreground/60 italic">{step.tag}</div>
+                      <span className="inline-flex items-center gap-0.5 mt-0.5 border border-amber-300 bg-amber-50 text-amber-800 rounded-sm text-xs font-medium px-1.5 py-0.5">
+                        <User size={10} className="inline mr-0.5" />
+                        Acto humano exclusivo
+                      </span>
                     </div>
                   </div>
                 </TooltipTrigger>
