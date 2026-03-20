@@ -603,7 +603,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
+        content: `## Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
         timestamp: new Date(),
       },
     ]);
