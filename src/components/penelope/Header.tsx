@@ -9,18 +9,18 @@ interface HeaderProps {
 export function Header({ language, onToggleLanguage, t }: HeaderProps) {
   return (
     <header className="header-institutional" role="banner">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Left side - Logo and text */}
           <div className="flex items-center gap-4">
             <div 
               className="flex-shrink-0 rounded-full"
               style={{
-                width: '100px',
-                height: '100px',
+                width: '130px',
+                height: '130px',
                 backgroundImage: "url('https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png')",
-                backgroundSize: '700px auto',
-                backgroundPosition: '-275px -20px',
+                backgroundSize: '520px auto',
+                backgroundPosition: '-195px -30px',
                 backgroundRepeat: 'no-repeat',
               }}
               role="img"
