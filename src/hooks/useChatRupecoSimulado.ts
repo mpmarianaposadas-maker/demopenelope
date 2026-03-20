@@ -86,9 +86,9 @@ interface ExpedienteSimulado {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 90000000 + 10000000)}-APN-ENACOM`;
 
-const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
+const MENSAJE_INICIAL = `## Sistema de Verificación Documental ENACOM
 
-**Penélope** - Módulo de Admisibilidad Formal
+**Penélope** — Módulo de Admisibilidad Formal
 
 Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
 
