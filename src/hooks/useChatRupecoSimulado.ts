@@ -508,32 +508,25 @@ export function useChatRupecoSimulado() {
         const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
         const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
 
-        let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
+        let informe = `## INFORME DE VERIFICACIÓN AUTOMÁTICA
 
 ---
 
-### Datos del Expediente
-| Campo | Valor |
-|:------|:------|
-| **Expediente** | ${expedienteActualizado.numero} |
-| **Carátula** | ${expedienteActualizado.caratula} |
-| **Tipo de persona** | ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
-| **Trámite** | ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo}) |
-| **Normativa aplicable** | ${tramiteConfirmado.normativa} |
+**Expediente:** ${expedienteActualizado.numero} | **Carátula:** ${expedienteActualizado.caratula}
+
+**Tipo de persona:** ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} | **Trámite:** ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo})
+
+**Normativa aplicable:** ${tramiteConfirmado.normativa}
 
 ---
 
 ### Resultado de Validación Documental
 
-| Parámetro | Valor |
-|:----------|:------|
-| **Nivel de confianza** | ${nivelConfianzaGlobal}% |
-| **Acción sugerida** | ${accion.descripcion} |
-| **Completitud documental** | ${porcentaje}% (${detectados.length}/${documentosDetectados.length}) |
+**Nivel de confianza:** ${nivelConfianzaGlobal}% | **Acción sugerida:** ${accion.descripcion} | **Completitud:** ${porcentaje}% (${detectados.length}/${documentosDetectados.length})
 
 ---
 
-### ✅ Requisitos Cumplidos
+### Requisitos Cumplidos
 
 `;
 
@@ -550,7 +543,7 @@ export function useChatRupecoSimulado() {
           informe += `*No se detectaron documentos válidos*\n`;
         }
 
-        informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
+        informe += `\n---\n\n### Requisitos Faltantes\n\n`;
 
         if (faltantes.length > 0) {
           faltantes.forEach(doc => {
@@ -562,17 +555,17 @@ export function useChatRupecoSimulado() {
             }
           });
 
-          informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
+          informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
           informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
-          informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+          informe += `> **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
-          informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
+          informe += `**Control de plazos (Decreto N° 971/2024 — PEHAR)**\n`;
           informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
           informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
-          informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
+          informe += `---\n\n### EXPEDIENTE COMPLETO\n\n`;
           informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
           informe += `> No se requiere intimación al administrado.\n`;
         }
