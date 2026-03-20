@@ -1,7 +1,22 @@
+import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
-import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send } from 'lucide-react';
+import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+function calcularDiasHabilesRestantes(): number {
+  const hoy = new Date();
+  const limite = new Date(2026, 3, 4); // 04/04/2026
+  let dias = 0;
+  const current = new Date(hoy);
+  current.setHours(0, 0, 0, 0);
+  while (current < limite) {
+    current.setDate(current.getDate() + 1);
+    const dow = current.getDay();
+    if (dow !== 0 && dow !== 6) dias++;
+  }
+  return Math.max(0, dias);
+}
 
 const steps = [
   { id: 'ingreso', label: 'Ingreso y caratulación', icon: FileInput, status: 'completed' as const },
@@ -20,6 +35,13 @@ export function PanelEstadoExpediente() {
   const { t } = useLanguage();
   const { tipoTramite } = useTipoTramite();
 
+  const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
+
+  const semaforoClasses = diasRestantes > 10
+    ? { bg: 'bg-green-100', text: 'text-green-800', border: 'border-l-green-500' }
+    : diasRestantes >= 5
+      ? { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-l-yellow-500' }
+      : { bg: 'bg-red-100', text: 'text-red-800', border: 'border-l-red-500' };
   const getStatusClasses = (status: 'completed' | 'current' | 'pending') => {
     switch (status) {
       case 'completed':
@@ -52,6 +74,32 @@ export function PanelEstadoExpediente() {
         <div className="font-mono text-sm font-medium text-foreground">EX-2026-89717554-APN-ENACOM</div>
         <div className="text-xs text-muted-foreground mt-2">{t('aside.estado.tramite')}</div>
         <div className="text-sm text-foreground font-medium transition-all duration-300">{tipoTramite}</div>
+      </div>
+
+      {/* Control de Plazo */}
+      <div className={`rounded-lg p-3 mb-4 border-l-4 ${semaforoClasses.border} ${semaforoClasses.bg}`}>
+        <div className={`flex items-center gap-1.5 text-xs font-semibold ${semaforoClasses.text} mb-2`}>
+          <AlertTriangle size={14} />
+          <span>Plazo legal de resolución</span>
+        </div>
+        <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs mb-2">
+          <div className="text-muted-foreground">Ingreso:</div>
+          <div className="font-medium text-foreground flex items-center gap-1">
+            <CalendarDays size={12} className="text-muted-foreground" />
+            05/03/2026
+          </div>
+          <div className="text-muted-foreground">Límite:</div>
+          <div className="font-medium text-foreground flex items-center gap-1">
+            <CalendarDays size={12} className="text-muted-foreground" />
+            04/04/2026
+          </div>
+        </div>
+        <div className={`text-sm font-bold ${semaforoClasses.text} tabular-nums`}>
+          {diasRestantes} días hábiles restantes
+        </div>
+        <div className="text-[10px] text-muted-foreground mt-1 italic">
+          Silencio positivo: Decreto 971/2024
+        </div>
       </div>
 
       {/* Timeline — Pasos dentro del alcance */}
