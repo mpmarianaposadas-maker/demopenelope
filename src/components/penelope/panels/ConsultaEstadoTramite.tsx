@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatFechaAR, formatFechaHoraAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Search, 
   FileText, 
@@ -11,6 +12,7 @@ import {
   Clock, 
   CheckCircle2, 
   AlertCircle,
+  AlertTriangle,
   Loader2,
   User,
   FileCheck,
@@ -20,6 +22,20 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
+
+function calcularDiasHabiles(desde: Date, hasta: Date): number {
+  let count = 0;
+  const current = new Date(desde);
+  current.setHours(0, 0, 0, 0);
+  const end = new Date(hasta);
+  end.setHours(0, 0, 0, 0);
+  while (current < end) {
+    current.setDate(current.getDate() + 1);
+    const day = current.getDay();
+    if (day !== 0 && day !== 6) count++;
+  }
+  return count;
+}
 
 type EstadoTramite = 'verificado' | 'enRevision' | 'enEspera' | 'completado';
 
@@ -153,8 +169,75 @@ export function ConsultaEstadoTramite() {
 
   const lang = language === 'es' ? 'es' : 'en';
 
+  const FECHA_INGRESO = new Date(2026, 2, 5);
+  const FECHA_LIMITE = new Date(2026, 3, 4);
+  const PLAZO_TOTAL = 30;
+
+  const diasTranscurridos = useMemo(() => calcularDiasHabiles(FECHA_INGRESO, new Date()), []);
+  const porcentajeAvance = Math.min((diasTranscurridos / PLAZO_TOTAL) * 100, 100);
+  const progressColor = porcentajeAvance <= 50 ? 'bg-green-500' : porcentajeAvance <= 80 ? 'bg-yellow-500' : 'bg-red-500';
+  const borderColor = porcentajeAvance <= 50 ? 'border-l-green-500' : porcentajeAvance <= 80 ? 'border-l-yellow-500' : 'border-l-red-500';
+
   return (
     <div className="space-y-6">
+      {/* Card de resumen */}
+      <Card className={`border-l-4 ${borderColor}`}>
+        <CardContent className="pt-6 space-y-4">
+          <div className="flex items-center gap-2 mb-1">
+            <Clock className="h-5 w-5 text-muted-foreground" />
+            <span className="font-semibold text-base">{language === 'es' ? 'Control de plazo del expediente' : 'Case deadline control'}</span>
+          </div>
+
+          {/* Contador dinámico */}
+          <div>
+            <div className="flex items-baseline gap-2 mb-2">
+              <span className="text-3xl font-bold tabular-nums">{diasTranscurridos}</span>
+              <span className="text-muted-foreground text-sm">
+                {language === 'es' ? `de ${PLAZO_TOTAL} días hábiles transcurridos` : `of ${PLAZO_TOTAL} business days elapsed`}
+              </span>
+            </div>
+            <div className="relative h-3 w-full overflow-hidden rounded-full bg-secondary">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${progressColor}`}
+                style={{ width: `${porcentajeAvance}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <span className="text-[10px] text-muted-foreground">0</span>
+              <span className="text-[10px] text-muted-foreground">{PLAZO_TOTAL}</span>
+            </div>
+          </div>
+
+          {/* Fechas */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-[10px] text-muted-foreground">{language === 'es' ? 'Fecha de ingreso' : 'Filing date'}</p>
+                <p className="text-sm font-medium">{formatFechaAR(FECHA_INGRESO)}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+              <div>
+                <p className="text-[10px] text-muted-foreground">{language === 'es' ? 'Fecha límite' : 'Deadline'}</p>
+                <p className="text-sm font-medium">{formatFechaAR(FECHA_LIMITE)}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-green-100 text-green-800 border-green-300 text-[10px] px-1.5 py-0.5 hover:bg-green-100">
+                {language === 'es' ? 'En tramitación — Etapa preliminar (Penélope)' : 'In process — Preliminary stage (Penélope)'}
+              </Badge>
+            </div>
+          </div>
+
+          {/* Referencia normativa */}
+          <p className="text-[10px] text-muted-foreground italic pt-1">
+            {language === 'es' ? 'Plazo Decreto 971/2024 — Silencio positivo' : 'Deadline Decree 971/2024 — Positive silence'}
+          </p>
+        </CardContent>
+      </Card>
+
       {/* Header */}
       <div className="flex items-center gap-3">
         <User className="h-6 w-6 text-primary" />
