@@ -17,6 +17,8 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
   estado_final: <CheckCircle size={18} />,
 };
 
+const STEPS_WITH_SUPERVISION = new Set(['verificacion', 'clasificacion', 'plazos']);
+
 interface PasoFlujoProps {
   paso: PasoFlujoType;
   t: (key: string) => string;
