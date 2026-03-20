@@ -53,7 +53,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
           Flujo de Verificación RUPECO
         </span>
         <span className="text-xs text-muted-foreground">
-          {isComplete ? '✅ Completo' : `Paso ${currentIndex + 1} de ${STEPS.length}`}
+          {isComplete ? <><CheckCircle2 size={14} className="inline mr-1" />Completo</> : `Paso ${currentIndex + 1} de ${STEPS.length}`}
         </span>
       </div>
       
