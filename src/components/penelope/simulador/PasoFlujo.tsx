@@ -6,7 +6,7 @@ import {
   TooltipProvider, 
   TooltipTrigger 
 } from '@/components/ui/tooltip';
-import { Check, Loader2, FileInput, FolderSearch, Tag, Clock, CheckCircle } from 'lucide-react';
+import { Check, Loader2, FileInput, FolderSearch, Tag, Clock, CheckCircle, UserCheck } from 'lucide-react';
 import type { PasoFlujo as PasoFlujoType } from '@/hooks/useSimuladorFlujo';
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
