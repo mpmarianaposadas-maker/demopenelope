@@ -82,11 +82,6 @@ export function PanelEstadoExpediente() {
                     {t('aside.estado.enProceso')}
                   </div>
                 )}
-                {step.scope === 'externo' && (
-                  <div className="text-[10px] text-muted-foreground/60 mt-0.5 italic">
-                    Fuera del alcance de Penélope
-                  </div>
-                )}
               </div>
             </div>
           );
