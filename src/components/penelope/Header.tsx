@@ -19,8 +19,8 @@ export function Header({ language, onToggleLanguage, t }: HeaderProps) {
                 width: '100px',
                 height: '100px',
                 backgroundImage: "url('https://i.ibb.co/mrbRy8rn/Pen-lope-perfil.png')",
-                backgroundSize: '550px auto',
-                backgroundPosition: '-215px -42px',
+                backgroundSize: '700px auto',
+                backgroundPosition: '-275px -20px',
                 backgroundRepeat: 'no-repeat',
               }}
               role="img"
