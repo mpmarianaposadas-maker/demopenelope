@@ -1,7 +1,22 @@
+import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
-import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send } from 'lucide-react';
+import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+function calcularDiasHabilesRestantes(): number {
+  const hoy = new Date();
+  const limite = new Date(2026, 3, 4); // 04/04/2026
+  let dias = 0;
+  const current = new Date(hoy);
+  current.setHours(0, 0, 0, 0);
+  while (current < limite) {
+    current.setDate(current.getDate() + 1);
+    const dow = current.getDay();
+    if (dow !== 0 && dow !== 6) dias++;
+  }
+  return Math.max(0, dias);
+}
 
 const steps = [
   { id: 'ingreso', label: 'Ingreso y caratulación', icon: FileInput, status: 'completed' as const },
