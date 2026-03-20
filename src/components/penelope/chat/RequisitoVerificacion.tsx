@@ -20,7 +20,9 @@ import {
   FileWarning,
   Info,
   FileText,
-  FolderOpen
+  FolderOpen,
+  ClipboardList,
+  CircleDot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
