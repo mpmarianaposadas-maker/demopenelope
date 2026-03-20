@@ -360,7 +360,7 @@ export function RequisitoVerificacion({
               <div className="flex items-start gap-2">
                 <FileWarning className="h-5 w-5 text-amber-600 shrink-0" />
                 <div className="text-sm text-amber-800">
-                  <p className="font-medium">⚠️ Posibles errores de OCR/digitalización detectados</p>
+                  <p className="font-medium"><AlertTriangle size={14} className="inline mr-1" />Posibles errores de OCR/digitalización detectados</p>
                   <p className="text-xs mt-1">
                     La lectura automática (OCR) puede no haber captado todo el contenido del documento 
                     (páginas incompletas, baja resolución o secciones ilegibles). 
