@@ -86,9 +86,9 @@ interface ExpedienteSimulado {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 90000000 + 10000000)}-APN-ENACOM`;
 
-const MENSAJE_INICIAL = `## 🔍 Sistema de Verificación Documental ENACOM
+const MENSAJE_INICIAL = `## Sistema de Verificación Documental ENACOM
 
-**Penélope** - Módulo de Admisibilidad Formal
+**Penélope** — Módulo de Admisibilidad Formal
 
 Seleccioná el tipo de trámite para ejecutar la verificación automática del núcleo RUPECO.`;
 
@@ -420,22 +420,18 @@ export function useChatRupecoSimulado() {
         setClasificacionPendiente(clasificacion);
 
         // Generar mensaje de clasificación
-        let mensajeClasificacion = `## 🤖 Clasificación Asistida del Trámite\n\n`;
+        let mensajeClasificacion = `## Clasificación Asistida del Trámite\n\n`;
         
         if (!ambiguo) {
-          mensajeClasificacion += `**Trámite probable:** ${tramite.nombre} *(confianza: ${nivelConfianzaCualitativo})*\n\n`;
-          mensajeClasificacion += `| Parámetro | Valor |\n|:----------|:------|\n`;
-          mensajeClasificacion += `| Alcanzado por silencio positivo | ${alcanzadoPorSilencioPositivo ? '✅ Sí' : '❌ No'} |\n`;
-          mensajeClasificacion += `| Plazo estimado (demo) | ${tramite.plazoSilencioPositivo} días |\n`;
-          mensajeClasificacion += `| Vencimiento tentativo | ${fechaVencimiento.toLocaleDateString('es-AR')} |\n\n`;
+          mensajeClasificacion += `Trámite clasificado como **${tramite.nombre}** con confianza **${nivelConfianzaCualitativo}**. `;
+          mensajeClasificacion += `Silencio positivo ${alcanzadoPorSilencioPositivo ? 'aplicable' : 'no aplicable'}. `;
+          mensajeClasificacion += `Plazo: ${tramite.plazoSilencioPositivo} días hábiles.\n\n`;
         } else {
-          mensajeClasificacion += `⚠️ **No fue posible clasificar el trámite con suficiente claridad.**\n\n`;
-          mensajeClasificacion += `La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
+          mensajeClasificacion += `No fue posible clasificar el trámite con suficiente claridad. La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.\n\n`;
         }
 
-        mensajeClasificacion += `> 📌 **Requiere confirmación del operador antes de continuar con la verificación documental.**\n\n`;
-        mensajeClasificacion += `---\n\n`;
-        mensajeClasificacion += `*Nota: Esta clasificación es una asistencia automatizada. La categoría definitiva del trámite la determina el operador humano.*`;
+        mensajeClasificacion += `Requiere confirmación del operador antes de continuar con la verificación documental.\n\n`;
+        mensajeClasificacion += `*Esta clasificación es una asistencia automatizada. La categoría definitiva la determina el operador humano.*`;
 
         setMessages(prev => [
           ...prev,
@@ -474,7 +470,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
+        content: `## Clasificación Confirmada\n\n**Trámite:** ${tramiteConfirmado.nombre}\n\nProcediendo con la verificación documental...`,
         timestamp: new Date(),
       },
     ]);
@@ -512,32 +508,25 @@ export function useChatRupecoSimulado() {
         const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
         const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
 
-        let informe = `## 📋 INFORME DE VERIFICACIÓN AUTOMÁTICA
+        let informe = `## INFORME DE VERIFICACIÓN AUTOMÁTICA
 
 ---
 
-### Datos del Expediente
-| Campo | Valor |
-|:------|:------|
-| **Expediente** | ${expedienteActualizado.numero} |
-| **Carátula** | ${expedienteActualizado.caratula} |
-| **Tipo de persona** | ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} |
-| **Trámite** | ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo}) |
-| **Normativa aplicable** | ${tramiteConfirmado.normativa} |
+**Expediente:** ${expedienteActualizado.numero} | **Carátula:** ${expedienteActualizado.caratula}
+
+**Tipo de persona:** ${expedienteActualizado.tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'} | **Trámite:** ${tramiteConfirmado.nombre} (${tramiteConfirmado.codigo})
+
+**Normativa aplicable:** ${tramiteConfirmado.normativa}
 
 ---
 
 ### Resultado de Validación Documental
 
-| Parámetro | Valor |
-|:----------|:------|
-| **Nivel de confianza** | ${nivelConfianzaGlobal}% |
-| **Acción sugerida** | ${accion.descripcion} |
-| **Completitud documental** | ${porcentaje}% (${detectados.length}/${documentosDetectados.length}) |
+**Nivel de confianza:** ${nivelConfianzaGlobal}% | **Acción sugerida:** ${accion.descripcion} | **Completitud:** ${porcentaje}% (${detectados.length}/${documentosDetectados.length})
 
 ---
 
-### ✅ Requisitos Cumplidos
+### Requisitos Cumplidos
 
 `;
 
@@ -554,7 +543,7 @@ export function useChatRupecoSimulado() {
           informe += `*No se detectaron documentos válidos*\n`;
         }
 
-        informe += `\n---\n\n### ❌ Requisitos Faltantes\n\n`;
+        informe += `\n---\n\n### Requisitos Faltantes\n\n`;
 
         if (faltantes.length > 0) {
           faltantes.forEach(doc => {
@@ -566,17 +555,17 @@ export function useChatRupecoSimulado() {
             }
           });
 
-          informe += `\n---\n\n### ⚠️ ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
+          informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
           informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
-          informe += `> 📝 **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+          informe += `> **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
-          informe += `⏰ **Control de plazos (Decreto N° 971/2024 - PEHAR)**\n`;
+          informe += `**Control de plazos (Decreto N° 971/2024 — PEHAR)**\n`;
           informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
           informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
-          informe += `---\n\n### ✅ EXPEDIENTE COMPLETO\n\n`;
+          informe += `---\n\n### EXPEDIENTE COMPLETO\n\n`;
           informe += `El expediente cumple con todos los requisitos del núcleo RUPECO y puede derivarse a la etapa de **análisis técnico-jurídico**.\n`;
           informe += `> No se requiere intimación al administrado.\n`;
         }
@@ -614,7 +603,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
+        content: `## Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
         timestamp: new Date(),
       },
     ]);
@@ -688,7 +677,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ EXPEDIENTE APROBADO
+        content: `## EXPEDIENTE APROBADO
 
 ---
 
@@ -735,7 +724,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ EXPEDIENTE RECHAZADO
+        content: `## EXPEDIENTE RECHAZADO
 
 ---
 
@@ -785,7 +774,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ↩️ DECISIÓN REVERTIDA
+        content: `## DECISIÓN REVERTIDA
 
 ---
 
