@@ -62,9 +62,9 @@ interface RequisitoVerificacionProps {
 // Componente para mostrar el estado semáforo
 function EstadoSemaforo({ estado, problemaOCR }: { estado: EstadoDeteccion; problemaOCR?: boolean }) {
   const config = {
-    verde: { icon: '🟢', label: 'Verde', className: 'text-success' },
-    amarillo: { icon: '🟡', label: 'Amarillo', className: 'text-warning-foreground' },
-    rojo: { icon: '🔴', label: 'Rojo', className: 'text-destructive' },
+    verde: { icon: <CircleDot size={14} className="text-success" />, label: 'Verde', className: 'text-success' },
+    amarillo: { icon: <CircleDot size={14} className="text-warning-foreground" />, label: 'Amarillo', className: 'text-warning-foreground' },
+    rojo: { icon: <CircleDot size={14} className="text-destructive" />, label: 'Rojo', className: 'text-destructive' },
   };
   const { icon, className } = config[estado];
   
