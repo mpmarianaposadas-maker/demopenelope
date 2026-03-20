@@ -39,6 +39,12 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
   const [showComplete, setShowComplete] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  const activeTabId = tabs[activeIndex]?.id;
+  const activeGroup = useMemo(() => {
+    if (!groups) return null;
+    return groups.find(g => g.tabIds.includes(activeTabId)) ?? null;
+  }, [groups, activeTabId]);
+
   const goToTab = useCallback((tabId: string) => {
     const idx = tabs.findIndex(tab => tab.id === tabId);
     if (idx !== -1) {
