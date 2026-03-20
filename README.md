@@ -1,73 +1,202 @@
-# Welcome to your Lovable project
+# Sistema Penélope  
+### Automatización asistida e inteligencia artificial responsable en etapas preliminares del procedimiento administrativo
 
-## Project info
+---
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 📌 Descripción
 
-## How can I edit this code?
+**Penélope** es un modelo de infraestructura procedimental que introduce automatización asistida e inteligencia artificial generativa en etapas preliminares del procedimiento administrativo, sin delegación de la función decisoria.
 
-There are several ways of editing your application.
+El sistema se orienta a intervenir sobre tareas técnicas, repetitivas y no discrecionales —verificación formal, clasificación documental y control de plazos— con el objetivo de reducir la inercia organizativa que afecta el cumplimiento de los plazos administrativos.
 
-**Use Lovable**
+Su diseño responde a una premisa central:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+> El problema no es la norma. Es la organización previa a la decisión.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🎯 Objetivo
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Mejorar la capacidad de respuesta de la Administración Pública mediante:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Reducción de cargas documentales redundantes  
+- Disminución de tiempos de admisibilidad  
+- Monitoreo activo de plazos procedimentales  
+- Mejora en la trazabilidad del trámite  
 
-Follow these steps:
+Todo ello **sin modificar el régimen jurídico vigente** ni sustituir la decisión administrativa.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## ⚙️ Alcance del sistema
 
-# Step 3: Install the necessary dependencies.
-npm i
+Penélope interviene exclusivamente en **etapas preliminares del procedimiento**, sin producir efectos jurídicos directos.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### ✔️ Funciones del sistema
 
-**Edit a file directly in GitHub**
+- Verificación formal de requisitos documentales  
+- Clasificación preliminar de expedientes  
+- Extracción de datos desde documentos no estructurados (PDFs)  
+- Generación asistida de borradores (providencias / intimaciones)  
+- Control y alerta de plazos administrativos  
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### ❌ Límites explícitos
 
-**Use GitHub Codespaces**
+- No interpreta normas  
+- No evalúa mérito ni oportunidad  
+- No emite actos administrativos  
+- No sustituye la decisión del funcionario competente  
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🔄 Pipeline operativo
 
-This project is built with:
+El sistema se estructura en un flujo secuencial de cinco etapas:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. **Ingreso de expediente**  
+   Vinculación automática con registros existentes (ej. RUPECO)
 
-## How can I deploy this project?
+2. **Verificación documental**  
+   Aplicación de reglas determinísticas para control de integridad formal
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+3. **Clasificación preliminar**  
+   Ordenamiento del expediente con validación humana obligatoria
 
-## Can I connect a custom domain to my Lovable project?
+4. **Control de plazos**  
+   Generación de alertas tempranas sobre vencimientos
 
-Yes, you can!
+5. **Convalidación humana**  
+   Revisión y aprobación antes de cualquier actuación en GDE
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+📌 La intervención del sistema finaliza antes del análisis sustantivo.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+---
+
+## 🧠 Arquitectura técnica
+
+Penélope adopta una **arquitectura híbrida**:
+
+### 🔹 Automatización determinística
+- Checklists normativos
+- Validaciones formales
+- Reglas auditables y reproducibles
+
+### 🔹 IA generativa (uso restringido)
+- Extracción de información en documentos no estructurados
+- Configuración conservadora:
+  - Temperatura = 0  
+  - Top-p bajo  
+  - Anclaje obligatorio al texto fuente  
+
+### 🔐 Restricciones operativas
+- Prohibición de inferencia  
+- Prohibición de completar información no presente  
+- Output no vinculante  
+- Validación humana obligatoria  
+
+---
+
+## 👤 Control humano (Human-in-the-loop)
+
+El sistema opera bajo supervisión humana efectiva:
+
+- Toda salida requiere validación del agente  
+- La activación de generación es manual (no automática)  
+- Posibilidad de corrección, rechazo o modificación  
+
+---
+
+## 🧾 Trazabilidad y auditoría
+
+Cada interacción queda registrada en un sistema de trazabilidad (**Prompt Net Ledger**), que permite:
+
+- Auditoría completa del proceso  
+- Identificación de intervenciones humanas  
+- Reconstrucción del flujo en caso de revisión o litigio  
+
+---
+
+## 🛑 Mecanismo de seguridad (Kill Switch)
+
+El sistema incorpora un mecanismo de suspensión inmediata:
+
+- Activación por funcionarios habilitados  
+- Detención del procesamiento automatizado  
+- Derivación a gestión manual  
+- Reactivación bajo control jerárquico  
+
+---
+
+## ⚖️ Marco jurídico
+
+El diseño del sistema se ajusta a los principios del Derecho Administrativo argentino:
+
+- Principio de legalidad  
+- Debido proceso (art. 18 CN)  
+- Art. 7 LNPA (elementos del acto administrativo)  
+- Responsabilidad estatal (Ley 26.944)  
+- Protección de datos personales (Ley 25.326)  
+
+Penélope **no integra el acto administrativo** ni afecta sus elementos esenciales.
+
+---
+
+## 🏛️ Caso de uso
+
+El modelo se desarrolla tomando como referencia:
+
+- ENACOM  
+- Registro RUPECO  
+- Trámites TIC, audiovisuales y postales  
+
+---
+
+## 🧪 Prueba de concepto (POC)
+
+Se desarrolló un prototipo interactivo en Lovable para:
+
+- Simular la experiencia del agente  
+- Validar el flujo operativo  
+- Evaluar la ergonomía del sistema  
+
+🔗 Demo:  
+https://demopenelope.lovable.app
+
+---
+
+## 🧭 Enfoque conceptual
+
+Penélope no es un sistema de decisión automatizada.
+
+Es un modelo de:
+
+> **fiabilidad procedimental por diseño**
+
+Su finalidad es evitar que la desorganización administrativa sustituya la decisión.
+
+---
+
+## 📚 Origen del proyecto
+
+Trabajo final del:
+
+**Posgrado Internacional en IA Generativa, Prompting y Derecho (IALAB)**  
+Edición 2025  
+
+---
+
+## 👩‍💻 Autora
+
+Graciela Mariana Posadas  
+Abogada – Especialista en Derecho Administrativo, Telecomunicaciones e IA  
+
+---
+
+## 📌 Estado del proyecto
+
+- ✔ Modelo conceptual desarrollado  
+- ✔ Arquitectura técnico-jurídica definida  
+- ✔ Prototipo funcional (POC)  
+- ⏳ Pendiente: implementación institucional  
+
+---
