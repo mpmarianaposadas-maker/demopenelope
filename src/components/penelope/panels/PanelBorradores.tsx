@@ -1,7 +1,7 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Badge } from '@/components/ui/badge';
-import { FileText, Send, Info } from 'lucide-react';
+import { FileText, Send, Info, ClipboardList } from 'lucide-react';
 
 export function PanelBorradores() {
   const { t } = useLanguage();
