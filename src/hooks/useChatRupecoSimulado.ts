@@ -774,7 +774,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ↩️ DECISIÓN REVERTIDA
+        content: `## DECISIÓN REVERTIDA
 
 ---
 
