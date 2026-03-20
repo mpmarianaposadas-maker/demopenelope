@@ -145,7 +145,7 @@ export function ChatRupeco() {
               <span>{t('chat.systemDisabled')}</span>
               <span className="block text-xs mt-0.5 opacity-80">
                 Para reactivarlo, use el panel de Kill Switch en la barra lateral.
-                {isMobile && ' Abra el panel lateral con el botón ☰.'}
+                {isMobile && ' Abra el panel lateral con el botón de menú.'}
               </span>
             </div>
           </div>

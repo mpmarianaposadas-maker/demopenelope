@@ -20,7 +20,9 @@ import {
   FileWarning,
   Info,
   FileText,
-  FolderOpen
+  FolderOpen,
+  ClipboardList,
+  CircleDot,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
@@ -60,9 +62,9 @@ interface RequisitoVerificacionProps {
 // Componente para mostrar el estado semáforo
 function EstadoSemaforo({ estado, problemaOCR }: { estado: EstadoDeteccion; problemaOCR?: boolean }) {
   const config = {
-    verde: { icon: '🟢', label: 'Verde', className: 'text-success' },
-    amarillo: { icon: '🟡', label: 'Amarillo', className: 'text-warning-foreground' },
-    rojo: { icon: '🔴', label: 'Rojo', className: 'text-destructive' },
+    verde: { icon: <CircleDot size={14} className="text-success" />, label: 'Verde', className: 'text-success' },
+    amarillo: { icon: <CircleDot size={14} className="text-warning-foreground" />, label: 'Amarillo', className: 'text-warning-foreground' },
+    rojo: { icon: <CircleDot size={14} className="text-destructive" />, label: 'Rojo', className: 'text-destructive' },
   };
   const { icon, className } = config[estado];
   
@@ -85,9 +87,9 @@ function RequisitoCardMobile({
   onValidarRequisito: (id: string, validado: boolean) => void;
 }) {
   const estadoConfig = {
-    verde: { bg: 'bg-success/10 border-success/30', text: 'text-success', emoji: '🟢' },
-    amarillo: { bg: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600', emoji: '🟡' },
-    rojo: { bg: 'bg-destructive/10 border-destructive/30', text: 'text-destructive', emoji: '🔴' }
+    verde: { bg: 'bg-success/10 border-success/30', text: 'text-success', emoji: <CircleDot size={14} className="text-success" /> },
+    amarillo: { bg: 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800', text: 'text-amber-600', emoji: <CircleDot size={14} className="text-amber-600" /> },
+    rojo: { bg: 'bg-destructive/10 border-destructive/30', text: 'text-destructive', emoji: <CircleDot size={14} className="text-destructive" /> }
   };
 
   const config = estadoConfig[req.estadoIA];
@@ -113,7 +115,7 @@ function RequisitoCardMobile({
           </div>
           {req.validadoPorAgente !== undefined && (
             <Badge variant={req.validadoPorAgente ? "default" : "destructive"} className="text-xs">
-              {req.validadoPorAgente ? '✓ Validado' : '✗ Rechazado'}
+              {req.validadoPorAgente ? <><CheckCircle2 size={12} className="inline mr-1" />Validado</> : <><XCircle size={12} className="inline mr-1" />Rechazado</>}
             </Badge>
           )}
         </div>
@@ -226,16 +228,16 @@ export function RequisitoVerificacion({
         {/* Resumen con semáforos */}
         <div className="flex flex-wrap gap-2 mt-2">
           <Badge variant="outline" className="bg-success/10 text-success border-success/30">
-            🟢 {verdes.length} verdes
+            <CircleDot size={12} className="inline mr-1" />{verdes.length} verdes
           </Badge>
           <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
-            🟡 {amarillos.length} amarillos
+            <CircleDot size={12} className="inline mr-1" />{amarillos.length} amarillos
           </Badge>
           <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30">
-            🔴 {rojos.length} rojos
+            <CircleDot size={12} className="inline mr-1" />{rojos.length} rojos
           </Badge>
           <Badge variant="outline" className="bg-muted text-muted-foreground border-muted-foreground/30">
-            📋 {totalRevisados}/{requisitos.length} revisados
+            <ClipboardList size={12} className="inline mr-1" />{totalRevisados}/{requisitos.length} revisados
           </Badge>
         </div>
       </CardHeader>
@@ -307,7 +309,7 @@ export function RequisitoVerificacion({
                         {req.comentarioBrief || '—'}
                         {req.problemaOCR && (
                           <div className="mt-1 text-xs text-amber-600 italic">
-                            ⚠️ Posible error OCR
+                            <AlertTriangle size={12} className="inline mr-1" />Posible error OCR
                           </div>
                         )}
                       </TableCell>
@@ -345,7 +347,7 @@ export function RequisitoVerificacion({
             <div className="flex items-start gap-2">
               <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
               <p className="text-xs text-blue-800">
-               <strong>ℹ️</strong> El campo "Orden en el expediente" indica el número de orden del documento 
+               <strong><Info size={14} className="inline mr-1" /></strong> El campo "Orden en el expediente" indica el número de orden del documento 
                 dentro del expediente electrónico (conforme Decreto 336/17 y nomenclatura GDE), 
                 donde se detectó cada requisito en esta demo.
               </p>
@@ -358,7 +360,7 @@ export function RequisitoVerificacion({
               <div className="flex items-start gap-2">
                 <FileWarning className="h-5 w-5 text-amber-600 shrink-0" />
                 <div className="text-sm text-amber-800">
-                  <p className="font-medium">⚠️ Posibles errores de OCR/digitalización detectados</p>
+                  <p className="font-medium"><AlertTriangle size={14} className="inline mr-1" />Posibles errores de OCR/digitalización detectados</p>
                   <p className="text-xs mt-1">
                     La lectura automática (OCR) puede no haber captado todo el contenido del documento 
                     (páginas incompletas, baja resolución o secciones ilegibles). 
@@ -371,7 +373,7 @@ export function RequisitoVerificacion({
 
           {/* Leyenda de política "Cuatro Ojos" */}
           <div className="p-2 bg-cream/50 rounded-lg text-xs border border-cream-dark">
-            <div className="font-medium mb-1 text-cream-foreground">⚖️ Política de "Cuatro Ojos"</div>
+            <div className="font-medium mb-1 text-cream-foreground"><Scale size={14} className="inline mr-1" />Política de "Cuatro Ojos"</div>
             <p className="text-cream-foreground/80">
               Cada requisito detectado por IA debe ser verificado por el agente. 
               Use los controles para validar o rechazar la detección automática.
@@ -385,7 +387,7 @@ export function RequisitoVerificacion({
                 <AlertTriangle className="h-5 w-5 text-cream-foreground flex-shrink-0" />
                 <div>
                   <div className="font-medium text-sm text-cream-foreground">
-                    ⏰ Control de Silencio Positivo (Decreto 971/2024)
+                    <Clock size={14} className="inline mr-1" />Control de Silencio Positivo (Decreto 971/2024)
                   </div>
                   <p className="text-xs text-cream-foreground/80 mt-1">
                     Hay {rojos.filter(f => f.validadoPorAgente !== true).length} documento(s) faltante(s). 
@@ -405,7 +407,7 @@ export function RequisitoVerificacion({
                 </div>
                 <div className="flex-1">
                   <div className="font-semibold text-success flex items-center gap-2">
-                    ✅ Expediente Aprobado
+                    <CheckCircle2 size={14} className="inline mr-1" />Expediente Aprobado
                   </div>
                   <div className="mt-2 space-y-1 text-sm">
                     <div className="flex items-center gap-2">

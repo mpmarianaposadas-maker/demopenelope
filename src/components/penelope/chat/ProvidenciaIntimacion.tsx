@@ -272,7 +272,7 @@ export function ProvidenciaIntimacion({
         <div className="bg-gray-100 dark:bg-gray-800/40 border-l-4 border-amber-400 pl-3 pr-3 py-2 mt-2 rounded-r">
           <span className="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 font-medium">Marca de sistema — no forma parte del instrumento</span>
           <p className="text-[10px] text-amber-700 dark:text-amber-400 text-center font-medium">
-            ⚠️ Borrador de NOTA para carga en GDE · Requiere validación y carga manual por el operador
+            <AlertTriangle size={14} className="inline mr-1" />Borrador de NOTA para carga en GDE · Requiere validación y carga manual por el operador
           </p>
         </div>
       </CardContent>

@@ -141,7 +141,7 @@ export function PanelAcercaDe() {
         <CardTitle as="h3">Qué es y qué NO es Penélope</CardTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
           <div className="border border-green-200 bg-green-50/50 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-3 text-sm">✓ ES</h4>
+            <h4 className="font-semibold text-green-800 mb-3 text-sm"><Check size={14} className="inline mr-1" />ES</h4>
             <ul className="space-y-2">
               {esItems.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-green-700">
@@ -152,7 +152,7 @@ export function PanelAcercaDe() {
             </ul>
           </div>
           <div className="border border-red-200 bg-red-50/50 rounded-lg p-4">
-            <h4 className="font-semibold text-red-800 mb-3 text-sm">✗ NO ES</h4>
+            <h4 className="font-semibold text-red-800 mb-3 text-sm"><X size={14} className="inline mr-1" />NO ES</h4>
             <ul className="space-y-2">
               {noEsItems.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-red-700">

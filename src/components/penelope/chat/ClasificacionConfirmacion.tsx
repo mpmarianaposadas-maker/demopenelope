@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AlertTriangle, CheckCircle2, Bot, HelpCircle, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Bot, HelpCircle, Info, Pin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type TramiteENAC, TRAMITES_ENAC } from '@/lib/nucleoRupeco';
 
@@ -74,7 +74,7 @@ export function ClasificacionConfirmacion({
           </div>
           <div>
             <CardTitle className="text-lg">
-              🤖 Clasificación Asistida del Trámite
+              Clasificación Asistida del Trámite
             </CardTitle>
           </div>
         </div>
@@ -139,7 +139,7 @@ export function ClasificacionConfirmacion({
               <div className="flex items-start gap-2">
                 <Info className="h-4 w-4 text-blue-600 mt-0.5 shrink-0" />
                 <div className="text-xs text-blue-800 space-y-1">
-                  <p className="font-semibold">ℹ️ ¿Qué significa "confianza técnica"?</p>
+                  <p className="font-semibold">¿Qué significa "confianza técnica"?</p>
                   <p>
                     Es una medida interna de la IA sobre cuán probable considera que su clasificación 
                     técnica sea correcta (por ejemplo, que se trate efectivamente de "{clasificacion.tramite.nombre}").
@@ -158,7 +158,7 @@ export function ClasificacionConfirmacion({
               <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-amber-800">
-                  ⚠️ No fue posible clasificar el trámite con suficiente claridad
+                  No fue posible clasificar el trámite con suficiente claridad
                 </p>
                 <p className="text-sm text-amber-700 mt-1">
                   La evidencia documental es ambigua. El operador debe seleccionar la categoría correspondiente.
@@ -173,7 +173,7 @@ export function ClasificacionConfirmacion({
           <div className="flex items-start gap-2">
             <HelpCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
             <div className="text-xs text-amber-800">
-              <p className="font-semibold">📌 Requiere confirmación del operador antes de continuar con la verificación documental.</p>
+              <p className="font-semibold"><Pin size={14} className="inline mr-1" />Requiere confirmación del operador antes de continuar con la verificación documental.</p>
             </div>
           </div>
         </div>

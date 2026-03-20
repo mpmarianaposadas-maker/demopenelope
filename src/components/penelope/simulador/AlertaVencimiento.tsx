@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Bell } from 'lucide-react';
+import { AlertTriangle, Bell, ClipboardList } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface AlertaVencimientoProps {
@@ -57,7 +57,7 @@ export function AlertaVencimiento({
 
               <div className="bg-muted/50 rounded-lg p-3 text-xs text-muted-foreground">
                 <p className="flex items-center gap-2">
-                  <span className="text-primary">📋</span>
+                  <ClipboardList size={14} className="text-primary" />
                   {t('simulador.alerta.registro')}
                 </p>
               </div>

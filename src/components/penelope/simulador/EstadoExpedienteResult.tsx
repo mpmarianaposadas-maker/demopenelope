@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, XCircle, Clock, FileText } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, FileText, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ExpedienteSimulado } from '@/hooks/useSimuladorFlujo';
 
@@ -84,7 +84,7 @@ export function EstadoExpedienteResult({ expediente, t }: EstadoExpedienteResult
             alertaActiva && 'text-destructive'
           )}>
             {diasRestantes} {t('simulador.expediente.dias')}
-            {alertaActiva && ' ⚠️'}
+            {alertaActiva && <AlertTriangle size={14} className="inline ml-1 text-destructive" />}
           </span>
         </div>
       </div>

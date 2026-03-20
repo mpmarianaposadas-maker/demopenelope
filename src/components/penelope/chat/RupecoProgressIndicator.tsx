@@ -1,5 +1,6 @@
-import { CheckCircle2, Circle, Loader2, UserCheck } from 'lucide-react';
+import { CheckCircle2, Circle, Loader2, UserCheck, Inbox, Bot, User, Search, ClipboardList } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 
 // Tipos sincronizados con el hook
 export type RupecoStep = 
@@ -15,17 +16,17 @@ interface StepConfig {
   id: RupecoStep;
   label: string;
   shortLabel: string;
-  icon: string;
+  icon: ReactNode;
 }
 
 // Pasos según el diagrama de flujo del documento
 const STEPS: StepConfig[] = [
-  { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: '📥' },
-  { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: '🤖' },
-  { id: 'confirmacion_clasificacion', label: 'Confirmación Operador', shortLabel: 'Confirm.', icon: '👤' },
-  { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: '🔍' },
-  { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: '📋' },
-  { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: '✅' },
+  { id: 'ingreso_recepcion', label: 'Ingreso y Recepción', shortLabel: 'Ingreso', icon: <Inbox size={16} /> },
+  { id: 'clasificacion_ia', label: 'Clasificación IA', shortLabel: 'Clasif.', icon: <Bot size={16} /> },
+  { id: 'confirmacion_clasificacion', label: 'Confirmación Operador', shortLabel: 'Confirm.', icon: <User size={16} /> },
+  { id: 'validacion_documental', label: 'Validación Documental', shortLabel: 'Valid.', icon: <Search size={16} /> },
+  { id: 'resultado', label: 'Resultado', shortLabel: 'Result.', icon: <ClipboardList size={16} /> },
+  { id: 'evaluacion', label: 'Evaluación', shortLabel: 'Eval.', icon: <CheckCircle2 size={16} /> },
 ];
 
 interface RupecoProgressIndicatorProps {
@@ -52,7 +53,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
           Flujo de Verificación RUPECO
         </span>
         <span className="text-xs text-muted-foreground">
-          {isComplete ? '✅ Completo' : `Paso ${currentIndex + 1} de ${STEPS.length}`}
+          {isComplete ? <><CheckCircle2 size={14} className="inline mr-1" />Completo</> : `Paso ${currentIndex + 1} de ${STEPS.length}`}
         </span>
       </div>
       
@@ -123,7 +124,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
       {!isComplete && currentIndex >= 0 && (
         <div className="mt-3 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs">
-            <span className="text-lg">{STEPS[currentIndex]?.icon || '📋'}</span>
+            <span className="text-lg">{STEPS[currentIndex]?.icon || <ClipboardList size={16} />}</span>
             <span className="text-muted-foreground">
               <strong className="text-foreground">{STEPS[currentIndex]?.label}</strong>
               {STEPS[currentIndex]?.id === 'confirmacion_clasificacion' && (
@@ -137,7 +138,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
       {isComplete && (
         <div className="mt-3 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs text-green-600">
-            <span className="text-lg">✅</span>
+            <span className="text-lg"><CheckCircle2 size={16} className="text-green-600" /></span>
             <span>
               <strong>Evaluación generada.</strong> Expediente verificado.
             </span>

@@ -2,7 +2,7 @@ import { Card, CardTitle, CardText, CardList } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/hooks/useLanguage';
-import { AlertTriangle, ArrowDown, CheckCircle, XCircle } from 'lucide-react';
+import { AlertTriangle, ArrowDown, CheckCircle, XCircle, ClipboardList, RefreshCw } from 'lucide-react';
 import { SiguientePaso } from './SiguientePaso';
 import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
@@ -97,8 +97,8 @@ export function PanelArquitectura() {
         <CardTitle as="h3">Diagramas de Flujo del Sistema</CardTitle>
         <Tabs defaultValue="principal" className="mt-4">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="principal">📋 Flujo Principal</TabsTrigger>
-            <TabsTrigger value="subsanacion">🔄 Flujo de Subsanación</TabsTrigger>
+            <TabsTrigger value="principal"><ClipboardList size={14} className="inline mr-1" />Flujo Principal</TabsTrigger>
+            <TabsTrigger value="subsanacion"><RefreshCw size={14} className="inline mr-1" />Flujo de Subsanación</TabsTrigger>
           </TabsList>
 
           <TabsContent value="principal" className="mt-4 space-y-0">
@@ -112,12 +112,12 @@ export function PanelArquitectura() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
               <div className="border border-green-200 bg-green-50/50 rounded-lg p-4 text-center">
                 <CheckCircle size={20} className="text-green-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-green-800">✓ Completo</p>
+                <p className="text-sm font-semibold text-green-800"><CheckCircle size={14} className="inline mr-1" />Completo</p>
                 <p className="text-xs text-green-700 mt-1">Pase a Área Técnica (borrador de PV)</p>
               </div>
               <div className="border border-red-200 bg-red-50/50 rounded-lg p-4 text-center">
                 <XCircle size={20} className="text-red-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-red-800">✗ Incompleto</p>
+                <p className="text-sm font-semibold text-red-800"><XCircle size={14} className="inline mr-1" />Incompleto</p>
                 <p className="text-xs text-red-700 mt-1">Intimación de Subsanación (borrador de Nota)</p>
               </div>
             </div>
