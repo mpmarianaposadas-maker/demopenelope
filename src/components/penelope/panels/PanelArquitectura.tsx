@@ -97,8 +97,8 @@ export function PanelArquitectura() {
         <CardTitle as="h3">Diagramas de Flujo del Sistema</CardTitle>
         <Tabs defaultValue="principal" className="mt-4">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="principal">📋 Flujo Principal</TabsTrigger>
-            <TabsTrigger value="subsanacion">🔄 Flujo de Subsanación</TabsTrigger>
+            <TabsTrigger value="principal"><ClipboardList size={14} className="inline mr-1" />Flujo Principal</TabsTrigger>
+            <TabsTrigger value="subsanacion"><RefreshCw size={14} className="inline mr-1" />Flujo de Subsanación</TabsTrigger>
           </TabsList>
 
           <TabsContent value="principal" className="mt-4 space-y-0">
