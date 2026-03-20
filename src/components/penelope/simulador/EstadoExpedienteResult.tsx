@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, XCircle, Clock, FileText } from 'lucide-react';
+import { CheckCircle2, XCircle, Clock, FileText, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ExpedienteSimulado } from '@/hooks/useSimuladorFlujo';
 
