@@ -57,7 +57,7 @@ export function AlertaVencimiento({
 
               <div className="bg-muted/50 rounded-lg p-3 text-xs text-muted-foreground">
                 <p className="flex items-center gap-2">
-                  <span className="text-primary">📋</span>
+                  <ClipboardList size={14} className="text-primary" />
                   {t('simulador.alerta.registro')}
                 </p>
               </div>

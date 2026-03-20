@@ -79,7 +79,7 @@ export function PanelBorradores() {
           
           <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
             <p className="text-xs text-blue-800 dark:text-blue-300 font-medium flex items-center gap-2">
-              📋 {t('borr.nota.instrucciones')}
+              <ClipboardList size={14} className="inline mr-1" />{t('borr.nota.instrucciones')}
             </p>
             <ul className="text-xs text-blue-700 dark:text-blue-400 mt-2 space-y-1 list-disc list-inside">
               <li>{t('borr.nota.paso1')}</li>

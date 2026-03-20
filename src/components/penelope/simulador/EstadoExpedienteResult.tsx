@@ -84,7 +84,7 @@ export function EstadoExpedienteResult({ expediente, t }: EstadoExpedienteResult
             alertaActiva && 'text-destructive'
           )}>
             {diasRestantes} {t('simulador.expediente.dias')}
-            {alertaActiva && ' ⚠️'}
+            {alertaActiva && <AlertTriangle size={14} className="inline ml-1 text-destructive" />}
           </span>
         </div>
       </div>

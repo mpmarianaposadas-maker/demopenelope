@@ -357,7 +357,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
                   {generarBorradorSubsanacion()}
                 </pre>
                 <div className="p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-                  <strong>⚠️ Importante:</strong> Este borrador requiere revisión y aprobación del agente 
+                  <strong><AlertTriangle size={14} className="inline mr-1" />Importante:</strong> Este borrador requiere revisión y aprobación del agente 
                   antes de su envío. Los campos entre corchetes deben ser completados con los datos reales.
                 </div>
               </div>

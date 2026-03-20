@@ -191,7 +191,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
           {showComplete && (
             <div className="flex items-center gap-1.5 justify-end px-4 pt-3 animate-in fade-in-0 duration-300">
               <Check size={14} className="text-green-600" />
-              <span className="text-[11px] text-green-600 font-medium">✓ Recorrido completo</span>
+              <span className="text-[11px] text-green-600 font-medium">Recorrido completo</span>
             </div>
           )}
 

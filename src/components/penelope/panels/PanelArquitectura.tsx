@@ -117,7 +117,7 @@ export function PanelArquitectura() {
               </div>
               <div className="border border-red-200 bg-red-50/50 rounded-lg p-4 text-center">
                 <XCircle size={20} className="text-red-600 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-red-800">✗ Incompleto</p>
+                <p className="text-sm font-semibold text-red-800"><XCircle size={14} className="inline mr-1" />Incompleto</p>
                 <p className="text-xs text-red-700 mt-1">Intimación de Subsanación (borrador de Nota)</p>
               </div>
             </div>

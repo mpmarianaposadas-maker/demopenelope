@@ -407,7 +407,7 @@ export function RequisitoVerificacion({
                 </div>
                 <div className="flex-1">
                   <div className="font-semibold text-success flex items-center gap-2">
-                    ✅ Expediente Aprobado
+                    <CheckCircle2 size={14} className="inline mr-1" />Expediente Aprobado
                   </div>
                   <div className="mt-2 space-y-1 text-sm">
                     <div className="flex items-center gap-2">

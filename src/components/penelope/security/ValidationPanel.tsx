@@ -266,7 +266,7 @@ export function ValidationPanel() {
               onClick={() => handleInputChange('Licencia TIC - Alta Nueva')}
               className="text-xs h-7"
             >
-              ✓ {t('security.validation.testSafe')}
+              <CheckCircle2 size={14} className="inline mr-1" />{t('security.validation.testSafe')}
             </Button>
             <span className="text-xs text-muted-foreground italic">
               Escriba cualquier texto en el campo de arriba para probar el motor de detección en tiempo real.

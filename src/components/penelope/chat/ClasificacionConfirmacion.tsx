@@ -173,7 +173,7 @@ export function ClasificacionConfirmacion({
           <div className="flex items-start gap-2">
             <HelpCircle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
             <div className="text-xs text-amber-800">
-              <p className="font-semibold">📌 Requiere confirmación del operador antes de continuar con la verificación documental.</p>
+              <p className="font-semibold"><Pin size={14} className="inline mr-1" />Requiere confirmación del operador antes de continuar con la verificación documental.</p>
             </div>
           </div>
         </div>

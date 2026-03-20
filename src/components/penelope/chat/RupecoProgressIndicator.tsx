@@ -138,7 +138,7 @@ export function RupecoProgressIndicator({ currentStep, esPJ = true }: RupecoProg
       {isComplete && (
         <div className="mt-3 pt-2 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs text-green-600">
-            <span className="text-lg">✅</span>
+            <span className="text-lg"><CheckCircle2 size={16} className="text-green-600" /></span>
             <span>
               <strong>Evaluación generada.</strong> Expediente verificado.
             </span>
