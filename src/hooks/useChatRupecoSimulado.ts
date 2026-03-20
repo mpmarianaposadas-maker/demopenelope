@@ -724,7 +724,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ❌ EXPEDIENTE RECHAZADO
+        content: `## EXPEDIENTE RECHAZADO
 
 ---
 
