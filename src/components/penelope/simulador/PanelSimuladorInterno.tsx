@@ -8,10 +8,30 @@ import { FlujoProcedimiento } from './FlujoProcedimiento';
 import { AlertaVencimiento, BotonAlertaVencimiento } from './AlertaVencimiento';
 import { useSimuladorFlujo } from '@/hooks/useSimuladorFlujo';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useLedger } from '@/contexts/LedgerContext';
+import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
+
+const STEP_TASK_MAP: Record<string, LedgerEntry['taskType']> = {
+  ingreso: 'VERIFICACION_VIGENCIA',
+  verificacion: 'DETECCION_FALTANTES',
+  clasificacion: 'CLASIFICACION_PRELIMINAR',
+  plazos: 'CONTROL_PLAZOS',
+  estado_final: 'GENERACION_PROVIDENCIA',
+};
+
+const STEP_OUTPUTS: Record<string, string> = {
+  ingreso: 'Expediente ingresado correctamente. Carátula generada con número de actuación asignado.',
+  verificacion: 'Documentación verificada contra RUPECO. Se comprobó vigencia de certificados y completitud formal.',
+  clasificacion: 'Trámite clasificado preliminarmente según matriz normativa. Área competente identificada.',
+  plazos: 'Plazo legal perentorio calculado. Cronograma de alertas configurado (10, 5 y 2 días hábiles).',
+  estado_final: 'Evaluación formal completada. Borrador de providencia de pase generado para revisión humana.',
+};
 
 export function PanelSimuladorInterno() {
   const panelRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const { agregarEntrada, reiniciarLedger } = useLedger();
+  const prevCompletedRef = useRef<Set<string>>(new Set());
   const {
     pasos,
     expediente,
