@@ -74,7 +74,7 @@ export function ClasificacionConfirmacion({
           </div>
           <div>
             <CardTitle className="text-lg">
-              🤖 Clasificación Asistida del Trámite
+              Clasificación Asistida del Trámite
             </CardTitle>
           </div>
         </div>
