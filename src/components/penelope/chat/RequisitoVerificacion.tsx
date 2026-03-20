@@ -309,7 +309,7 @@ export function RequisitoVerificacion({
                         {req.comentarioBrief || '—'}
                         {req.problemaOCR && (
                           <div className="mt-1 text-xs text-amber-600 italic">
-                            ⚠️ Posible error OCR
+                            <AlertTriangle size={12} className="inline mr-1" />Posible error OCR
                           </div>
                         )}
                       </TableCell>
