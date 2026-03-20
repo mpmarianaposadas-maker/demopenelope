@@ -115,7 +115,7 @@ function RequisitoCardMobile({
           </div>
           {req.validadoPorAgente !== undefined && (
             <Badge variant={req.validadoPorAgente ? "default" : "destructive"} className="text-xs">
-              {req.validadoPorAgente ? '✓ Validado' : '✗ Rechazado'}
+              {req.validadoPorAgente ? <><CheckCircle2 size={12} className="inline mr-1" />Validado</> : <><XCircle size={12} className="inline mr-1" />Rechazado</>}
             </Badge>
           )}
         </div>
