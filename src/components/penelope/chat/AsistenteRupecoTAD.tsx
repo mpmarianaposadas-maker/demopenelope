@@ -179,7 +179,7 @@ Este documento es un borrador generado automáticamente. Requiere revisión y ap
           </div>
           <div>
             <CardTitle className="text-lg text-amber-900">
-              🛠️ Asistente RUPECO/TAD
+              <Wrench size={16} className="inline mr-1" /> Asistente RUPECO/TAD
             </CardTitle>
             <p className="text-xs text-amber-700 mt-1">
               Clasificación y resolución de errores comunes

@@ -210,7 +210,7 @@ export function RequisitoVerificacion({
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
             <CardTitle className="text-base">
-              📂 Verificación del Núcleo Documental (demo)
+              <FolderOpen size={16} className="inline mr-1" /> Verificación del Núcleo Documental (demo)
             </CardTitle>
           </div>
           <Button

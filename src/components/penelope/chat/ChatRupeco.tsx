@@ -15,12 +15,20 @@ import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
+const QUICK_ACTION_ICONS: Record<string, React.ReactNode> = {
+  'Licencia TIC nueva': <Radio size={14} className="inline mr-1" />,
+  'Autorización Audiovisual': <Tv size={14} className="inline mr-1" />,
+  'Habilitación Postal': <Mail size={14} className="inline mr-1" />,
+  'Modificación societaria TIC': <RefreshCw size={14} className="inline mr-1" />,
+  'Actualización RUPECO': <ClipboardList size={14} className="inline mr-1" />,
+};
+
 const QUICK_ACTIONS = [
-  { label: '📡 Licencia TIC nueva', message: 'Licencia TIC nueva para persona jurídica' },
-  { label: '📺 Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
-  { label: '📮 Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
-  { label: '🔄 Modificación societaria TIC', message: 'Modificación societaria TIC para empresa' },
-  { label: '📋 Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
+  { label: 'Licencia TIC nueva', message: 'Licencia TIC nueva para persona jurídica' },
+  { label: 'Autorización Audiovisual', message: 'Autorización audiovisual para empresa' },
+  { label: 'Habilitación Postal', message: 'Habilitación servicio postal para empresa' },
+  { label: 'Modificación societaria TIC', message: 'Modificación societaria TIC para empresa' },
+  { label: 'Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
 ];
 
 export function ChatRupeco() {
