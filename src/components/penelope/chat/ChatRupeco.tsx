@@ -269,6 +269,23 @@ export function ChatRupeco() {
         )}
       </div>
 
+      {/* Siguiente paso contextual */}
+      {currentStep !== 'inicio' && (
+        <div className="flex-shrink-0 border-t border-border px-4 py-2.5 bg-muted/30">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <ArrowRight size={12} className="flex-shrink-0 text-primary" />
+            <span>
+              {currentStep === 'ingreso_recepcion' && 'Procesando ingreso del expediente...'}
+              {currentStep === 'clasificacion_ia' && 'Clasificación asistida en curso...'}
+              {currentStep === 'confirmacion_clasificacion' && 'Confirmar la clasificación para continuar con la verificación documental RUPECO.'}
+              {currentStep === 'validacion_documental' && 'Verificando documentación contra el núcleo RUPECO...'}
+              {currentStep === 'resultado' && 'Revisar el informe de verificación y validar cada requisito.'}
+              {currentStep === 'evaluacion' && 'Aprobar o rechazar el expediente para completar la admisibilidad formal.'}
+            </span>
+          </div>
+        </div>
+      )}
+
     </Card>
   );
 }
