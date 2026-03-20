@@ -19,7 +19,8 @@ import {
   RotateCcw,
   FileWarning,
   Info,
-  FileText
+  FileText,
+  FolderOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';

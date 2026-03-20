@@ -22,7 +22,8 @@ import {
   Copy,
   Check,
   Info,
-  ChevronRight
+  ChevronRight,
+  Wrench
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
