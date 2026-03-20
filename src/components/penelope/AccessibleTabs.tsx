@@ -159,7 +159,13 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
               <div className="hidden md:block w-px self-stretch bg-border mx-1.5 my-1" />
             )}
             <div className="flex flex-col gap-0.5">
-              <span className="text-[10px] text-muted-foreground/70 uppercase tracking-wider px-1 leading-tight">
+              <span className={cn(
+                "text-[10px] uppercase tracking-wider px-1 leading-tight inline-flex items-center gap-1 transition-colors duration-200",
+                isActiveGroup ? "text-primary font-semibold" : "text-muted-foreground/70"
+              )}>
+                {isActiveGroup && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                )}
                 {group.label}
               </span>
               <div className="flex flex-wrap gap-0.5">
