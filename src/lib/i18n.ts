@@ -237,7 +237,7 @@ export const translations: Record<Language, Translations> = {
     'security.validationError': 'Error de validación',
     'security.alert.high.title': '🚫 Contenido Bloqueado',
     'security.alert.high.description': 'Se detectó un intento de inyección de prompts. La entrada ha sido rechazada por seguridad.',
-    'security.alert.medium.title': '⚠️ Contenido Sospechoso',
+    'security.alert.medium.title': 'Contenido Sospechoso',
     'security.alert.medium.description': 'Se detectaron patrones inusuales. El contenido ha sido sanitizado automáticamente.',
     'security.alert.low.title': 'Verificación de Seguridad',
     'security.alert.low.description': 'Se detectó contenido inusual que está siendo revisado.',
