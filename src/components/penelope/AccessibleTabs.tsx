@@ -149,6 +149,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
   const renderTabs = () => {
     if (groups && groups.length > 0) {
       return groups.map((group, gi) => {
+        const isActiveGroup = activeGroup?.label === group.label;
         const groupTabs = group.tabIds
           .map(id => ({ tab: tabs.find(t => t.id === id)!, index: tabs.findIndex(t => t.id === id) }))
           .filter(({ tab }) => tab);
