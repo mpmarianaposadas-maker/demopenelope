@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { formatFechaAR, formatFechaHoraAR } from '@/lib/formatDate';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Search, 
   FileText, 
@@ -11,6 +12,7 @@ import {
   Clock, 
   CheckCircle2, 
   AlertCircle,
+  AlertTriangle,
   Loader2,
   User,
   FileCheck,
@@ -20,6 +22,20 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
+
+function calcularDiasHabiles(desde: Date, hasta: Date): number {
+  let count = 0;
+  const current = new Date(desde);
+  current.setHours(0, 0, 0, 0);
+  const end = new Date(hasta);
+  end.setHours(0, 0, 0, 0);
+  while (current < end) {
+    current.setDate(current.getDate() + 1);
+    const day = current.getDay();
+    if (day !== 0 && day !== 6) count++;
+  }
+  return count;
+}
 
 type EstadoTramite = 'verificado' | 'enRevision' | 'enEspera' | 'completado';
 
