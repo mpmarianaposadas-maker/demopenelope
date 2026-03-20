@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Bell } from 'lucide-react';
+import { AlertTriangle, Bell, ClipboardList } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface AlertaVencimientoProps {
