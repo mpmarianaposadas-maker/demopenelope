@@ -35,6 +35,13 @@ export function PanelEstadoExpediente() {
   const { t } = useLanguage();
   const { tipoTramite } = useTipoTramite();
 
+  const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
+
+  const semaforoClasses = diasRestantes > 10
+    ? { bg: 'bg-green-100', text: 'text-green-800', border: 'border-l-green-500' }
+    : diasRestantes >= 5
+      ? { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-l-yellow-500' }
+      : { bg: 'bg-red-100', text: 'text-red-800', border: 'border-l-red-500' };
   const getStatusClasses = (status: 'completed' | 'current' | 'pending') => {
     switch (status) {
       case 'completed':
