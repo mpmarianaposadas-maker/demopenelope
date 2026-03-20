@@ -2,7 +2,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { FileText, CheckCircle, Clock, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type { LedgerEntry } from '@/components/penelope/security/SecurityLedger';
-import { DEMO_LEDGER_ENTRIES } from '@/components/penelope/security/demoLedgerEntries';
+import { useLedger } from '@/contexts/LedgerContext';
 import { formatFechaAR, formatHoraSegAR } from '@/lib/formatDate';
 
 const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
@@ -13,12 +13,9 @@ const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
   CONTROL_PLAZOS: 'Control de plazos',
 };
 
-interface PanelMetricasPromptsProps {
-  entries?: LedgerEntry[];
-}
-
-export function PanelMetricasPrompts({ entries = DEMO_LEDGER_ENTRIES }: PanelMetricasPromptsProps) {
+export function PanelMetricasPrompts() {
   const { t } = useLanguage();
+  const { entries } = useLedger();
 
   const last = entries.length > 0 ? entries[entries.length - 1] : null;
 

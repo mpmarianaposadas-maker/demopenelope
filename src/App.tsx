@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TipoTramiteProvider } from "@/contexts/TipoTramiteContext";
 import { KillSwitchProvider } from "@/contexts/KillSwitchContext";
 import { HistorialAccionesProvider } from "@/contexts/HistorialAccionesContext";
+import { LedgerProvider } from "@/contexts/LedgerContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -17,15 +18,17 @@ const App = () => (
       <KillSwitchProvider>
         <TipoTramiteProvider>
           <HistorialAccionesProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
+            <LedgerProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </LedgerProvider>
           </HistorialAccionesProvider>
         </TipoTramiteProvider>
       </KillSwitchProvider>

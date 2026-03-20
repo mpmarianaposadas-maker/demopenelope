@@ -137,7 +137,7 @@ export function PanelSimuladorInterno() {
             ) : (
               <Button 
                 variant="outline" 
-                onClick={reiniciarSimulacion} 
+                onClick={() => { reiniciarSimulacion(); reiniciarLedger(); }} 
                 disabled={simulando}
               >
                 <RotateCcw className="w-4 h-4 mr-2" />
