@@ -185,7 +185,7 @@ export function ChatRupeco() {
                   onClick={() => sendMessage(action.message)}
                   disabled={isLoading}
                 >
-                  {action.label}
+                  {QUICK_ACTION_ICONS[action.label]}{action.label}
                 </Button>
               ))}
             </div>
