@@ -1,4 +1,5 @@
 import { Card, CardTitle, CardText } from '../Card';
+import { FolderOpen, Wrench } from 'lucide-react';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -27,10 +28,10 @@ export function PanelDemoInteractiva() {
       <Tabs defaultValue="verificacion" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="verificacion">
-            📂 Verificación Documental
+            <FolderOpen size={16} className="inline mr-1" /> Verificación Documental
           </TabsTrigger>
           <TabsTrigger value="asistente">
-            🛠️ Asistente RUPECO/TAD
+            <Wrench size={16} className="inline mr-1" /> Asistente RUPECO/TAD
           </TabsTrigger>
         </TabsList>
         

@@ -19,7 +19,8 @@ import {
   RotateCcw,
   FileWarning,
   Info,
-  FileText
+  FileText,
+  FolderOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AprobacionExpediente } from '@/hooks/useChatRupecoSimulado';
@@ -210,7 +211,7 @@ export function RequisitoVerificacion({
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
             <CardTitle className="text-base">
-              📂 Verificación del Núcleo Documental (demo)
+              <FolderOpen size={16} className="inline mr-1" /> Verificación del Núcleo Documental (demo)
             </CardTitle>
           </div>
           <Button
