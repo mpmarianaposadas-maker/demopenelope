@@ -2,7 +2,7 @@ import { Card, CardTitle, CardText, CardList } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLanguage } from '@/hooks/useLanguage';
-import { AlertTriangle, ArrowDown, CheckCircle, XCircle } from 'lucide-react';
+import { AlertTriangle, ArrowDown, CheckCircle, XCircle, ClipboardList, RefreshCw } from 'lucide-react';
 import { SiguientePaso } from './SiguientePaso';
 import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
