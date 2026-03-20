@@ -677,7 +677,7 @@ export function useChatRupecoSimulado() {
       {
         id: generateId(),
         role: 'assistant',
-        content: `## ✅ EXPEDIENTE APROBADO
+        content: `## EXPEDIENTE APROBADO
 
 ---
 
