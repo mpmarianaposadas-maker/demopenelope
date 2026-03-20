@@ -387,7 +387,7 @@ export function RequisitoVerificacion({
                 <AlertTriangle className="h-5 w-5 text-cream-foreground flex-shrink-0" />
                 <div>
                   <div className="font-medium text-sm text-cream-foreground">
-                    ⏰ Control de Silencio Positivo (Decreto 971/2024)
+                    <Clock size={14} className="inline mr-1" />Control de Silencio Positivo (Decreto 971/2024)
                   </div>
                   <p className="text-xs text-cream-foreground/80 mt-1">
                     Hay {rojos.filter(f => f.validadoPorAgente !== true).length} documento(s) faltante(s). 
