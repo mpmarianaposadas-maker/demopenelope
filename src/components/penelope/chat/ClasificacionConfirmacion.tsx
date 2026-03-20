@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { AlertTriangle, CheckCircle2, Bot, HelpCircle, Info } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Bot, HelpCircle, Info, Pin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { type TramiteENAC, TRAMITES_ENAC } from '@/lib/nucleoRupeco';
 
