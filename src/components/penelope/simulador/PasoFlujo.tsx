@@ -117,9 +117,17 @@ export function PasoFlujo({ paso, t, isLast = false }: PasoFlujoProps) {
               estado === 'completado' && 'text-foreground'
             )}
           >
-            {t(tituloKey)}
+          {t(tituloKey)}
           </h4>
         </div>
+
+        {/* Human supervision badge */}
+        {STEPS_WITH_SUPERVISION.has(paso.id) && (estado === 'activo' || estado === 'completado') && (
+          <div className="inline-flex items-center gap-1 px-2 py-0.5 mt-1 rounded border border-blue-200 bg-blue-50 text-blue-700 text-xs">
+            <UserCheck size={12} />
+            <span>Supervisión humana requerida</span>
+          </div>
+        )}
         
         {/* Tooltip text shown on mobile */}
         <p className="text-xs text-muted-foreground mt-1 md:hidden">
