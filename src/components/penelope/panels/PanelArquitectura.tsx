@@ -150,7 +150,7 @@ export function PanelArquitectura() {
           <TabsContent value="subsanacion" className="mt-4 space-y-0">
             <FlowStep number={1} title="Detección de Incidencia" description="Sistema detecta documento faltante, vencido o ilegible." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={2} title="Generación de Borrador de Intimación" description="Penélope genera borrador no vinculante. Temperatura 0.0." actor="mixed" actorTypes={['llm', 'validacion']} />
-            <FlowStep number={3} title="Validación por Agente Humano" description="Agente revisa, modifica y firma. La emisión es acto de trámite exclusivo del agente." actor="human" highlighted actorTypes={['validacion']} />
+            <FlowStep number={3} title="Validación por Agente Humano" description="Agente revisa, modifica y firma. La emisión es acto de trámite exclusivo del agente." actor="human" highlighted actorTypes={['humano-exclusivo']} />
             <FlowStep number={4} title="Notificación y Suspensión de Plazo" description="Notificación vía TAD, suspensión del cómputo." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={5} title="Recepción de Subsanación" description="Trámite se reanuda, retorna a control documental." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={6} title="Re-verificación con Control Humano" description="Nueva verificación formal con supervisión del agente." actor="human" actorTypes={['reglas', 'validacion']} />
