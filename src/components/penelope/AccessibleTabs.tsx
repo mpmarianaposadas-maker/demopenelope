@@ -40,7 +40,7 @@ const tabContentVariants: Variants = {
 
 export function AccessibleTabs({ tabs, children, t, groups, tooltips }: AccessibleTabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set(['acerca-de']));
+  const [visitedTabs, setVisitedTabs] = useState<Set<string>>(new Set());
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const [showComplete, setShowComplete] = useState(false);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
