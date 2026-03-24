@@ -1,7 +1,7 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
 import { useLanguage } from '@/hooks/useLanguage';
-import { AlertTriangle, Lightbulb, Rocket, Database, FlaskConical, Users } from 'lucide-react';
+import { AlertTriangle, Lightbulb, Rocket, Database, FlaskConical, Users, Eye, CheckCircle, GraduationCap, MessageSquare } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 export function PanelMetricas() {
