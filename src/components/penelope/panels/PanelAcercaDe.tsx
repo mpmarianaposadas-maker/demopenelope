@@ -63,7 +63,7 @@ export function PanelAcercaDe() {
                 Bienvenido/a a la PoC del Sistema Penélope
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Esta prueba de concepto acompaña el trabajo final «El viaje de Penélope» y permite explorar de forma interactiva el sistema propuesto. A continuación encontrará un recorrido sugerido.
+                Esta prueba de concepto acompaña la propuesta académica «El viaje de Penélope» y permite explorar de forma interactiva el sistema propuesto. A continuación encontrará un recorrido sugerido.
               </p>
             </div>
           </div>
