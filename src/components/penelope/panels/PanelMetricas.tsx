@@ -159,27 +159,87 @@ export function PanelMetricas() {
         </div>
       </Card>
 
-      {/* Modelo ADKAR - Anexo IV */}
+      {/* Gestión del Cambio — Anexo IV */}
       <Card>
-        <CardTitle as="h3">Gestión del Cambio — Modelo ADKAR</CardTitle>
+        <CardTitle as="h3">Gestión del Cambio</CardTitle>
         <CardText>
-          El Anexo IV del trabajo final propone el modelo ADKAR para la adopción institucional de Penélope:
+          La incorporación de Penélope no se reduce a una decisión tecnológica. Requiere condiciones organizativas que faciliten su apropiación institucional de forma gradual, prudente y supervisada.
         </CardText>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
-          {[
-            { letra: 'A', titulo: 'Awareness', desc: 'Talleres de sensibilización sobre IA responsable en la Administración Pública.' },
-            { letra: 'D', titulo: 'Desire', desc: 'Certificación como «Operadores de IA Pública» para generar incentivo profesional.' },
-            { letra: 'K', titulo: 'Knowledge', desc: 'Capacitación en interpretación de alertas, semáforos y outputs del sistema.' },
-            { letra: 'A', titulo: 'Ability', desc: 'Simulacros en sandbox con expedientes de prueba y retroalimentación supervisada.' },
-          ].map((etapa, i) => (
-            <div key={i} className="border border-border rounded-lg p-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{etapa.letra}</span>
-                <span className="text-sm font-semibold text-foreground">{etapa.titulo}</span>
+
+        <div className="space-y-4 my-4">
+          {/* Eje 1 */}
+          <div className="border border-border rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
+                <Eye size={18} className="text-primary" />
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed ml-8">{etapa.desc}</p>
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">1. Comprensión del problema institucional</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  El punto de partida no es introducir inteligencia artificial, sino visibilizar el problema organizativo que Penélope busca abordar: reiteración documental, ciclos evitables de subsanación, fragmentación de registros y riesgo de demora en etapas preliminares. La herramienta no interviene sobre la autonomía técnica o jurídica del agente.
+                </p>
+              </div>
             </div>
-          ))}
+          </div>
+
+          {/* Eje 2 */}
+          <div className="border border-border rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
+                <CheckCircle size={18} className="text-primary" />
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">2. Beneficio verificable desde el piloto</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  La legitimidad interna de la herramienta no se construye con promesas abstractas, sino con beneficios observables en un piloto controlado: mejora en tiempos de admisibilidad formal, reducción de pedidos de subsanación puramente formales, mayor orden en etapas preliminares y mejor trazabilidad operativa. Todo beneficio es acotado, verificable y sujeto a revisión.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Eje 3 */}
+          <div className="border border-border rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
+                <GraduationCap size={18} className="text-primary" />
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">3. Capacitación orientada al criterio y a la supervisión humana</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                  La capacitación no exige conocimiento técnico profundo sobre modelos de lenguaje. Se centra en habilidades de supervisión:
+                </p>
+                <ul className="text-xs text-muted-foreground leading-relaxed list-disc ml-4 space-y-0.5">
+                  <li>Interpretar alertas y semáforos del sistema</li>
+                  <li>Revisar clasificaciones preliminares y validar o corregir información extraída</li>
+                  <li>Revisar borradores no vinculantes antes de su carga en GDE</li>
+                  <li>Comprender los límites de intervención de Penélope</li>
+                  <li>Sostener el principio de validación humana obligatoria</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Eje 4 */}
+          <div className="border border-border rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
+                <MessageSquare size={18} className="text-primary" />
+              </div>
+              <div>
+                <h4 className="text-sm font-semibold text-foreground mb-1">4. Retroalimentación continua y mejora iterativa</h4>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  La gestión del cambio incluye mecanismos para que agentes y equipos puedan reportar errores, señalar casos no previstos, proponer ajustes y participar en la mejora de reglas, flujos o alertas. La experiencia del personal es insumo para la evolución de la herramienta y condición de su apropiación institucional.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Cierre */}
+        <div className="border-t border-border pt-3 mt-3">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            La gestión del cambio no se agota en una capacitación inicial. Comprende soporte continuo, consulta, revisión periódica y actualización de instructivos. Su finalidad es que Penélope sea percibida como infraestructura de apoyo no decisorio, orientada a ordenar etapas preliminares y liberar tiempo para el análisis sustantivo, sin desplazar la responsabilidad humana ni alterar el régimen jurídico aplicable.
+          </p>
         </div>
       </Card>
 
