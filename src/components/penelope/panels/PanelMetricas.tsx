@@ -118,10 +118,10 @@ export function PanelMetricas() {
         </Table>
       </Card>
 
-      {/* Indicadores de Éxito - Cap. VIII */}
+      {/* Indicadores de Éxito */}
       <Card>
-        <CardTitle as="h3">Indicadores de Éxito (Cap. VIII)</CardTitle>
-        <CardText>Indicadores cualitativos y cuantitativos definidos en el trabajo final para evaluar el impacto proyectado de Penélope:</CardText>
+        <CardTitle as="h3">Indicadores de Éxito</CardTitle>
+        <CardText>Indicadores cualitativos y cuantitativos definidos para evaluar el impacto proyectado de Penélope:</CardText>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
           {[
             { label: 'Tiempo promedio de admisibilidad formal', tipo: 'Cuantitativo — meta esperada' },
@@ -141,10 +141,10 @@ export function PanelMetricas() {
         </div>
       </Card>
 
-      {/* Fases de Implementación - Cap. VIII */}
+      {/* Fases de Implementación */}
       <Card>
         <CardTitle as="h3">Fases de Implementación</CardTitle>
-        <CardText>Hoja de ruta del trabajo final (Cap. VIII, p. 19-21):</CardText>
+        <CardText>Hoja de ruta propuesta para el despliegue gradual de Penélope:</CardText>
         <div className="space-y-3 my-4">
           {[
             { icon: Users, fase: 'Fase 1', titulo: 'Planificación interdisciplinaria', desc: 'Conformación de equipo con perfiles jurídicos, técnicos y de gestión organizativa.' },

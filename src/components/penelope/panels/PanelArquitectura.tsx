@@ -191,7 +191,7 @@ export function PanelArquitectura() {
         <div className="bg-primary/5 border-l-4 border-l-primary rounded-r-lg p-4">
           <p className="text-sm font-semibold text-foreground mb-1">Nota: Golden Dataset</p>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            El trabajo final (Cap. VI y VIII) enfatiza la necesidad de construir un <strong>conjunto de datos curado</strong> (golden dataset) antes de la puesta en producción, para evitar la automatización acrítica de patrones históricos que podrían perpetuar sesgos o errores estructurales.
+            Se enfatiza la necesidad de construir un <strong>conjunto de datos curado</strong> (golden dataset) antes de la puesta en producción, para evitar la automatización acrítica de patrones históricos que podrían perpetuar sesgos o errores estructurales.
           </p>
         </div>
       </Card>

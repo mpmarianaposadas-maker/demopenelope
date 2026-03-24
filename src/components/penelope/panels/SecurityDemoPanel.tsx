@@ -72,7 +72,7 @@ export function SecurityDemoPanel() {
           <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700 bg-amber-50">Escenario proyectado</Badge>
         </div>
         <CardText className="mb-4">
-          Evaluación de riesgos conforme al Anexo III del trabajo final. Cada riesgo incluye su nivel inicial, la estrategia de mitigación implementada por Penélope y el nivel residual resultante.
+          Evaluación de riesgos conforme al marco de gobernanza propuesto. Cada riesgo incluye su nivel inicial, la estrategia de mitigación implementada por Penélope y el nivel residual resultante.
         </CardText>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
