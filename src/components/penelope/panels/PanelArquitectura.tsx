@@ -129,17 +129,17 @@ export function PanelArquitectura() {
 
             <FlowStep number={7} title="Monitoreo de Plazos (Decreto 971/2024)" description="Control continuo, alertas escalonadas." actor="auto" actorTypes={['reglas']} />
 
-            {/* Límite de intervención reforzado */}
-            <div className="border-2 border-dashed border-red-400 rounded-lg p-5 bg-red-50/30 text-center mt-2 space-y-2">
+            {/* Límite de intervención — delimitación institucional */}
+            <div className="border-2 border-dashed border-primary/40 rounded-lg p-5 bg-primary/5 text-center mt-2 space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <User size={18} className="text-red-700" />
-                <p className="text-sm font-bold text-red-700">LÍMITE DE INTERVENCIÓN DE PENÉLOPE</p>
+                <User size={18} className="text-primary" />
+                <p className="text-sm font-bold text-primary">LÍMITE DE INTERVENCIÓN DE PENÉLOPE</p>
               </div>
-              <p className="text-xs text-red-600">
+              <p className="text-xs text-muted-foreground">
                 A partir de aquí, el análisis técnico-jurídico y la decisión son competencia exclusiva del área sustantiva.
               </p>
               <div className="flex justify-center pt-1">
-                <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50 text-xs">
+                <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 text-xs">
                   <User size={12} className="mr-1" />
                   Reserva de decisión administrativa — Intervención humana no delegable
                 </Badge>
