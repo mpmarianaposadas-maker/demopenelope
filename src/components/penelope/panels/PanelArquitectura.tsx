@@ -158,10 +158,9 @@ export function PanelArquitectura() {
         </Tabs>
 
         {/* Leyenda */}
-        <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-border">
-          <Badge className="bg-blue-100 text-blue-800 border-blue-200">Determinístico (motor de reglas)</Badge>
-          <Badge className="bg-green-100 text-green-800 border-green-200">Agente humano (obligatorio)</Badge>
-          <Badge className="bg-amber-100 text-amber-800 border-amber-200">IA asistida + Supervisión humana</Badge>
+        <div className="mt-6 pt-4 border-t border-border space-y-2">
+          <p className="text-xs font-semibold text-muted-foreground mb-2">Taxonomía de actores del sistema</p>
+          <ActorLabels types={['reglas', 'llm', 'validacion', 'humano-exclusivo']} size="sm" />
         </div>
       </Card>
 
