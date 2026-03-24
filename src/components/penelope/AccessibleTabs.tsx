@@ -24,7 +24,13 @@ interface AccessibleTabsProps {
   tooltips?: Record<string, string>;
 }
 
-const TOUR_TABS = ['acerca-de', 'demo-interactiva', 'arquitectura', 'brecha-rupeco', 'propuesta-normativa', 'metricas'];
+// Tour tracks all tabs in the PoC
+const TOUR_TABS = [
+  'acerca-de', 'arquitectura', 'brecha-rupeco',
+  'demo-interactiva', 'borradores', 'simulador',
+  'trazabilidad', 'propuesta-normativa', 'seguridad',
+  'metricas', 'metricas-operador', 'trazabilidad-ciudadana',
+];
 
 const tabContentVariants: Variants = {
   initial: { opacity: 0, y: 10, scale: 0.98 },
