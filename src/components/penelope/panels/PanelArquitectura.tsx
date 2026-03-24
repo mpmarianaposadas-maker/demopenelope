@@ -23,11 +23,6 @@ function FlowStep({ number, title, description, actor, warning, highlighted, act
     human: 'border-l-green-500 bg-green-50/50',
     mixed: 'border-l-amber-500 bg-amber-50/50',
   };
-  const actorLabels = {
-    auto: 'Determinístico',
-    human: 'Agente humano',
-    mixed: 'IA asistida + Supervisión',
-  };
 
   return (
     <div className="relative">
@@ -35,7 +30,6 @@ function FlowStep({ number, title, description, actor, warning, highlighted, act
         <div className="flex items-center gap-2 mb-1">
           <span className="text-xs font-bold text-primary bg-primary/10 rounded-full w-6 h-6 flex items-center justify-center">{number}</span>
           <span className="font-semibold text-sm text-foreground">{title}</span>
-          <Badge variant="outline" className="text-xs ml-auto">{actorLabels[actor]}</Badge>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed ml-8">{description}</p>
         {actorTypes && (
