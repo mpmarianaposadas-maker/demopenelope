@@ -2,27 +2,42 @@ import { Card, CardTitle, CardText } from '../Card';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Send, Info, ClipboardList } from 'lucide-react';
+import { ActorLabels } from '../ActorLabel';
 
 export function PanelBorradores() {
   const { t } = useLanguage();
 
   return (
     <>
+      {/* Leyenda de naturaleza simulada */}
+      <div className="bg-amber-50/50 border border-amber-200 rounded-lg p-3 flex items-center gap-2 text-xs text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-300">
+        <Info size={14} className="flex-shrink-0" />
+        <span>Panel ilustrativo — Borradores no vinculantes generados por el sistema. Requieren revisión, edición y firma del agente responsable antes de producir cualquier efecto.</span>
+      </div>
+
       {/* ═══ SECCIÓN 1: Comunicaciones dirigidas al administrado ═══ */}
-      <div className="flex items-center gap-2 mb-2">
-        <Send className="w-5 h-5 text-primary" />
-        <h3 className="font-serif font-semibold text-foreground text-base">
-          {t('borr.seccion.administrado') || 'Comunicaciones dirigidas al administrado'}
-        </h3>
+      <div className="flex items-center justify-between flex-wrap gap-2 mb-2 mt-4">
+        <div className="flex items-center gap-2">
+          <Send className="w-5 h-5 text-primary" />
+          <h3 className="font-serif font-semibold text-foreground text-base">
+            {t('borr.seccion.administrado') || 'Comunicaciones dirigidas al administrado'}
+          </h3>
+        </div>
+        <ActorLabels types={['llm', 'validacion']} />
       </div>
 
       {/* Nota de Intimación */}
       <Card as="article">
         <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
           <CardTitle>{t('borr.nota.title')}</CardTitle>
-          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
-            Tipo documento GDE: Nota (NO)
-          </Badge>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
+              Borrador no vinculante
+            </Badge>
+            <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
+              Tipo documento GDE: Nota (NO)
+            </Badge>
+          </div>
         </div>
         <div className="space-y-2 mb-4">
           <CardText>
@@ -102,9 +117,14 @@ export function PanelBorradores() {
       <Card as="article">
         <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
           <CardTitle as="h3">{t('borr.alt.title')}</CardTitle>
-          <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
-            Tipo documento GDE: Nota (NO)
-          </Badge>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
+              Borrador no vinculante
+            </Badge>
+            <Badge variant="outline" className="text-[10px] bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-800">
+              Tipo documento GDE: Nota (NO)
+            </Badge>
+          </div>
         </div>
         
         <div className="border-l-4 border-accent pl-4 space-y-3 text-sm md:text-base">
@@ -136,20 +156,28 @@ export function PanelBorradores() {
       </Card>
 
       {/* ═══ SECCIÓN 2: Información interna de gestión (GDE) ═══ */}
-      <div className="flex items-center gap-2 mb-2 mt-6">
-        <FileText className="w-5 h-5 text-primary" />
-        <h3 className="font-serif font-semibold text-foreground text-base">
-          {t('borr.seccion.interna') || 'Actos internos de gestión (GDE)'}
-        </h3>
+      <div className="flex items-center justify-between flex-wrap gap-2 mb-2 mt-6">
+        <div className="flex items-center gap-2">
+          <FileText className="w-5 h-5 text-primary" />
+          <h3 className="font-serif font-semibold text-foreground text-base">
+            {t('borr.seccion.interna') || 'Actos internos de gestión (GDE)'}
+          </h3>
+        </div>
+        <ActorLabels types={['llm', 'validacion']} />
       </div>
 
       {/* Providencia */}
       <Card as="article">
         <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
           <CardTitle>{t('borr.pv.title')}</CardTitle>
-          <Badge variant="outline" className="text-[10px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800">
-            Tipo documento GDE: Providencia (PV)
-          </Badge>
+          <div className="flex items-center gap-2 flex-wrap">
+            <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800">
+              Borrador no vinculante
+            </Badge>
+            <Badge variant="outline" className="text-[10px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300 dark:border-green-800">
+              Tipo documento GDE: Providencia (PV)
+            </Badge>
+          </div>
         </div>
         <div className="space-y-2 mb-4">
           <CardText>
