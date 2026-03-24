@@ -267,7 +267,7 @@ export function PanelAcercaDe() {
           ))}
         </div>
         <p className="text-[10px] text-muted-foreground italic">
-          Datos demostrativos — escenario proyectado sobre la base del trabajo final.
+          Datos demostrativos — escenario proyectado sobre la base de la propuesta académica.
         </p>
       </Card>
 
