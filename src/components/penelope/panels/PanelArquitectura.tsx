@@ -23,11 +23,6 @@ function FlowStep({ number, title, description, actor, warning, highlighted, act
     human: 'border-l-green-500 bg-green-50/50',
     mixed: 'border-l-amber-500 bg-amber-50/50',
   };
-  const actorLabels = {
-    auto: 'Determinístico',
-    human: 'Agente humano',
-    mixed: 'IA asistida + Supervisión',
-  };
 
   return (
     <div className="relative">
@@ -35,7 +30,6 @@ function FlowStep({ number, title, description, actor, warning, highlighted, act
         <div className="flex items-center gap-2 mb-1">
           <span className="text-xs font-bold text-primary bg-primary/10 rounded-full w-6 h-6 flex items-center justify-center">{number}</span>
           <span className="font-semibold text-sm text-foreground">{title}</span>
-          <Badge variant="outline" className="text-xs ml-auto">{actorLabels[actor]}</Badge>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed ml-8">{description}</p>
         {actorTypes && (
@@ -112,8 +106,8 @@ export function PanelArquitectura() {
             <FlowStep number={1} title="Ingreso por TAD" description="El expediente ingresa por TAD, se genera número GDE." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={2} title="Sanitización Documental" description="Aplanado de capas PDF para prevenir prompt injection." actor="auto" warning="Protección contra texto oculto en documentos (Anexo II)" actorTypes={['reglas']} />
             <FlowStep number={3} title="Clasificación Preliminar Asistida" description="LLM clasifica por tipo y normativa, determina nivel de confianza. Sujeta a validación." actor="mixed" highlighted actorTypes={['reglas', 'llm', 'validacion']} />
-            <FlowStep number={4} title="Confirmación del Operador" description="El agente confirma, corrige o rechaza. Sin confirmación, el flujo no avanza." actor="human" actorTypes={['validacion']} />
-            <FlowStep number={5} title="Verificación Documental Asistida (Once-Only)" description="Consulta RUPECO, verifica completitud formal." actor="auto" actorTypes={['reglas', 'validacion']} />
+            <FlowStep number={4} title="Confirmación del Operador" description="El agente confirma, corrige o rechaza. Sin confirmación, el flujo no avanza." actor="human" actorTypes={['humano-exclusivo']} />
+            <FlowStep number={5} title="Control Documental con Interoperabilidad RUPECO (Once-Only)" description="Consulta RUPECO, verifica completitud formal por reglas de negocio." actor="auto" actorTypes={['reglas', 'validacion']} />
 
             {/* Bifurcación */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
@@ -135,17 +129,17 @@ export function PanelArquitectura() {
 
             <FlowStep number={7} title="Monitoreo de Plazos (Decreto 971/2024)" description="Control continuo, alertas escalonadas." actor="auto" actorTypes={['reglas']} />
 
-            {/* Límite de intervención reforzado */}
-            <div className="border-2 border-dashed border-red-400 rounded-lg p-5 bg-red-50/30 text-center mt-2 space-y-2">
+            {/* Límite de intervención — delimitación institucional */}
+            <div className="border-2 border-dashed border-primary/40 rounded-lg p-5 bg-primary/5 text-center mt-2 space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <User size={18} className="text-red-700" />
-                <p className="text-sm font-bold text-red-700">LÍMITE DE INTERVENCIÓN DE PENÉLOPE</p>
+                <User size={18} className="text-primary" />
+                <p className="text-sm font-bold text-primary">LÍMITE DE INTERVENCIÓN DE PENÉLOPE</p>
               </div>
-              <p className="text-xs text-red-600">
+              <p className="text-xs text-muted-foreground">
                 A partir de aquí, el análisis técnico-jurídico y la decisión son competencia exclusiva del área sustantiva.
               </p>
               <div className="flex justify-center pt-1">
-                <Badge variant="outline" className="border-red-300 text-red-700 bg-red-50 text-xs">
+                <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 text-xs">
                   <User size={12} className="mr-1" />
                   Reserva de decisión administrativa — Intervención humana no delegable
                 </Badge>
@@ -156,18 +150,17 @@ export function PanelArquitectura() {
           <TabsContent value="subsanacion" className="mt-4 space-y-0">
             <FlowStep number={1} title="Detección de Incidencia" description="Sistema detecta documento faltante, vencido o ilegible." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={2} title="Generación de Borrador de Intimación" description="Penélope genera borrador no vinculante. Temperatura 0.0." actor="mixed" actorTypes={['llm', 'validacion']} />
-            <FlowStep number={3} title="Validación por Agente Humano" description="Agente revisa, modifica y firma. La emisión es acto de trámite exclusivo del agente." actor="human" highlighted actorTypes={['validacion']} />
+            <FlowStep number={3} title="Validación por Agente Humano" description="Agente revisa, modifica y firma. La emisión es acto de trámite exclusivo del agente." actor="human" highlighted actorTypes={['humano-exclusivo']} />
             <FlowStep number={4} title="Notificación y Suspensión de Plazo" description="Notificación vía TAD, suspensión del cómputo." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={5} title="Recepción de Subsanación" description="Trámite se reanuda, retorna a control documental." actor="auto" actorTypes={['reglas']} />
-            <FlowStep number={6} title="Re-verificación con Control Humano" description="Nueva verificación formal con supervisión del agente." actor="human" actorTypes={['reglas', 'validacion']} />
+            <FlowStep number={6} title="Re-verificación con Supervisión Humana" description="Nueva verificación formal con supervisión obligatoria del agente." actor="mixed" actorTypes={['reglas', 'validacion']} />
           </TabsContent>
         </Tabs>
 
         {/* Leyenda */}
-        <div className="flex flex-wrap gap-3 mt-6 pt-4 border-t border-border">
-          <Badge className="bg-blue-100 text-blue-800 border-blue-200">Determinístico (motor de reglas)</Badge>
-          <Badge className="bg-green-100 text-green-800 border-green-200">Agente humano (obligatorio)</Badge>
-          <Badge className="bg-amber-100 text-amber-800 border-amber-200">IA asistida + Supervisión humana</Badge>
+        <div className="mt-6 pt-4 border-t border-border space-y-2">
+          <p className="text-xs font-semibold text-muted-foreground mb-2">Taxonomía de actores del sistema</p>
+          <ActorLabels types={['reglas', 'llm', 'validacion', 'humano-exclusivo']} size="sm" />
         </div>
       </Card>
 
