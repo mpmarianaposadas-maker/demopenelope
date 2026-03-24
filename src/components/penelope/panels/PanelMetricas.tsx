@@ -118,10 +118,10 @@ export function PanelMetricas() {
         </Table>
       </Card>
 
-      {/* Indicadores de Éxito - Cap. VIII */}
+      {/* Indicadores de Éxito */}
       <Card>
-        <CardTitle as="h3">Indicadores de Éxito (Cap. VIII)</CardTitle>
-        <CardText>Indicadores cualitativos y cuantitativos definidos en el trabajo final para evaluar el impacto proyectado de Penélope:</CardText>
+        <CardTitle as="h3">Indicadores de Éxito</CardTitle>
+        <CardText>Indicadores cualitativos y cuantitativos definidos para evaluar el impacto proyectado de Penélope:</CardText>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
           {[
             { label: 'Tiempo promedio de admisibilidad formal', tipo: 'Cuantitativo — meta esperada' },
