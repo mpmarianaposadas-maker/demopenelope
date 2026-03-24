@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Check, X, BookOpen, GraduationCap, ArrowRight, Compass, Search, GitBranch, BarChart2, Scale, TrendingUp } from 'lucide-react';
+import { Check, X, BookOpen, GraduationCap, ArrowRight, Compass, Search, GitBranch, BarChart2, Scale, TrendingUp, BrainCircuit, Cpu, UserCheck, ShieldOff } from 'lucide-react';
 import { SiguientePaso } from './SiguientePaso';
 import { useTabNavigation } from '@/contexts/TabNavigationContext';
 
@@ -12,32 +12,32 @@ export function PanelAcercaDe() {
 
   const transformaciones = [
     { de: 'Administración reactiva', a: 'Administración preventiva', desc: 'De esperar vencimientos a anticiparse a riesgos procedimentales.' },
-    { de: 'Inercia procedimental', a: 'Gestión activa', desc: 'De acumulación pasiva a intervención temprana.' },
+    { de: 'Inercia procedimental', a: 'Gestión activa', desc: 'De acumulación pasiva a intervención temprana en etapas preliminares.' },
     { de: 'Cumplimiento burocrático', a: 'Experiencia del ciudadano', desc: 'Del enfoque en proceso interno al interés público.' },
     { de: 'Silencio como distorsión', a: 'Silencio como garantía', desc: 'El silencio positivo vuelve a ser garantía excepcional.' },
   ];
 
-  const esItems = [
-    'Sistema de automatización asistida e IA responsable',
-    'Infraestructura organizativa',
-    'Facilitador de interoperabilidad',
-    'Modelo de fiabilidad por diseño',
-    'Herramienta de gestión activa',
-    'Compatible con Derecho Público argentino',
+  const siHace = [
+    'Clasificar preliminarmente documentación',
+    'Detectar faltantes formales',
+    'Sugerir borradores no vinculantes',
+    'Registrar trazabilidad de cada intervención',
+    'Generar alertas sobre plazos perentorios',
+    'Asistir etapas preliminares del trámite',
   ];
 
-  const noEsItems = [
-    'Sistema de IA decisoria',
-    'Herramienta de interpretación jurídica',
-    'Sustituto de la actividad del órgano',
-    'Emisor de actos administrativos',
-    'Evaluador de solvencia/idoneidad',
-    'Sistema que opera en etapa de decisión',
+  const noHace = [
+    'No resuelve expedientes',
+    'No dicta actos administrativos',
+    'No sustituye criterio jurídico humano',
+    'No firma decisiones finales',
+    'No reemplaza responsabilidad del agente público',
+    'No opera sin revisión humana',
   ];
 
   const pasos = [
     { icon: <BookOpen size={15} className="inline mr-1" />, tab: 'Acerca de', desc: 'Conozca el marco conceptual y la pregunta de investigación' },
-    { icon: <Search size={15} className="inline mr-1" />, tab: 'Demo Interactiva', desc: 'Simule el procesamiento de un expediente real' },
+    { icon: <Search size={15} className="inline mr-1" />, tab: 'Demo Interactiva', desc: 'Simule el procesamiento de un expediente' },
     { icon: <GitBranch size={15} className="inline mr-1" />, tab: 'Arquitectura', desc: 'Explore los diagramas de flujo y el modelo de fiabilidad' },
     { icon: <BarChart2 size={15} className="inline mr-1" />, tab: 'Brecha RUPECO', desc: 'Visualice el hallazgo central: la brecha del 57%' },
     { icon: <Scale size={15} className="inline mr-1" />, tab: 'Propuesta Normativa', desc: 'Revise el articulado propuesto' },
@@ -60,10 +60,10 @@ export function PanelAcercaDe() {
             <Compass size={24} className="text-primary flex-shrink-0 mt-0.5" />
             <div>
               <h2 className="text-base font-semibold text-foreground mb-1">
-                Bienvenido/a a la Demo Interactiva del Sistema Penélope
+                Bienvenido/a a la PoC del Sistema Penélope
               </h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Esta demo acompaña el trabajo final «El viaje de Penélope» y permite explorar de forma interactiva el sistema propuesto. A continuación encontrará un recorrido sugerido.
+                Esta prueba de concepto acompaña el trabajo final «El viaje de Penélope» y permite explorar de forma interactiva el sistema propuesto. A continuación encontrará un recorrido sugerido.
               </p>
             </div>
           </div>
@@ -86,10 +86,10 @@ export function PanelAcercaDe() {
         </div>
       )}
 
-
       {/* Sección 1: El Viaje de Penélope */}
       <Card>
         <CardTitle>El Viaje de Penélope</CardTitle>
+        <Badge variant="outline" className="text-[10px] mb-3 border-primary/30 text-primary">Propuesta académica — PoC</Badge>
         <div className="bg-primary/5 border-l-4 border-l-primary rounded-r-lg p-4 mb-4">
           <p className="text-muted-foreground leading-relaxed italic">
             «En el mito homérico, Penélope teje y desteje esperando el regreso de Ulises. En esta propuesta, la Administración —quien la encarna— se despide de la espera pasiva y procura abandonar una lógica procedimental basada en la postergación y la acumulación de expedientes, para dar paso a una gestión que interviene tempranamente sobre sus propios procesos.»
@@ -136,26 +136,33 @@ export function PanelAcercaDe() {
         </div>
       </Card>
 
-      {/* Sección 4: Qué ES y qué NO ES */}
+      {/* Sección 4: Penélope SÍ hace / NO hace */}
       <Card>
-        <CardTitle as="h3">Qué es y qué NO es Penélope</CardTitle>
+        <CardTitle as="h3">Alcance funcional de Penélope</CardTitle>
+        <CardText>
+          Penélope opera exclusivamente como infraestructura de apoyo no decisorio. Su intervención se limita a etapas preliminares, formales y no discrecionales del procedimiento administrativo.
+        </CardText>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <div className="border border-green-200 bg-green-50/50 rounded-lg p-4">
-            <h4 className="font-semibold text-green-800 mb-3 text-sm"><Check size={14} className="inline mr-1" />ES</h4>
+          <div className="border border-green-200 bg-green-50/50 rounded-lg p-4 dark:bg-green-950/10 dark:border-green-900">
+            <h4 className="font-semibold text-green-800 dark:text-green-300 mb-3 text-sm flex items-center gap-1.5">
+              <Check size={14} />Penélope sí hace
+            </h4>
             <ul className="space-y-2">
-              {esItems.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-green-700">
+              {siHace.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-green-700 dark:text-green-400">
                   <Check size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="border border-red-200 bg-red-50/50 rounded-lg p-4">
-            <h4 className="font-semibold text-red-800 mb-3 text-sm"><X size={14} className="inline mr-1" />NO ES</h4>
+          <div className="border border-red-200 bg-red-50/50 rounded-lg p-4 dark:bg-red-950/10 dark:border-red-900">
+            <h4 className="font-semibold text-red-800 dark:text-red-300 mb-3 text-sm flex items-center gap-1.5">
+              <ShieldOff size={14} />Penélope no hace
+            </h4>
             <ul className="space-y-2">
-              {noEsItems.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-red-700">
+              {noHace.map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400">
                   <X size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
                   <span>{item}</span>
                 </li>
@@ -165,11 +172,86 @@ export function PanelAcercaDe() {
         </div>
       </Card>
 
-      {/* Sección 5: Alcance */}
+      {/* Sección 5: Rol del LLM */}
       <Card>
-        <CardTitle as="h3">Alcance de esta Demo</CardTitle>
+        <CardTitle as="h3">Rol de la IA generativa en el sistema</CardTitle>
+        <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-3">
+          <div className="flex items-start gap-3">
+            <BrainCircuit size={20} className="text-primary flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Penélope utiliza un modelo de lenguaje (LLM) de forma estrictamente acotada. El modelo asiste en la lectura de documentos no estructurados, ayuda a extraer o resumir información relevante y sugiere borradores no vinculantes de actos de trámite. Opera bajo prompts restrictivos, acotado por reglas determinísticas y controles de validación.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground border border-border rounded-lg p-2.5">
+              <Cpu size={14} className="text-blue-600 flex-shrink-0" />
+              <span><strong>Motor de reglas:</strong> verificación formal, plazos, completitud</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground border border-border rounded-lg p-2.5">
+              <BrainCircuit size={14} className="text-purple-600 flex-shrink-0" />
+              <span><strong>Asistencia LLM:</strong> clasificación preliminar, borradores</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground border border-border rounded-lg p-2.5">
+              <UserCheck size={14} className="text-green-600 flex-shrink-0" />
+              <span><strong>Validación humana:</strong> obligatoria en toda operación</span>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground italic border-t border-border/50 pt-2">
+            El LLM no decide, no sustituye análisis sustantivo y no reemplaza el criterio jurídico humano. Toda sugerencia requiere convalidación por agente responsable.
+          </p>
+        </div>
+      </Card>
+
+      {/* Sección 6: Qué ES y qué NO ES (categorización técnica) */}
+      <Card>
+        <CardTitle as="h3">Qué es y qué NO es Penélope</CardTitle>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+          <div className="border border-green-200 bg-green-50/50 rounded-lg p-4 dark:bg-green-950/10 dark:border-green-900">
+            <h4 className="font-semibold text-green-800 dark:text-green-300 mb-3 text-sm"><Check size={14} className="inline mr-1" />ES</h4>
+            <ul className="space-y-2">
+              {[
+                'Sistema de automatización asistida e IA responsable',
+                'Infraestructura organizativa de apoyo no decisorio',
+                'Facilitador de interoperabilidad (principio Once-Only)',
+                'Modelo de fiabilidad por diseño',
+                'Herramienta de gestión activa en etapas preliminares',
+                'Compatible con Derecho Público argentino',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-green-700 dark:text-green-400">
+                  <Check size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="border border-red-200 bg-red-50/50 rounded-lg p-4 dark:bg-red-950/10 dark:border-red-900">
+            <h4 className="font-semibold text-red-800 dark:text-red-300 mb-3 text-sm"><X size={14} className="inline mr-1" />NO ES</h4>
+            <ul className="space-y-2">
+              {[
+                'Sistema de IA decisoria',
+                'Herramienta de interpretación jurídica',
+                'Sustituto de la actividad del órgano competente',
+                'Emisor de actos administrativos',
+                'Evaluador de solvencia o idoneidad',
+                'Sistema que opera en etapa de decisión',
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400">
+                  <X size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Card>
+
+      {/* Sección 7: Alcance */}
+      <Card>
+        <CardTitle as="h3">Alcance de esta PoC</CardTitle>
         <CardText>
-          Esta demo ilustra el diseño conceptual modelando 5 de los 14 procedimientos identificados como sujetos a silencio positivo.
+          Esta prueba de concepto ilustra el diseño conceptual del sistema, modelando 5 de los 14 procedimientos identificados como sujetos a silencio positivo. No utiliza datos reales del ENACOM.
         </CardText>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-4">
           {[
@@ -184,9 +266,12 @@ export function PanelAcercaDe() {
             </div>
           ))}
         </div>
+        <p className="text-[10px] text-muted-foreground italic">
+          Datos demostrativos — escenario proyectado sobre la base del trabajo final.
+        </p>
       </Card>
 
-      {/* Sección 6: Créditos */}
+      {/* Sección 8: Créditos */}
       <Card>
         <div className="flex items-start gap-3">
           <GraduationCap size={24} className="text-primary flex-shrink-0 mt-1" />
@@ -202,7 +287,7 @@ export function PanelAcercaDe() {
       {/* Navegación al siguiente paso */}
       <SiguientePaso
         label="Demo Interactiva"
-        description="Pruebe el sistema en acción con un trámite simulado"
+        description="Pruebe el sistema en acción con un caso simulado"
         onNavigate={() => goToTab('demo-interactiva')}
       />
     </>

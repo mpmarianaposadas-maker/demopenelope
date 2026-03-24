@@ -12,7 +12,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   BarChart3,
-  Shield
+  Shield,
+  Info
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { exportToCSV, generateDemoData, type MetricaRow } from '@/lib/exportCSV';
@@ -142,6 +143,12 @@ export function PanelMetricasOperador() {
 
   return (
     <div className="space-y-6">
+      {/* Disclaimer de simulación */}
+      <div className="bg-amber-50/50 border border-amber-200 rounded-lg p-3 flex items-center gap-2 text-xs text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-300">
+        <Info size={14} className="flex-shrink-0" />
+        <span>Panel ilustrativo de piloto simulado. Los valores no corresponden a datos reales del ENACOM.</span>
+      </div>
+
       {/* Header con badge de acceso restringido */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">

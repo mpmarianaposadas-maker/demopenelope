@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
 import { Table, TableRow, TableCell } from '../Table';
 import { Badge } from '@/components/ui/badge';
@@ -85,22 +84,24 @@ export function PanelTrazabilidad() {
         <div className="space-y-3">
           {[
             {
-              tipo: 'Validación humana',
+              tipo: 'Sugerencia validada por agente',
               icon: <UserCheck className="w-4 h-4 text-green-600" />,
-              badge: 'VALIDACIÓN',
+              badge: 'SUGERENCIA VALIDADA',
               badgeClass: 'bg-green-100 text-green-800 border-green-300',
               responsable: 'agente_demo',
               fecha: '24/02/2026 — 10:32:15',
-              justificacion: 'Confirmación de clasificación "Licencia TIC - Alta Nueva" tras revisión manual del tipo de trámite.',
+              sugerencia: 'Clasificación preliminar: "Licencia TIC - Alta Nueva".',
+              resultado: 'Confirmación de clasificación tras revisión manual del tipo de trámite.',
             },
             {
-              tipo: 'Kill Switch',
+              tipo: 'Kill Switch — Módulo desactivado',
               icon: <Power className="w-4 h-4 text-red-600" />,
-              badge: 'KILL SWITCH',
+              badge: 'MÓDULO DESACTIVADO',
               badgeClass: 'bg-red-100 text-red-800 border-red-300',
               responsable: 'Dir. Nac. Telecomunicaciones',
               fecha: '24/02/2026 — 11:02:08',
-              justificacion: 'Suspensión cautelar del procesamiento automático por detección de anomalía en clasificación. Requiere doble firma para reactivación.',
+              sugerencia: 'N/A — Acción de gobernanza.',
+              resultado: 'Suspensión cautelar del procesamiento asistido por detección de anomalía en clasificación. Requiere doble firma para reactivación.',
             },
           ].map((event, i) => (
             <div key={i} className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-sm space-y-2">
@@ -123,7 +124,10 @@ export function PanelTrazabilidad() {
                   <span>{event.fecha}</span>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground">{event.justificacion}</p>
+              <div className="text-xs text-muted-foreground space-y-1 border-t border-border/30 pt-1.5">
+                <p><span className="font-medium text-foreground/80">Sugerencia emitida:</span> {event.sugerencia}</p>
+                <p><span className="font-medium text-foreground/80">Resultado de revisión:</span> {event.resultado}</p>
+              </div>
             </div>
           ))}
         </div>

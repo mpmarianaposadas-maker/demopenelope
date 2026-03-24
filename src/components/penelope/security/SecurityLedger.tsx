@@ -33,6 +33,11 @@ const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
   CONTROL_PLAZOS: 'Control activo de plazos perentorios',
 };
 
+const ESTADO_LABELS: Record<string, { label: string; className: string }> = {
+  convalidado: { label: 'Sugerencia validada', className: 'border-green-400 text-green-700 bg-green-50' },
+  corregido: { label: 'Sugerencia ajustada por agente', className: 'border-amber-400 text-amber-700 bg-amber-50' },
+};
+
 export function SecurityLedger({ entries, maxVisible = 5, onViewExpediente }: SecurityLedgerProps) {
   const [expanded, setExpanded] = useState(false);
 
@@ -69,84 +74,88 @@ export function SecurityLedger({ entries, maxVisible = 5, onViewExpediente }: Se
           <ScrollArea className={expanded ? 'max-h-[28rem]' : 'max-h-72'}>
             <div className="space-y-3">
               <AnimatePresence mode="popLayout">
-                {visibleEntries.map((entry, index) => (
-                  <motion.div
-                    key={entry.id}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ delay: index * 0.04 }}
-                    className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-xs space-y-2"
-                  >
-                    {/* Header: PromptID + Estado */}
-                    <div className="flex items-center justify-between gap-2 flex-wrap">
-                      <span className="font-mono font-semibold text-foreground">{entry.promptId}</span>
-                      <Badge
-                        variant="outline"
-                        className={
-                          entry.estado === 'convalidado'
-                            ? 'border-green-400 text-green-700 bg-green-50'
-                            : 'border-amber-400 text-amber-700 bg-amber-50'
-                        }
-                      >
-                        {entry.estado === 'convalidado' ? (
-                          <><CheckCircle2 className="w-3 h-3 mr-1" />Convalidado</>
-                        ) : (
-                          <><PenLine className="w-3 h-3 mr-1" />Corregido</>
-                        )}
-                      </Badge>
-                    </div>
+                {visibleEntries.map((entry, index) => {
+                  const estadoInfo = ESTADO_LABELS[entry.estado] ?? ESTADO_LABELS.convalidado;
+                  return (
+                    <motion.div
+                      key={entry.id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ delay: index * 0.04 }}
+                      className="p-3 bg-secondary/30 rounded-lg border border-border/50 text-xs space-y-2"
+                    >
+                      {/* Header: PromptID + Estado */}
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="font-mono font-semibold text-foreground">{entry.promptId}</span>
+                        <Badge variant="outline" className={estadoInfo.className}>
+                          {entry.estado === 'convalidado' ? (
+                            <><CheckCircle2 className="w-3 h-3 mr-1" />{estadoInfo.label}</>
+                          ) : (
+                            <><PenLine className="w-3 h-3 mr-1" />{estadoInfo.label}</>
+                          )}
+                        </Badge>
+                      </div>
 
-                    {/* Tipo de tarea */}
-                    <div className="text-muted-foreground">
-                      {TASK_LABELS[entry.taskType]}
-                    </div>
+                      {/* Tipo de tarea */}
+                      <div className="text-muted-foreground">
+                        {TASK_LABELS[entry.taskType]}
+                      </div>
 
-                    {/* Grid de campos */}
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <FileText className="w-3 h-3 shrink-0" />
-                        <span className="font-medium text-foreground/80">CaseID:</span>
-                        <span className="truncate font-mono">{entry.caseId}</span>
+                      {/* Grid de campos */}
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <FileText className="w-3 h-3 shrink-0" />
+                          <span className="font-medium text-foreground/80">CaseID:</span>
+                          <span className="truncate font-mono">{entry.caseId}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <User className="w-3 h-3 shrink-0" />
+                          <span className="font-medium text-foreground/80">Validador:</span>
+                          <span>{entry.validadorId}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 shrink-0" />
+                          <span>{formatDate(entry.timestamp)} {formatTime(entry.timestamp)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Hash className="w-3 h-3 shrink-0" />
+                          <span className="font-medium text-foreground/80">Hash:</span>
+                          <span className="font-mono truncate">{entry.inputHash}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <User className="w-3 h-3 shrink-0" />
-                        <span className="font-medium text-foreground/80">Validador:</span>
-                        <span>{entry.validadorId}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 shrink-0" />
-                        <span>{formatDate(entry.timestamp)} {formatTime(entry.timestamp)}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Hash className="w-3 h-3 shrink-0" />
-                        <span className="font-medium text-foreground/80">Hash:</span>
-                        <span className="font-mono truncate">{entry.inputHash}</span>
-                      </div>
-                    </div>
 
-                    {/* Output IA */}
-                    <div className="pt-1.5 border-t border-border/30">
-                      <span className="font-medium text-foreground/80 block mb-0.5">Output del modelo:</span>
-                      <p className="text-muted-foreground leading-relaxed">{entry.outputIA}</p>
-                    </div>
-
-                    {/* Link al expediente */}
-                    {onViewExpediente && (
-                      <div className="pt-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 text-xs text-primary gap-1 px-1"
-                          onClick={() => onViewExpediente(entry.caseId)}
-                        >
-                          <Link2 className="w-3 h-3" />
-                          Ver historial del expediente
-                        </Button>
+                      {/* Output IA with clearer labeling */}
+                      <div className="pt-1.5 border-t border-border/30 space-y-1">
+                        <span className="font-medium text-foreground/80 block">Sugerencia emitida por el modelo:</span>
+                        <p className="text-muted-foreground leading-relaxed">{entry.outputIA}</p>
                       </div>
-                    )}
-                  </motion.div>
-                ))}
+
+                      {/* Validación humana */}
+                      <div className="pt-1 border-t border-border/20 flex items-center gap-2 text-[10px]">
+                        <User className="w-3 h-3 text-green-600 shrink-0" />
+                        <span className="text-muted-foreground">
+                          Revisión humana: <span className="font-medium text-foreground">{entry.validadorId}</span> — {estadoInfo.label}
+                        </span>
+                      </div>
+
+                      {/* Link al expediente */}
+                      {onViewExpediente && (
+                        <div className="pt-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 text-xs text-primary gap-1 px-1"
+                            onClick={() => onViewExpediente(entry.caseId)}
+                          >
+                            <Link2 className="w-3 h-3" />
+                            Ver historial del expediente
+                          </Button>
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </div>
           </ScrollArea>

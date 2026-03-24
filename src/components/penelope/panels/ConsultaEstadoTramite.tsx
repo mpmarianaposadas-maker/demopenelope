@@ -18,7 +18,8 @@ import {
   FileCheck,
   Eye,
   Building2,
-  ExternalLink
+  ExternalLink,
+  Info
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
@@ -80,14 +81,14 @@ const estadoConfig: Record<EstadoTramite, { color: string; icon: React.ReactNode
 const etapaLabels: Record<string, Record<EtapaProcedimiento, string>> = {
   es: {
     ingreso: 'Ingreso y caratulación',
-    verificacion: 'Verificación documental',
+    verificacion: 'Verificación documental asistida',
     analisis: 'Análisis sustantivo',
     decision: 'Decisión',
     notificacion: 'Notificación',
   },
   en: {
     ingreso: 'Entry and filing',
-    verificacion: 'Document verification',
+    verificacion: 'Assisted document verification',
     analisis: 'Substantive analysis',
     decision: 'Decision',
     notificacion: 'Notification',
@@ -128,9 +129,9 @@ function generarTramiteSimulado(id: string): TramiteInfo | null {
     ],
     historial: [
       { fecha: fechaIngreso, evento: 'Trámite ingresado por TAD', actor: 'Sistema TAD' },
-      { fecha: new Date(fechaIngreso.getTime() + 2 * 60 * 60 * 1000), evento: 'Documentación recibida — 4 archivos', actor: 'Sistema Penélope' },
-      { fecha: new Date(fechaIngreso.getTime() + 24 * 60 * 60 * 1000), evento: 'Verificación formal iniciada', actor: 'Sistema Penélope' },
-      { fecha: new Date(fechaIngreso.getTime() + 48 * 60 * 60 * 1000), evento: estado === 'verificado' ? 'Verificación completada — derivado a análisis sustantivo' : 'En proceso de verificación formal', actor: estado === 'verificado' ? 'Agente validador' : 'Sistema Penélope' }
+      { fecha: new Date(fechaIngreso.getTime() + 2 * 60 * 60 * 1000), evento: 'Documentación recibida — 4 archivos', actor: 'Sistema Penélope (preprocesamiento)' },
+      { fecha: new Date(fechaIngreso.getTime() + 24 * 60 * 60 * 1000), evento: 'Verificación formal asistida iniciada', actor: 'Sistema Penélope (asistencia)' },
+      { fecha: new Date(fechaIngreso.getTime() + 48 * 60 * 60 * 1000), evento: estado === 'verificado' ? 'Verificación completada — derivado a análisis sustantivo' : 'En proceso de verificación formal asistida', actor: estado === 'verificado' ? 'Agente validador' : 'Sistema Penélope (asistencia)' }
     ]
   };
 }
@@ -180,6 +181,12 @@ export function ConsultaEstadoTramite() {
 
   return (
     <div className="space-y-6">
+      {/* Disclaimer */}
+      <div className="bg-amber-50/50 border border-amber-200 rounded-lg p-3 flex items-center gap-2 text-xs text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-300">
+        <Info size={14} className="flex-shrink-0" />
+        <span>Caso simulado — Los datos corresponden a un escenario demostrativo y no reflejan expedientes reales del ENACOM.</span>
+      </div>
+
       {/* Card de resumen */}
       <Card className={`border-l-4 ${borderColor}`}>
         <CardContent className="pt-6 space-y-4">
@@ -450,7 +457,7 @@ export function ConsultaEstadoTramite() {
             </CardContent>
           </Card>
 
-          {/* Disclaimer institucional — sin referencia a confidencialidad */}
+          {/* Disclaimer institucional */}
           <div className="p-4 bg-secondary/50 rounded-lg border border-border/50 text-xs text-muted-foreground space-y-2">
             <p>{t('trazabilidad.ciudadana.disclaimer')}</p>
           </div>

@@ -94,12 +94,17 @@ export function PanelSimuladorInterno() {
                 </p>
               </div>
             </div>
-            <Badge 
-              variant="outline" 
-              className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 self-start sm:self-center"
-            >
-              🔒 {t('simulador.badge')}
-            </Badge>
+            <div className="flex items-center gap-2 self-start sm:self-center">
+              <Badge 
+                variant="outline" 
+                className="bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30"
+              >
+                {t('simulador.badge')}
+              </Badge>
+              <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700 bg-amber-50">
+                Simulación de piloto
+              </Badge>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
@@ -166,7 +171,7 @@ export function PanelSimuladorInterno() {
       <div className="border-t border-border pt-2 mt-3 flex items-start gap-1.5">
         <Info size={12} className="text-muted-foreground/40 mt-0.5 flex-shrink-0" />
         <p className="text-xs text-muted-foreground/40">
-          Esta demo ilustra el diseño conceptual del sistema. No procesa datos reales ni produce efectos jurídicos. · Anexo II, El viaje de Penélope (2026)
+          PoC académica — Esta simulación ilustra el diseño conceptual del sistema. No procesa datos reales ni produce efectos jurídicos. · Anexo II, El viaje de Penélope (2026)
         </p>
       </div>
     </div>

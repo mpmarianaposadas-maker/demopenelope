@@ -5,6 +5,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Shield, BookOpen, Info, ShieldAlert, AlertTriangle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
+import { ActorLabels } from '../ActorLabel';
 
 import { DEMO_LEDGER_ENTRIES } from '../security/demoLedgerEntries';
 
@@ -63,9 +64,12 @@ export function SecurityDemoPanel() {
 
       {/* Risk Matrix - Anexo III */}
       <Card>
-        <div className="flex items-center gap-2 mb-4">
-          <AlertTriangle className="w-5 h-5 text-amber-600" />
-          <CardTitle>Matriz de Riesgos</CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <CardTitle>Matriz de Riesgos</CardTitle>
+          </div>
+          <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700 bg-amber-50">Escenario proyectado</Badge>
         </div>
         <CardText className="mb-4">
           Evaluación de riesgos conforme al Anexo III del trabajo final. Cada riesgo incluye su nivel inicial, la estrategia de mitigación implementada por Penélope y el nivel residual resultante.
@@ -78,14 +82,15 @@ export function SecurityDemoPanel() {
                 <th className="text-center py-2 px-3 font-semibold text-foreground">Nivel Inicial</th>
                 <th className="text-left py-2 px-3 font-semibold text-foreground">Mitigación</th>
                 <th className="text-center py-2 px-3 font-semibold text-foreground">Residual</th>
+                <th className="text-center py-2 px-3 font-semibold text-foreground">Actor</th>
               </tr>
             </thead>
             <tbody>
               {[
-                { riesgo: 'Sesgo algorítmico', inicial: 'ALTO', mitigacion: 'Dataset curado + Auditorías periódicas', residual: 'BAJO' },
-                { riesgo: 'Alucinaciones', inicial: 'MEDIO', mitigacion: 'Temperatura 0 + Anclaje normativo', residual: 'BAJO' },
-                { riesgo: 'Prompt Injection', inicial: 'ALTO', mitigacion: 'Sanitización + Prompt defensivo', residual: 'MEDIO' },
-                { riesgo: 'Privacidad (PII)', inicial: 'MEDIO', mitigacion: 'Filtros de entrada + Ley 25.326', residual: 'BAJO' },
+                { riesgo: 'Sesgo algorítmico', inicial: 'ALTO', mitigacion: 'Dataset curado + Auditorías periódicas', residual: 'BAJO', actors: ['reglas', 'validacion'] as const },
+                { riesgo: 'Alucinaciones', inicial: 'MEDIO', mitigacion: 'Temperatura 0 + Anclaje normativo', residual: 'BAJO', actors: ['llm', 'validacion'] as const },
+                { riesgo: 'Prompt Injection', inicial: 'ALTO', mitigacion: 'Sanitización + Prompt defensivo', residual: 'MEDIO', actors: ['reglas'] as const },
+                { riesgo: 'Privacidad (PII)', inicial: 'MEDIO', mitigacion: 'Filtros de entrada + Ley 25.326', residual: 'BAJO', actors: ['reglas', 'validacion'] as const },
               ].map((row, i) => (
                 <tr key={i} className="border-b border-border/50">
                   <td className="py-2.5 px-3 font-medium text-foreground">{row.riesgo}</td>
@@ -99,6 +104,9 @@ export function SecurityDemoPanel() {
                     <Badge variant="outline" className={row.residual === 'BAJO' ? 'border-green-300 text-green-700 bg-green-50' : 'border-amber-300 text-amber-700 bg-amber-50'}>
                       {row.residual}
                     </Badge>
+                  </td>
+                  <td className="py-2.5 px-3">
+                    <ActorLabels types={[...row.actors]} />
                   </td>
                 </tr>
               ))}

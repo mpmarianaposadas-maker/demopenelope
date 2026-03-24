@@ -26,6 +26,14 @@ export function PanelMetricas() {
 
   return (
     <>
+      {/* Disclaimer de proyección */}
+      <div className="bg-amber-50/50 border border-amber-200 rounded-lg p-3 flex items-start gap-2 text-xs text-amber-700 dark:bg-amber-950/20 dark:border-amber-800 dark:text-amber-300">
+        <AlertTriangle size={14} className="flex-shrink-0 mt-0.5" />
+        <span>
+          Panel ilustrativo de piloto simulado. Los valores presentados son proyecciones estimadas y no corresponden a datos reales del ENACOM. Escenario proyectado sobre la base de benchmarking internacional.
+        </span>
+      </div>
+
       <Card>
         <CardTitle>{t('metr.title')}</CardTitle>
         <CardText>
@@ -34,10 +42,10 @@ export function PanelMetricas() {
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-6">
           {[
-            { value: '35-40%', subtitle: 'reducción total', note: 'en etapas preliminares' },
+            { value: '35-40%', subtitle: 'reducción proyectada', note: 'en etapas preliminares' },
             { value: '70-100%', subtitle: 'overlap RUPECO', note: 'requisitos reutilizables' },
-            { value: '12-18', subtitle: 'días ganados', note: 'para análisis sustantivo' },
-            { value: '100%', subtitle: 'supervisión humana', note: 'en toda decisión' },
+            { value: '12-18', subtitle: 'días ganados (meta)', note: 'para análisis sustantivo' },
+            { value: '100%', subtitle: 'supervisión humana', note: 'en toda operación' },
           ].map((kpi, i) => (
             <div key={i} className="p-4 bg-secondary rounded-lg text-center transition-all duration-300 ease-out hover:scale-105 hover:shadow-md hover:bg-primary/10 cursor-default group">
               <div className="text-2xl md:text-3xl font-bold text-primary transition-transform duration-300 group-hover:scale-110">{kpi.value}</div>
@@ -50,11 +58,12 @@ export function PanelMetricas() {
 
       <Card>
         <CardTitle as="h3">{t('metr.tiempos.title')}</CardTitle>
+        <Badge variant="outline" className="text-[10px] mb-3 border-amber-300 text-amber-700 bg-amber-50">Escenario simulado — Benchmark de diseño</Badge>
         <Table
           columns={[
             { key: 'fase', header: t('metr.tiempos.col1') },
             { key: 'actual', header: t('metr.tiempos.col2') },
-            { key: 'penelope', header: t('metr.tiempos.col3') },
+            { key: 'penelope', header: `${t('metr.tiempos.col3')} (proyección)` },
             { key: 'reduccion', header: t('metr.tiempos.col4') },
           ]}
         >
@@ -112,12 +121,12 @@ export function PanelMetricas() {
       {/* Indicadores de Éxito - Cap. VIII */}
       <Card>
         <CardTitle as="h3">Indicadores de Éxito (Cap. VIII)</CardTitle>
-        <CardText>Indicadores cualitativos y cuantitativos definidos en el trabajo final para evaluar el impacto de Penélope:</CardText>
+        <CardText>Indicadores cualitativos y cuantitativos definidos en el trabajo final para evaluar el impacto proyectado de Penélope:</CardText>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
           {[
-            { label: 'Tiempo promedio de admisibilidad formal', tipo: 'Cuantitativo' },
-            { label: 'Número de ciclos de subsanación por expediente', tipo: 'Cuantitativo' },
-            { label: 'Porcentaje de reutilización de datos RUPECO', tipo: 'Cuantitativo' },
+            { label: 'Tiempo promedio de admisibilidad formal', tipo: 'Cuantitativo — meta esperada' },
+            { label: 'Número de ciclos de subsanación por expediente', tipo: 'Cuantitativo — objetivo de piloto' },
+            { label: 'Porcentaje de reutilización de datos RUPECO', tipo: 'Cuantitativo — proyección ilustrativa' },
             { label: 'Percepción del administrado', tipo: 'Cualitativo' },
             { label: 'Percepción de los agentes', tipo: 'Cualitativo' },
           ].map((kpi, i) => (
@@ -138,10 +147,10 @@ export function PanelMetricas() {
         <CardText>Hoja de ruta del trabajo final (Cap. VIII, p. 19-21):</CardText>
         <div className="space-y-3 my-4">
           {[
-            { icon: Users, fase: 'Fase 1', titulo: 'Planificación interdisciplinaria', desc: 'Conformación de equipo con perfiles jurídicos, técnicos y de gestión del cambio.' },
+            { icon: Users, fase: 'Fase 1', titulo: 'Planificación interdisciplinaria', desc: 'Conformación de equipo con perfiles jurídicos, técnicos y de gestión organizativa.' },
             { icon: Database, fase: 'Fase 2', titulo: 'Golden Dataset (conjunto de datos curado)', desc: 'Construcción de dataset representativo para evitar automatización acrítica de patrones históricos.' },
             { icon: FlaskConical, fase: 'Fase 3', titulo: 'Piloto controlado', desc: 'Prueba en entorno acotado con expedientes reales y supervisión reforzada.' },
-            { icon: Rocket, fase: 'Fase 4', titulo: 'Despliegue gradual y gestión del cambio', desc: 'Escalado progresivo con modelo ADKAR de acompañamiento institucional.' },
+            { icon: Rocket, fase: 'Fase 4', titulo: 'Despliegue gradual y acompañamiento institucional', desc: 'Escalado progresivo con monitoreo continuo, capacitación y mejora iterativa.' },
           ].map((f, i) => (
             <div key={i} className="flex items-start gap-3 border border-border rounded-lg p-4">
               <div className="bg-primary/10 rounded-full p-2 flex-shrink-0">
@@ -159,7 +168,7 @@ export function PanelMetricas() {
         </div>
       </Card>
 
-      {/* Gestión del Cambio — Anexo IV */}
+      {/* Gestión del Cambio — NO TOCAR */}
       <Card>
         <CardTitle as="h3">Gestión del Cambio</CardTitle>
         <CardText>
@@ -253,6 +262,22 @@ export function PanelMetricas() {
               Los indicadores de impacto y las simulaciones presentadas son proyecciones estimadas (objetivos de diseño), construidas sobre la base de experiencias internacionales comparables (ANATEL - Brasil, OFCOM - Reino Unido) y estudios de organismos multilaterales (BID, OCDE). No reflejan datos empíricos del ENACOM.
             </p>
           </div>
+        </div>
+      </Card>
+
+      {/* Cierre / Conclusión de la PoC */}
+      <Card>
+        <CardTitle as="h3">Síntesis</CardTitle>
+        <div className="bg-primary/5 border-l-4 border-l-primary rounded-r-lg p-4 space-y-3">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Penélope no propone reemplazar la decisión humana. Organiza y asiste etapas preliminares del procedimiento administrativo, liberando tiempo para el análisis sustantivo que corresponde al agente competente.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Esta prueba de concepto muestra un escenario institucional posible, presentado como propuesta académica y no como sistema en producción. Combina innovación con límites claros, trazabilidad, prudencia y gobernanza.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Toda intervención del sistema es acotada, supervisada y reversible. El régimen jurídico aplicable, la responsabilidad del agente público y el debido proceso administrativo permanecen inalterados.
+          </p>
         </div>
       </Card>
     </>

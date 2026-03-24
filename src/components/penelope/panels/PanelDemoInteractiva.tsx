@@ -1,5 +1,6 @@
 import { Card, CardTitle, CardText } from '../Card';
 import { FolderOpen, Wrench } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -13,7 +14,12 @@ export function PanelDemoInteractiva() {
   return (
     <div className="space-y-6">
       <Card>
-        <CardTitle>{t('demo.title')}</CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+          <CardTitle>{t('demo.title')}</CardTitle>
+          <Badge variant="outline" className="text-[10px] border-amber-300 text-amber-700 bg-amber-50">
+            Caso simulado — Datos demostrativos
+          </Badge>
+        </div>
         <CardText>{t('demo.intro1')}</CardText>
         <CardText>{t('demo.intro2')}</CardText>
       </Card>
