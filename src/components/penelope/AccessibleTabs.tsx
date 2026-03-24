@@ -69,6 +69,7 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
       });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTop = 0;
   }, [activeIndex, tabs]);
 
   // Show completion message
