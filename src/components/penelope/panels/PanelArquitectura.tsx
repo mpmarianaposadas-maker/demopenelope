@@ -106,8 +106,8 @@ export function PanelArquitectura() {
             <FlowStep number={1} title="Ingreso por TAD" description="El expediente ingresa por TAD, se genera número GDE." actor="auto" actorTypes={['reglas']} />
             <FlowStep number={2} title="Sanitización Documental" description="Aplanado de capas PDF para prevenir prompt injection." actor="auto" warning="Protección contra texto oculto en documentos (Anexo II)" actorTypes={['reglas']} />
             <FlowStep number={3} title="Clasificación Preliminar Asistida" description="LLM clasifica por tipo y normativa, determina nivel de confianza. Sujeta a validación." actor="mixed" highlighted actorTypes={['reglas', 'llm', 'validacion']} />
-            <FlowStep number={4} title="Confirmación del Operador" description="El agente confirma, corrige o rechaza. Sin confirmación, el flujo no avanza." actor="human" actorTypes={['validacion']} />
-            <FlowStep number={5} title="Verificación Documental Asistida (Once-Only)" description="Consulta RUPECO, verifica completitud formal." actor="auto" actorTypes={['reglas', 'validacion']} />
+            <FlowStep number={4} title="Confirmación del Operador" description="El agente confirma, corrige o rechaza. Sin confirmación, el flujo no avanza." actor="human" actorTypes={['humano-exclusivo']} />
+            <FlowStep number={5} title="Control Documental con Interoperabilidad RUPECO (Once-Only)" description="Consulta RUPECO, verifica completitud formal por reglas de negocio." actor="auto" actorTypes={['reglas', 'validacion']} />
 
             {/* Bifurcación */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
