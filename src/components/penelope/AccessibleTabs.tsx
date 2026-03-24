@@ -213,10 +213,10 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         {/* Tab panels */}
         <div className="border border-t-0 border-border rounded-b-lg bg-card overflow-hidden">
           {/* Tour progress indicator */}
-          {tourVisited > 0 && tourVisited < TOUR_TABS.length && (
+          {tourVisited >= 0 && tourVisited < TOUR_TABS.length && (
             <div className="flex items-center gap-2 justify-end px-4 pt-3">
-              <span className="text-[11px] text-muted-foreground">{tourVisited}/{TOUR_TABS.length} del recorrido</span>
-              <Progress value={(tourVisited / TOUR_TABS.length) * 100} className="h-1.5 w-20" />
+              <span className="text-[11px] text-muted-foreground">Sección {Math.min(tourVisited + 1, TOUR_TABS.length)} de {TOUR_TABS.length}</span>
+              <Progress value={((tourVisited + 1) / TOUR_TABS.length) * 100} className="h-1.5 w-24" />
             </div>
           )}
           {showComplete && (

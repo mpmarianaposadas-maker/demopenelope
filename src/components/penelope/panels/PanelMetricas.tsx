@@ -141,10 +141,10 @@ export function PanelMetricas() {
         </div>
       </Card>
 
-      {/* Fases de Implementación - Cap. VIII */}
+      {/* Fases de Implementación */}
       <Card>
         <CardTitle as="h3">Fases de Implementación</CardTitle>
-        <CardText>Hoja de ruta del trabajo final (Cap. VIII, p. 19-21):</CardText>
+        <CardText>Hoja de ruta propuesta para el despliegue gradual de Penélope:</CardText>
         <div className="space-y-3 my-4">
           {[
             { icon: Users, fase: 'Fase 1', titulo: 'Planificación interdisciplinaria', desc: 'Conformación de equipo con perfiles jurídicos, técnicos y de gestión organizativa.' },
