@@ -149,7 +149,7 @@ export function ProvidenciaIntimacion({
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-amber-600" />
             <CardTitle className="text-base text-amber-800 dark:text-amber-200">
-              Borrador de Nota de Intimación
+              Borrador de Nota de Solicitud de Documentación Faltante
             </CardTitle>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
