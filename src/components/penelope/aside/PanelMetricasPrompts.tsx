@@ -35,9 +35,8 @@ export function PanelMetricasPrompts() {
       <p className="text-xs text-muted-foreground -mt-3 mb-3">
         Registro de interacciones con el modelo de IA
       </p>
-      </div>
 
-      {/* Entries - closing div moved above */}
+      {/* Entries */}
       <div className="space-y-3">
         {entries.slice(-3).map((entry) => (
           <div key={entry.id} className="p-2.5 rounded-lg bg-secondary/40 border border-border/40 space-y-1.5 text-xs">
