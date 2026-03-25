@@ -640,7 +640,8 @@ export function useChatRupecoSimulado() {
         timestamp: new Date(),
       },
     ]);
-  }, []);
+    triggerScrollToTop();
+  }, [triggerScrollToTop]);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {
