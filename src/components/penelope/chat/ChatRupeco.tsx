@@ -86,7 +86,7 @@ export function ChatRupeco() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, evaluation, requisitosData, historialAcciones, clasificacionPendiente]);
+  }, [messages]);
 
   // Smooth scroll to requisitos section when it first appears (post-classification)
   useEffect(() => {
