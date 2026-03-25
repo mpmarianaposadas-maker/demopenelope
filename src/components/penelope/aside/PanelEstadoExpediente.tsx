@@ -33,7 +33,7 @@ const stepsExternos = [
 
 export function PanelEstadoExpediente() {
   const { t } = useLanguage();
-  const { tipoTramite } = useTipoTramite();
+  const tipoTramite = 'Licencia TIC - Alta nueva';
 
   const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
 

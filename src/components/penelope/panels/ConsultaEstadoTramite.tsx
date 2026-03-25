@@ -268,9 +268,13 @@ export function ConsultaEstadoTramite() {
                 onKeyDown={(e) => e.key === 'Enter' && handleBuscar()}
                 className="bg-background"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('trazabilidad.ciudadana.formato')}
-              </p>
+              {errorValidacion ? (
+                <p className="text-sm text-red-500 mt-1">{errorValidacion}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('trazabilidad.ciudadana.formato')}
+                </p>
+              )}
             </div>
             <Button 
               onClick={handleBuscar} 
