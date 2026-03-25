@@ -32,9 +32,6 @@ export function PanelMetricasPrompts() {
           {entries.length} interacciones
         </Badge>
       </div>
-      <p className="text-xs text-muted-foreground -mt-3 mb-3">
-        Registro de interacciones con el modelo de IA
-      </p>
 
       {/* Entries */}
       <div className="space-y-3">

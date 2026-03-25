@@ -3,7 +3,6 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { TabNavigationContext } from '@/contexts/TabNavigationContext';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
 import { Check, ChevronRight } from 'lucide-react';
 
 interface Tab {
@@ -239,25 +238,6 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
               transition={{ duration: 0.25, ease: "easeOut" }}
             >
               {children[activeIndex]}
-
-              {/* Footer: Next section button */}
-              <div className="mt-6 pt-4 border-t border-border flex items-center justify-end gap-3">
-                <span className="text-xs text-muted-foreground">
-                  Siguiente: {t(tabs[(activeIndex + 1) % tabs.length]?.i18nKey)}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    const nextIndex = (activeIndex + 1) % tabs.length;
-                    setActiveIndex(nextIndex);
-                    setVisitedTabs(prev => new Set(prev).add(tabs[nextIndex].id));
-                  }}
-                  className="gap-1.5"
-                >
-                  {activeIndex === tabs.length - 1 ? '→ Volver al inicio' : '→ Siguiente sección'}
-                </Button>
-              </div>
             </motion.section>
           </AnimatePresence>
         </div>
