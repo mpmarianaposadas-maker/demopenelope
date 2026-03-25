@@ -126,6 +126,8 @@ export function useChatRupecoSimulado() {
   const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
   const [historialAcciones, setHistorialAcciones] = useState<AccionAgente[]>([]);
   const [clasificacionPendiente, setClasificacionPendiente] = useState<ClasificacionPendiente | null>(null);
+  const [scrollToTopCounter, setScrollToTopCounter] = useState(0);
+  const triggerScrollToTop = useCallback(() => setScrollToTopCounter(c => c + 1), []);
 
   // Helper to add a ledger entry
   const registrarLedger = useCallback((
@@ -484,6 +486,7 @@ export function useChatRupecoSimulado() {
         timestamp: new Date(),
       },
     ]);
+    triggerScrollToTop();
 
     setCurrentStep('validacion_documental');
     setTipoTramite(tramiteConfirmado.nombre);
@@ -616,9 +619,10 @@ export function useChatRupecoSimulado() {
 
         setCurrentStep('evaluacion');
         setIsLoading(false);
+        triggerScrollToTop();
       }, 600);
     }, 600);
-  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger]);
+  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Cancelar la clasificación
   const cancelarClasificacion = useCallback(() => {
@@ -636,7 +640,8 @@ export function useChatRupecoSimulado() {
         timestamp: new Date(),
       },
     ]);
-  }, []);
+    triggerScrollToTop();
+  }, [triggerScrollToTop]);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {
@@ -727,7 +732,8 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion, registrarLedger]);
+    triggerScrollToTop();
+  }, [expediente, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para rechazar el expediente completo
   const rechazarExpediente = useCallback((agenteNombre: string, motivoRechazo: string) => {
@@ -780,7 +786,8 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion, registrarLedger]);
+    triggerScrollToTop();
+  }, [expediente, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para revertir la decisión
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
@@ -846,10 +853,11 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       },
     ]);
     
+    triggerScrollToTop();
     setTimeout(() => {
       setAprobacion(null);
     }, 100);
-  }, [expediente, aprobacion, agregarAccion, registrarLedger]);
+  }, [expediente, aprobacion, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
@@ -955,5 +963,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
+    scrollToTopCounter,
   };
 }

@@ -73,6 +73,7 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
+    scrollToTopCounter,
   } = useChatRupecoSimulado();
 
   // Scroll to top on mount and reset (messages.length === 1 means initial state)
@@ -88,6 +89,17 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Scroll to top when triggered by actions (confirmar, aprobar, rechazar, etc.)
+  useEffect(() => {
+    if (scrollToTopCounter > 0 && scrollRef.current) {
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = 0;
+        }
+      }, 150);
+    }
+  }, [scrollToTopCounter]);
 
   // Notify parent about approval state changes
   useEffect(() => {
