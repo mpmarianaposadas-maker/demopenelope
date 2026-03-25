@@ -409,7 +409,7 @@ export const translations: Record<Language, Translations> = {
     'borr.nota.texto4': 'a la entidad solicitante a que en el plazo de',
     'borr.nota.texto5': 'contados a partir de la notificación de la presente, proceda a subsanar la irregularidad detallada.',
     'borr.nota.texto6': 'La documentación requerida deberá ser presentada a través del sistema de Trámites a Distancia (TAD) de la Administración Pública Nacional, citando el número de expediente de referencia.',
-    'borr.nota.texto7': 'La presentación oportuna de la documentación solicitada permitirá la continuación del análisis técnico-sustantivo del expediente.',
+    'borr.nota.texto7': 'La presentación oportuna de la documentación solicitada posibilitará la continuación de su pedido en tiempo y forma.',
     'borr.nota.cierre': 'Sin otro particular, saludo a Usted atentamente.',
     'borr.nota.instrucciones': 'Pasos para carga en GDE:',
     'borr.nota.paso1': 'Validar datos del destinatario',
