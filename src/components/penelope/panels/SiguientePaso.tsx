@@ -5,9 +5,10 @@ interface SiguientePasoProps {
   label: string;
   description: string;
   onNavigate: () => void;
+  icon?: React.ReactNode;
 }
 
-export function SiguientePaso({ label, description, onNavigate }: SiguientePasoProps) {
+export function SiguientePaso({ label, description, onNavigate, icon }: SiguientePasoProps) {
   return (
     <div className="mt-6 bg-secondary/30 rounded-lg p-4 border border-border">
       <p className="text-xs text-muted-foreground mb-2">Siguiente paso sugerido:</p>
@@ -20,7 +21,7 @@ export function SiguientePaso({ label, description, onNavigate }: SiguientePasoP
           className="flex-shrink-0"
         >
           {label}
-          <ArrowRight size={14} className="ml-1.5" />
+          {icon || <ArrowRight size={14} className="ml-1.5" />}
         </Button>
       </div>
     </div>

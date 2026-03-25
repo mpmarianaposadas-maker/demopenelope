@@ -60,11 +60,12 @@ function generarTextoNota(
           NOTA DE INTIMACIÓN
 ═══════════════════════════════════════════════════════════════════
 
+Número de Nota: [ Campo a completar por el agente ]
 Expediente: ${expediente.numero}
 Fecha: ${fechaActual}
 
 Destinatario: ${expediente.caratula.split(' s/')[0]}
-Domicilio constituido: [Domicilio registrado en TAD]
+Domicilio constituido: [ Campo a completar por el agente ]
 
 Ref.: INTIMACIÓN - Subsanación documental
 
@@ -99,6 +100,9 @@ La documentación requerida deberá ser presentada a través del sistema
 de Trámites a Distancia (TAD), citando el número de expediente.
 
 Sin otro particular, saludo a Ud. atentamente.
+
+[ Firma del agente — Campo a completar por el agente ]
+[ Cargo y dependencia — Campo a completar por el agente ]
 `.trim();
 }
 
