@@ -67,7 +67,7 @@ Fecha: ${fechaActual}
 Destinatario: ${expediente.caratula.split(' s/')[0]}
 Domicilio constituido: [ Campo a completar por el agente ]
 
-Ref.: INTIMACIÓN - Subsanación documental
+Ref.: Solicitud de documentación EX [ Completar con el número otorgado por el Sistema TAD ]
 
 De mi consideración:
 
