@@ -126,6 +126,8 @@ export function useChatRupecoSimulado() {
   const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
   const [historialAcciones, setHistorialAcciones] = useState<AccionAgente[]>([]);
   const [clasificacionPendiente, setClasificacionPendiente] = useState<ClasificacionPendiente | null>(null);
+  const [scrollToTopCounter, setScrollToTopCounter] = useState(0);
+  const triggerScrollToTop = useCallback(() => setScrollToTopCounter(c => c + 1), []);
 
   // Helper to add a ledger entry
   const registrarLedger = useCallback((
