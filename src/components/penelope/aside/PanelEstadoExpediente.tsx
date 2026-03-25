@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTipoTramite } from '@/contexts/TipoTramiteContext';
+import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays, Info, User } from 'lucide-react';
 import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays, Info, User } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
