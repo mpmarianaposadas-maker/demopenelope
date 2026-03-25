@@ -57,7 +57,7 @@ function generarTextoNota(
   return `
 ═══════════════════════════════════════════════════════════════════
           ENTE NACIONAL DE COMUNICACIONES - ENACOM
-          NOTA DE INTIMACIÓN
+          NOTA DE SOLICITUD DE DOCUMENTACIÓN FALTANTE U OBSERVADA FORMALMENTE
 ═══════════════════════════════════════════════════════════════════
 
 Número de Nota: [ Campo a completar por el agente ]
@@ -67,7 +67,7 @@ Fecha: ${fechaActual}
 Destinatario: ${expediente.caratula.split(' s/')[0]}
 Domicilio constituido: [ Campo a completar por el agente ]
 
-Ref.: INTIMACIÓN - Subsanación documental
+Ref.: Solicitud de documentación EX [ Completar con el número otorgado por el Sistema TAD ]
 
 De mi consideración:
 
@@ -149,7 +149,7 @@ export function ProvidenciaIntimacion({
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-amber-600" />
             <CardTitle className="text-base text-amber-800 dark:text-amber-200">
-              Borrador de Nota de Intimación
+              Borrador de Nota de Solicitud de Documentación Faltante
             </CardTitle>
           </div>
           <div className="flex items-center gap-2 flex-wrap">

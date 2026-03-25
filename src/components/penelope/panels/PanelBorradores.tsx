@@ -69,8 +69,12 @@ export function PanelBorradores() {
             ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
           </p>
           <p>{t('borr.nota.domicilio')}</p>
-          <p>{t('borr.nota.presente')}</p>
-          <p className="font-semibold">{t('borr.nota.refIntimacion')}</p>
+          <p className="font-semibold">
+            {t('borr.nota.refIntimacion')}{' '}
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
+              [Completar con el número otorgado por el Sistema TAD]
+            </span>
+          </p>
           
           <p className="leading-relaxed">{t('borr.nota.texto1')}</p>
           <p className="leading-relaxed">{t('borr.nota.texto2')}</p>
