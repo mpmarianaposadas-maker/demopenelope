@@ -245,7 +245,6 @@ export function ProvidenciaIntimacion({
               )}
             </pre>
           </div>
-          </div>
         </details>
         
         {/* Acciones */}
