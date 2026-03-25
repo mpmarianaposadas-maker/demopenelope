@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { RotateCcw, Bot, AlertTriangle, ChevronDown, Radio, Tv, Mail, RefreshCw, ClipboardList, ArrowRight } from 'lucide-react';
+import { RotateCcw, Bot, AlertTriangle, Radio, Tv, Mail, RefreshCw, ClipboardList, ArrowRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ChatMessage } from './ChatMessage';
 import { ChatInput } from './ChatInput';
@@ -40,9 +40,8 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
   const requisitosRef = useRef<HTMLDivElement>(null);
-  const [showScrollHint, setShowScrollHint] = useState(false);
+  const clasificacionRef = useRef<HTMLDivElement>(null);
   const [showFade, setShowFade] = useState(true);
-  const prevRequisitosRef = useRef(false);
   const historialRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
@@ -50,14 +49,6 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     if (!el) return;
     const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 24;
     setShowFade(!atBottom);
-
-    // Hide hint when historial is visible in viewport
-    if (historialRef.current) {
-      const rect = historialRef.current.getBoundingClientRect();
-      const containerRect = el.getBoundingClientRect();
-      const historialVisible = rect.top < containerRect.bottom;
-      if (historialVisible) setShowScrollHint(false);
-    }
   }, []);
   
   const { 
@@ -79,7 +70,6 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero,
-    // Nuevas funciones para clasificación
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
@@ -104,22 +94,25 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     onAprobacionChange?.(aprobacion?.aprobado === true);
   }, [aprobacion, onAprobacionChange]);
 
-  // Smooth scroll to requisitos section when it first appears (post-classification)
+  // Scroll to clasificación panel when it appears (after trámite selection)
   useEffect(() => {
-    if (requisitosData && !prevRequisitosRef.current) {
-      setShowScrollHint(false);
+    if (clasificacionPendiente && clasificacionRef.current) {
+      setTimeout(() => {
+        clasificacionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [clasificacionPendiente]);
+
+  // Scroll to requisitos panel when it first appears (after confirmation)
+  const prevRequisitosRef = useRef(false);
+  useEffect(() => {
+    if (requisitosData && !prevRequisitosRef.current && requisitosRef.current) {
+      setTimeout(() => {
+        requisitosRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
     prevRequisitosRef.current = !!requisitosData;
   }, [requisitosData]);
-
-  // Show scroll hint when clasificación is pending
-  useEffect(() => {
-    if (clasificacionPendiente) {
-      setShowScrollHint(true);
-    } else if (!requisitosData) {
-      setShowScrollHint(false);
-    }
-  }, [clasificacionPendiente, requisitosData]);
 
   const showQuickActions = messages.length === 1;
   const showProgress = currentStep !== 'inicio';
@@ -206,27 +199,12 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
 
           {/* Panel de confirmación de clasificación */}
           {clasificacionPendiente && (
-            <div className="mt-4">
+            <div className="mt-4" ref={clasificacionRef}>
               <ClasificacionConfirmacion
                 clasificacion={clasificacionPendiente}
                 onConfirmar={confirmarClasificacion}
                 onRechazar={cancelarClasificacion}
               />
-              {/* Indicador de scroll: más contenido abajo */}
-              {showScrollHint && historialAcciones.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => historialRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-                  className="mt-3 flex flex-col items-center gap-2 cursor-pointer bg-transparent border-none w-full"
-                >
-                  <div className="p-2 rounded-full bg-primary text-primary-foreground shadow-md">
-                    <ChevronDown className="h-5 w-5" />
-                  </div>
-                  <p className="text-xs text-center max-w-sm font-medium text-primary">
-                    Ir al Historial de Acciones
-                  </p>
-                </button>
-              )}
             </div>
           )}
 

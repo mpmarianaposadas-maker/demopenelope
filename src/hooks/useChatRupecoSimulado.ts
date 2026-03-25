@@ -5,6 +5,7 @@ import { AccionAgente, TipoAccion } from '@/components/penelope/chat/HistorialAc
 import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useSecurityValidation } from '@/hooks/useSecurityValidation';
+import { useLedger } from '@/contexts/LedgerContext';
 import { 
   TRAMITES_ENAC, 
   NUCLEO_RUPECO, 
@@ -49,7 +50,6 @@ interface DocumentoDetectado {
   articuloEspecifico?: string;
   validadoPorAgente?: boolean;
   observacionAgente?: string;
-  // Nuevos campos para verificación documental reformada
   estadoIA: EstadoDeteccion;
   ordenExpediente: string;
   comentarioBrief?: string;
@@ -86,6 +86,9 @@ interface ExpedienteSimulado {
 const generateId = () => Math.random().toString(36).substring(2, 9);
 const generateExpedienteNum = () => `EX-2026-${Math.floor(Math.random() * 90000000 + 10000000)}-APN-ENACOM`;
 
+let ledgerSeq = 1236; // Start after demo entries PNL-2026-001234 and PNL-2026-001235
+const nextPromptId = () => `PNL-2026-${String(ledgerSeq++).padStart(6, '0')}`;
+
 const MENSAJE_INICIAL = `## Sistema de Verificación Documental ENACOM
 
 **Penélope** — Módulo de Admisibilidad Formal
@@ -106,6 +109,7 @@ export function useChatRupecoSimulado() {
   const { setTipoTramite } = useTipoTramite();
   const { isSystemActive } = useKillSwitch();
   const { validateInput } = useSecurityValidation();
+  const { agregarEntrada } = useLedger();
   
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -122,6 +126,25 @@ export function useChatRupecoSimulado() {
   const [aprobacion, setAprobacion] = useState<AprobacionExpediente | null>(null);
   const [historialAcciones, setHistorialAcciones] = useState<AccionAgente[]>([]);
   const [clasificacionPendiente, setClasificacionPendiente] = useState<ClasificacionPendiente | null>(null);
+
+  // Helper to add a ledger entry
+  const registrarLedger = useCallback((
+    caseId: string,
+    taskType: 'VERIFICACION_VIGENCIA' | 'CLASIFICACION_PRELIMINAR' | 'GENERACION_PROVIDENCIA' | 'DETECCION_FALTANTES' | 'CONTROL_PLAZOS',
+    outputIA: string,
+    estado: 'convalidado' | 'corregido' = 'convalidado',
+  ) => {
+    agregarEntrada({
+      caseId,
+      promptId: nextPromptId(),
+      taskType,
+      inputHash: `${Math.random().toString(36).substring(2, 10)}...${Math.random().toString(36).substring(2, 6)}`,
+      outputIA,
+      validadorId: 'AGT-López, M.',
+      timestamp: new Date(),
+      estado,
+    });
+  }, [agregarEntrada]);
 
   // Función para agregar una acción al historial
   const agregarAccion = useCallback((
@@ -151,28 +174,23 @@ export function useChatRupecoSimulado() {
     let ambiguo = false;
     let confianza = 0;
     
-    // Buscar por código ENAC
     for (const tramite of TRAMITES_ENAC) {
       if (lower.includes(tramite.codigo.toLowerCase())) {
         tramiteDetectado = tramite;
-        confianza = 95; // Alta confianza si menciona código exacto
+        confianza = 95;
         break;
       }
     }
     
-    // Buscar por palabras clave si no encontramos código
     if (!tramiteDetectado) {
-      // Licencia TIC nueva
       if (lower.includes('tic') && (lower.includes('nueva') || lower.includes('alta'))) {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
         confianza = 85;
       }
-      // Modificación TIC
       else if (lower.includes('tic') && (lower.includes('modific') || lower.includes('societar'))) {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00063') || null;
         confianza = 80;
       }
-      // Actualización RUPECO
       else if (lower.includes('rupeco') || (lower.includes('actualiz') && lower.includes('dato'))) {
         tramiteDetectado = {
           codigo: 'ENAC00064',
@@ -186,32 +204,26 @@ export function useChatRupecoSimulado() {
         };
         confianza = 85;
       }
-      // Audiovisual
       else if (lower.includes('audiovisual') || lower.includes('televisión') || lower.includes('radio')) {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00025') || null;
         confianza = 80;
       }
-      // Postal
       else if (lower.includes('postal') || lower.includes('correo')) {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00013') || null;
         confianza = 85;
       }
-      // Palabras genéricas - baja confianza
       else if (lower.includes('licencia') || lower.includes('tic')) {
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
         confianza = 55;
-        ambiguo = true; // Evidencia muy genérica
+        ambiguo = true;
       }
-      // RUPECO solo no está en categorías permitidas de esta demo
       else if (lower.includes('rupeco') || lower.includes('inscripción') || lower.includes('registro')) {
-        // Redirigir a la categoría más cercana o marcar ambiguo
         tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
         confianza = 40;
         ambiguo = true;
       }
     }
     
-    // Si no detectamos nada específico, marcar como muy ambiguo
     if (!tramiteDetectado) {
       tramiteDetectado = TRAMITES_ENAC.find(t => t.codigo === 'ENAC00062') || null;
       confianza = 30;
@@ -226,7 +238,7 @@ export function useChatRupecoSimulado() {
     if (lower.includes('humana') || lower.includes('física') || lower.includes('fisico') || lower.includes('particular')) {
       return 'humana';
     }
-    return 'juridica'; // Default a jurídica
+    return 'juridica';
   };
 
   const simularExtraccionDocumental = useCallback((
@@ -236,7 +248,6 @@ export function useChatRupecoSimulado() {
     const { rupeco, adicionales } = getDocumentosRequeridos(tipoPersona, tramite?.codigo);
     const todosDocumentos = [...rupeco, ...adicionales];
     
-    // Obtener info completa del documento
     const getDocInfo = (docId: string) => {
       const docRupeco = NUCLEO_RUPECO.flatMap(b => b.documentos).find(d => d.id === docId);
       if (docRupeco) {
@@ -252,7 +263,6 @@ export function useChatRupecoSimulado() {
       };
     };
 
-    // Simular número de orden en el expediente electrónico (Decreto 336/17)
     const generarOrdenExpediente = (index: number, detectado: boolean): string => {
       if (!detectado) return 'No localizado';
       const ordenNum = index + 1;
@@ -267,7 +277,6 @@ export function useChatRupecoSimulado() {
       return ubicaciones[Math.floor(Math.random() * ubicaciones.length)];
     };
 
-    // Generar comentario breve según estado
     const generarComentarioBrief = (estadoIA: EstadoDeteccion, problemaOCR: boolean): string => {
       if (estadoIA === 'verde') {
         const comentarios = [
@@ -290,17 +299,15 @@ export function useChatRupecoSimulado() {
       }
     };
     
-    // Simular detección con probabilidades realistas
     return todosDocumentos.map((doc, index) => {
       const probabilidadDeteccion = Math.random();
-      const detectado = probabilidadDeteccion > 0.3; // 70% de probabilidad de detección
+      const detectado = probabilidadDeteccion > 0.3;
       const nivelConfianza = detectado 
-        ? 60 + Math.random() * 40 // Entre 60% y 100%
+        ? 60 + Math.random() * 40
         : 0;
       
       const docInfo = getDocInfo(doc.id);
       
-      // Determinar estado IA (semáforo) basado en detección y confianza
       let estadoIA: EstadoDeteccion;
       let problemaOCR = false;
       
@@ -310,7 +317,7 @@ export function useChatRupecoSimulado() {
         estadoIA = 'verde';
       } else {
         estadoIA = 'amarillo';
-        problemaOCR = Math.random() > 0.5; // 50% de probabilidad de problema OCR
+        problemaOCR = Math.random() > 0.5;
       }
       
       const ordenExpediente = generarOrdenExpediente(index, detectado);
@@ -382,18 +389,23 @@ export function useChatRupecoSimulado() {
       `Expediente: ${numExp} | Tipo: ${tipoPersona === 'humana' ? 'Persona Humana' : 'Persona Jurídica'}`,
     );
 
+    // Ledger: selección de trámite
+    registrarLedger(
+      numExp,
+      'CLASIFICACION_PRELIMINAR',
+      `Trámite seleccionado: ${tramite.nombre} (${tramite.codigo}). Tipo persona: ${tipoPersona === 'humana' ? 'Humana' : 'Jurídica'}.`,
+    );
+
     // Simular procesamiento en etapas
     setTimeout(() => {
       setCurrentStep('clasificacion_ia');
       
       setTimeout(() => {
-        // Calcular nivel de confianza cualitativo
         const nivelConfianzaCualitativo = getNivelConfianzaCualitativo(confianza);
         const alcanzadoPorSilencioPositivo = tramite.plazoSilencioPositivo > 0;
         const fechaVencimiento = new Date();
         fechaVencimiento.setDate(fechaVencimiento.getDate() + tramite.plazoSilencioPositivo);
 
-        // Crear expediente preliminar (sin documentos todavía)
         const expPreliminar: ExpedienteSimulado = {
           numero: numExp,
           caratula,
@@ -406,7 +418,6 @@ export function useChatRupecoSimulado() {
         };
         setExpediente(expPreliminar);
 
-        // Crear clasificación pendiente de confirmación
         const clasificacion: ClasificacionPendiente = {
           tramite,
           tipoPersona,
@@ -419,7 +430,6 @@ export function useChatRupecoSimulado() {
         };
         setClasificacionPendiente(clasificacion);
 
-        // Generar mensaje de clasificación — solo prosa, sin tablas ni duplicación con la tarjeta
         let mensajeClasificacion: string;
         
         if (!ambiguo) {
@@ -442,7 +452,7 @@ export function useChatRupecoSimulado() {
         setIsLoading(false);
       }, 600);
     }, 400);
-  }, [agregarAccion]);
+  }, [agregarAccion, registrarLedger]);
 
   // Confirmar la clasificación y continuar con validación documental
   const confirmarClasificacion = useCallback((tramiteConfirmado: TramiteENAC) => {
@@ -451,7 +461,6 @@ export function useChatRupecoSimulado() {
     setIsLoading(true);
     setClasificacionPendiente(null);
 
-    // Registrar confirmación en historial
     agregarAccion(
       'clasificacion_confirmada' as TipoAccion,
       `Clasificación confirmada: ${tramiteConfirmado.nombre}`,
@@ -459,7 +468,13 @@ export function useChatRupecoSimulado() {
       `Tipo original detectado: ${clasificacionPendiente.tramite.nombre} | Confianza: ${clasificacionPendiente.nivelConfianza}`,
     );
 
-    // Agregar mensaje de confirmación
+    // Ledger: clasificación confirmada
+    registrarLedger(
+      expediente.numero,
+      'CLASIFICACION_PRELIMINAR',
+      `Clasificación confirmada por operador: ${tramiteConfirmado.nombre}. Confianza IA: ${clasificacionPendiente.nivelConfianza}.`,
+    );
+
     setMessages(prev => [
       ...prev,
       {
@@ -494,12 +509,26 @@ export function useChatRupecoSimulado() {
 
       setExpediente(expedienteActualizado);
 
+      // Ledger: verificación documental completada
+      const detectados = documentosDetectados.filter(d => d.detectado);
+      const faltantes = documentosDetectados.filter(d => !d.detectado);
+      registrarLedger(
+        expediente.numero,
+        'VERIFICACION_VIGENCIA',
+        `Verificación documental: ${detectados.length}/${documentosDetectados.length} documentos detectados. Confianza global: ${nivelConfianzaGlobal}%.`,
+      );
+
+      if (faltantes.length > 0) {
+        registrarLedger(
+          expediente.numero,
+          'DETECCION_FALTANTES',
+          `Faltantes detectados: ${faltantes.map(f => f.nombre).join(', ')}.`,
+        );
+      }
+
       setTimeout(() => {
         setCurrentStep('resultado');
         
-        // Generar informe de resultado
-        const detectados = documentosDetectados.filter(d => d.detectado);
-        const faltantes = documentosDetectados.filter(d => !d.detectado);
         const porcentaje = Math.round((detectados.length / documentosDetectados.length) * 100);
         const accion = determinarAccionPorConfianza(nivelConfianzaGlobal);
 
@@ -558,6 +587,13 @@ export function useChatRupecoSimulado() {
           informe += `**Control de plazos (Decreto N° 971/2024 — PEHAR)**\n`;
           informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
           informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
+
+          // Ledger: generación de borrador de intimación
+          registrarLedger(
+            expediente.numero,
+            'GENERACION_PROVIDENCIA',
+            `Borrador de intimación generado. ${faltantes.length} documento(s) faltante(s). Plazo: ${diasRestantes} días hábiles.`,
+          );
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
           informe += `---\n\n### EXPEDIENTE COMPLETO\n\n`;
@@ -565,7 +601,6 @@ export function useChatRupecoSimulado() {
           informe += `> No se requiere intimación al administrado.\n`;
         }
 
-        // Agregar mensaje con el informe
         setMessages(prev => [
           ...prev,
           {
@@ -576,7 +611,6 @@ export function useChatRupecoSimulado() {
           },
         ]);
 
-        // Generar evaluación
         const evalData = generarEvaluacionJSON(expedienteActualizado);
         setEvaluation(evalData);
 
@@ -584,7 +618,7 @@ export function useChatRupecoSimulado() {
         setIsLoading(false);
       }, 600);
     }, 600);
-  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion]);
+  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger]);
 
   // Cancelar la clasificación
   const cancelarClasificacion = useCallback(() => {
@@ -614,7 +648,6 @@ export function useChatRupecoSimulado() {
       return;
     }
 
-    // Agregar mensaje del usuario (selección de trámite)
     const userMessage: Message = {
       id: generateId(),
       role: 'user',
@@ -624,7 +657,6 @@ export function useChatRupecoSimulado() {
 
     setMessages(prev => [...prev, userMessage]);
     
-    // Iniciar clasificación (ahora requiere confirmación)
     iniciarClasificacion(content);
   }, [isSystemActive, validateInput, iniciarClasificacion]);
 
@@ -657,16 +689,22 @@ export function useChatRupecoSimulado() {
       observaciones,
     };
     
-    // Registrar en historial
     agregarAccion(
       'aprobar_expediente',
       `Expediente ${expediente.numero} aprobado`,
       agenteNombre,
       observaciones,
     );
+
+    // Ledger: aprobación
+    registrarLedger(
+      expediente.numero,
+      'CONTROL_PLAZOS',
+      `Expediente aprobado por ${agenteNombre}. Derivado a análisis técnico-jurídico.${observaciones ? ` Obs: ${observaciones}` : ''}`,
+    );
+
     setAprobacion(nuevaAprobacion);
     
-    // Agregar mensaje de confirmación
     setMessages(prev => [
       ...prev,
       {
@@ -689,7 +727,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion]);
+  }, [expediente, agregarAccion, registrarLedger]);
 
   // Función para rechazar el expediente completo
   const rechazarExpediente = useCallback((agenteNombre: string, motivoRechazo: string) => {
@@ -703,17 +741,23 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       motivoRechazo,
     };
     
-    // Registrar en historial
     agregarAccion(
       'rechazar_expediente',
       `Expediente ${expediente.numero} rechazado`,
       agenteNombre,
       motivoRechazo,
     );
+
+    // Ledger: rechazo
+    registrarLedger(
+      expediente.numero,
+      'CONTROL_PLAZOS',
+      `Expediente rechazado por ${agenteNombre}. Motivo: ${motivoRechazo}.`,
+      'corregido',
+    );
     
     setAprobacion(nuevoRechazo);
     
-    // Agregar mensaje de confirmación
     setMessages(prev => [
       ...prev,
       {
@@ -736,7 +780,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion]);
+  }, [expediente, agregarAccion, registrarLedger]);
 
   // Función para revertir la decisión
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
@@ -744,15 +788,21 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     
     const decisionOriginal = aprobacion.aprobado ? 'APROBACIÓN' : 'RECHAZO';
     
-    // Registrar en historial
     agregarAccion(
       'revertir_decision',
       `Decisión de ${decisionOriginal.toLowerCase()} revertida`,
       agenteNombre,
       justificacion,
     );
+
+    // Ledger: reversión
+    registrarLedger(
+      expediente.numero,
+      'CONTROL_PLAZOS',
+      `Decisión de ${decisionOriginal.toLowerCase()} revertida por ${agenteNombre}. Justificación: ${justificacion}.`,
+      'corregido',
+    );
     
-    // Actualizar la aprobación marcándola como revertida
     setAprobacion(prev => prev ? {
       ...prev,
       revertido: true,
@@ -763,7 +813,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       }
     } : null);
     
-    // Agregar mensaje de confirmación
     setMessages(prev => [
       ...prev,
       {
@@ -797,11 +846,10 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       },
     ]);
     
-    // Después de un breve delay, limpiar la aprobación para permitir nueva decisión
     setTimeout(() => {
       setAprobacion(null);
     }, 100);
-  }, [expediente, aprobacion, agregarAccion]);
+  }, [expediente, aprobacion, agregarAccion, registrarLedger]);
 
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
@@ -812,7 +860,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       ? (validado ? 'validar_requisito' : 'rechazar_requisito')
       : 'subsanar_requisito';
     
-    // Registrar en historial
     agregarAccion(
       tipoAccion,
       validado 
@@ -848,7 +895,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       nivelConfianza: d.nivelConfianza,
       validadoPorAgente: d.validadoPorAgente,
       observacionAgente: d.observacionAgente,
-      // Nuevos campos para verificación documental reformada
       estadoIA: d.estadoIA,
       ordenExpediente: d.ordenExpediente,
       comentarioBrief: d.comentarioBrief,
@@ -906,7 +952,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     todosRequisitosValidados,
     historialAcciones,
     expedienteNumero: expediente?.numero,
-    // Nuevas funciones para clasificación con confirmación
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
