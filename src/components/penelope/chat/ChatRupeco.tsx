@@ -99,6 +99,11 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     }
   }, [messages]);
 
+  // Notify parent about approval state changes
+  useEffect(() => {
+    onAprobacionChange?.(aprobacion?.aprobado === true);
+  }, [aprobacion, onAprobacionChange]);
+
   // Smooth scroll to requisitos section when it first appears (post-classification)
   useEffect(() => {
     if (requisitosData && !prevRequisitosRef.current) {
