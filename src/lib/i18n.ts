@@ -394,7 +394,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.trazabilidadCiudadana': 'Estado de Trámite',
 
     // Nota de Intimación para GDE (reemplazo de CO)
-    'borr.nota.title': 'Borrador de Nota de Intimación',
+    'borr.nota.title': 'Borrador de Nota de Solicitud de Documentación Faltante u Observada Formalmente',
     'borr.nota.destino': 'Para carga en GDE',
     'borr.nota.generador': 'Sistema Penélope - Módulo "Redactor Nota" (Prompt estructurado, Temp: 0.0)',
     'borr.nota.ref': 'Referencia:',
