@@ -403,7 +403,7 @@ export const translations: Record<Language, Translations> = {
     'borr.nota.domicilio': 'Domicilio Constituido: [Domicilio registrado en TAD]',
     'borr.nota.presente': '',
     'borr.nota.refIntimacion': 'Ref.: Solicitud de documentación EX',
-    'borr.nota.texto1': 'Me dirijo a Usted en relación al expediente de referencia, tramitado ante este Ente Nacional de Comunicaciones conforme la normativa vigente en materia de Servicios de Tecnologías de la Información y las Comunicaciones (Ley N° 27.078 y modificatorias).',
+    'borr.nota.texto1': 'Me dirijo a Usted en relación al expediente de referencia, tramitado ante este Ente Nacional de Comunicaciones en el cual',
     'borr.nota.texto2': 'Del análisis formal de la documentación aportada mediante Trámites a Distancia (TAD), se ha detectado la falta de documentación obligatoria conforme Res. ENACOM N° 3731/2019 (RUPECO).',
     'borr.nota.texto3': 'En virtud de lo expuesto, y de conformidad con lo establecido en los artículos 1° inciso f) y 3° de la Ley Nacional de Procedimientos Administrativos N° 19.549, se',
     'borr.nota.texto4': 'a la entidad solicitante a que en el plazo de',
