@@ -57,7 +57,7 @@ function generarTextoNota(
   return `
 ═══════════════════════════════════════════════════════════════════
           ENTE NACIONAL DE COMUNICACIONES - ENACOM
-          NOTA DE INTIMACIÓN
+          NOTA DE SOLICITUD DE DOCUMENTACIÓN FALTANTE U OBSERVADA FORMALMENTE
 ═══════════════════════════════════════════════════════════════════
 
 Número de Nota: [ Campo a completar por el agente ]
