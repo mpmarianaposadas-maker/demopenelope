@@ -44,7 +44,7 @@ export function PanelDemoInteractiva() {
         </TabsList>
         
         <TabsContent value="verificacion" className="mt-4">
-          <ChatRupeco />
+          <ChatRupeco onAprobacionChange={(aprobado) => setExpedienteAprobado(aprobado)} />
         </TabsContent>
         
         <TabsContent value="asistente" className="mt-4">
