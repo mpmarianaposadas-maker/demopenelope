@@ -31,7 +31,11 @@ const QUICK_ACTIONS = [
   { label: 'Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
 ];
 
-export function ChatRupeco() {
+interface ChatRupecoProps {
+  onAprobacionChange?: (aprobado: boolean) => void;
+}
+
+export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
