@@ -786,7 +786,8 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion, registrarLedger]);
+    triggerScrollToTop();
+  }, [expediente, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para revertir la decisión
   const revertirDecision = useCallback((agenteNombre: string, justificacion: string) => {
