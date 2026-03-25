@@ -486,6 +486,7 @@ export function useChatRupecoSimulado() {
         timestamp: new Date(),
       },
     ]);
+    triggerScrollToTop();
 
     setCurrentStep('validacion_documental');
     setTipoTramite(tramiteConfirmado.nombre);
