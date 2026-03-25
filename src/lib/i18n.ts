@@ -866,7 +866,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.trazabilidadCiudadana': 'Case Status',
 
     // Note for Summons for GDE (replacement of CO)
-    'borr.nota.title': 'Draft Summons Note',
+    'borr.nota.title': 'Draft Note — Request for Missing or Formally Observed Documentation',
     'borr.nota.destino': 'For upload to GDE',
     'borr.nota.generador': 'Penélope System - "Note Writer" Module (Structured prompt, Temp: 0.0)',
     'borr.nota.ref': 'Reference:',
