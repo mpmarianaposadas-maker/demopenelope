@@ -32,7 +32,6 @@ const stepsExternos = [
 
 export function PanelEstadoExpediente() {
   const { t } = useLanguage();
-  const { tipoTramite } = useTipoTramite();
 
   const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
 
