@@ -853,10 +853,11 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       },
     ]);
     
+    triggerScrollToTop();
     setTimeout(() => {
       setAprobacion(null);
     }, 100);
-  }, [expediente, aprobacion, agregarAccion, registrarLedger]);
+  }, [expediente, aprobacion, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para validar un requisito individual
   const validarRequisito = useCallback((requisitoId: string, validado: boolean, observacion?: string) => {
