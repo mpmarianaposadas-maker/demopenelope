@@ -162,7 +162,7 @@ export function ConsultaEstadoTramite() {
     if (resultado) {
       setTramite(resultado);
     } else {
-      setNoEncontrado(true);
+      setErrorValidacion('No se encontró el expediente. Pruebe con: EX-2026-12345678, SEG-ABC123 o TRA-987654');
     }
 
     setIsSearching(false);
