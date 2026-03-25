@@ -92,9 +92,6 @@ export function ChatRupeco() {
   useEffect(() => {
     if (requisitosData && !prevRequisitosRef.current) {
       setShowScrollHint(false);
-      setTimeout(() => {
-        requisitosRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 300);
     }
     prevRequisitosRef.current = !!requisitosData;
   }, [requisitosData]);

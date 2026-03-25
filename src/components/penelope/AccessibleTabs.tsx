@@ -68,8 +68,6 @@ export function AccessibleTabs({ tabs, children, t, groups, tooltips }: Accessib
         return new Set(prev).add(currentTabId);
       });
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.documentElement.scrollTop = 0;
   }, [activeIndex, tabs]);
 
   // Show completion message

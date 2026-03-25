@@ -69,11 +69,6 @@ export function PanelSimuladorInterno() {
     prevCompletedRef.current = completedIds;
   }, [pasos, expediente.numero, agregarEntrada]);
 
-  useEffect(() => {
-    if (pasoActivo) {
-      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [pasoActivo?.id]);
 
   const puedeSimularAlerta = expediente.estado !== 'sin_iniciar' && !simulando;
 
