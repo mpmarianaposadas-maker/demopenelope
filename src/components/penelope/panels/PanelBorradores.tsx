@@ -122,15 +122,10 @@ export function PanelBorradores() {
           <p className="leading-relaxed">
             {t('borr.alt.texto1')}{' '}
             <strong>{t('borr.co.intima')}</strong>{' '}
-            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
-              [el/la peticionante — completar según corresponda: persona humana o jurídica]
-            </span>{' '}
+            <span className="italic text-muted-foreground text-sm">(denominación según corresponda — reiteración del encabezado)</span>{' '}
             a subsanar el defecto formal detectado dentro del plazo de{' '}
             <strong>{t('borr.alt.plazo')}</strong>{' '}
             {t('borr.alt.texto3')}
-          </p>
-          <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
-            ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
           </p>
           <p className="leading-relaxed">{t('borr.alt.texto4')}</p>
           <p className="leading-relaxed">{t('borr.alt.texto5')}</p>

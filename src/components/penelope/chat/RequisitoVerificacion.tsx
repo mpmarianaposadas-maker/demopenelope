@@ -391,7 +391,7 @@ export function RequisitoVerificacion({
                   </div>
                   <p className="text-xs text-cream-foreground/80 mt-1">
                     Hay {rojos.filter(f => f.validadoPorAgente !== true).length} documento(s) faltante(s). 
-                    Debe generarse Providencia de Intimación para evitar la configuración del silencio administrativo positivo.
+                    Debe generarse Nota de Intimación para evitar la configuración del silencio administrativo positivo.
                   </p>
                 </div>
               </div>

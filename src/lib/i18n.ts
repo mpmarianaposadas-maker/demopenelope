@@ -881,7 +881,7 @@ export const translations: Record<Language, Translations> = {
     'borr.nota.texto4': 'the requesting entity to, within',
     'borr.nota.texto5': 'counted from the notification of this document, proceed to correct the detailed irregularity.',
     'borr.nota.texto6': 'The required documentation must be submitted through the Remote Procedures (TAD) system of the National Public Administration, citing the reference case file number.',
-    'borr.nota.texto7': 'The timely submission of the requested documentation will allow the continuation of the technical-substantive analysis of the case file.',
+    'borr.nota.texto7': 'The timely submission of the requested documentation will enable the continuation of your request in a timely manner.',
     'borr.nota.cierre': 'Without further ado, I greet you attentively.',
     'borr.nota.instrucciones': 'Steps for upload to GDE:',
     'borr.nota.paso1': 'Validate recipient data',

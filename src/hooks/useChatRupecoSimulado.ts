@@ -583,7 +583,7 @@ export function useChatRupecoSimulado() {
           });
 
           informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
-          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Providencia de Intimación.\n\n`;
+          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Nota de Intimación.\n\n`;
           informe += `> **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
