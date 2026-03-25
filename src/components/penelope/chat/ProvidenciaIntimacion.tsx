@@ -236,8 +236,15 @@ export function ProvidenciaIntimacion({
           </summary>
           <div className="mt-2 bg-white dark:bg-background rounded-md border p-3 max-h-[150px] overflow-y-auto">
             <pre className="text-[9px] font-mono text-muted-foreground whitespace-pre-wrap leading-relaxed">
-              {textoNota}
+              {textoNota.split(/(\[ [^\]]+\])/).map((part, i) =>
+                part.startsWith('[') && part.endsWith(']') ? (
+                  <span key={i} className="italic text-muted-foreground/70">{part}</span>
+                ) : (
+                  <span key={i}>{part}</span>
+                )
+              )}
             </pre>
+          </div>
           </div>
         </details>
         
