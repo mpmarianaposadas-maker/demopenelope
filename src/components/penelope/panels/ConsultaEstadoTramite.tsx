@@ -265,10 +265,16 @@ export function ConsultaEstadoTramite() {
               <Input
                 placeholder={t('trazabilidad.ciudadana.placeholder')}
                 value={idBusqueda}
-                onChange={(e) => setIdBusqueda(e.target.value)}
+                onChange={(e) => {
+                  setIdBusqueda(e.target.value);
+                  if (errorBusqueda) setErrorBusqueda('');
+                }}
                 onKeyDown={(e) => e.key === 'Enter' && handleBuscar()}
                 className="bg-background"
               />
+              {errorBusqueda && (
+                <p className="text-xs text-destructive mt-1">{errorBusqueda}</p>
+              )}
               <p className="text-xs text-muted-foreground mt-1">
                 {t('trazabilidad.ciudadana.formato')}
               </p>
