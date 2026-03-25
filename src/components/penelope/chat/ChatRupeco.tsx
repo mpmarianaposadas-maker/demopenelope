@@ -81,9 +81,16 @@ export function ChatRupeco() {
     cancelarClasificacion,
   } = useChatRupecoSimulado();
 
-  // Auto-scroll to bottom on new content
+  // Scroll to top on mount and reset (messages.length === 1 means initial state)
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current && messages.length === 1) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [messages.length]);
+
+  // Auto-scroll to bottom on new message from assistant
+  useEffect(() => {
+    if (scrollRef.current && messages.length > 1) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);

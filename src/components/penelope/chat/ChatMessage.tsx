@@ -36,7 +36,16 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {isAssistant ? 'Penélope' : 'Tú'}
         </div>
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <ReactMarkdown>{message.content}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              h2: ({ children }) => (
+                <div className="font-semibold text-sm text-foreground border-b border-border pb-1 mb-2 mt-1">{children}</div>
+              ),
+              h3: ({ children }) => (
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mt-3 mb-1">{children}</div>
+              ),
+            }}
+          >{message.content}</ReactMarkdown>
         </div>
       </div>
     </div>

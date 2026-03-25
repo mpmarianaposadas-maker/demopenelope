@@ -52,11 +52,20 @@ export function PanelDemoInteractiva() {
         </TabsContent>
       </Tabs>
 
-      <SiguientePaso
-        label="Arquitectura"
-        description="Explore los diagramas de flujo del sistema"
-        onNavigate={() => goToTab('arquitectura')}
-      />
+      {expedienteAprobado ? (
+        <SiguientePaso
+          label="Borradores Generados"
+          description="Revisar y completar el Borrador de Nota de Intimación generado"
+          onNavigate={() => goToTab('borradores')}
+          icon={<FileText size={14} className="ml-1.5" />}
+        />
+      ) : (
+        <SiguientePaso
+          label="Arquitectura"
+          description="Explore los diagramas de flujo del sistema"
+          onNavigate={() => goToTab('arquitectura')}
+        />
+      )}
     </div>
   );
 }
