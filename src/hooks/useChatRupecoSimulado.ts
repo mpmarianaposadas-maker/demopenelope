@@ -582,8 +582,8 @@ export function useChatRupecoSimulado() {
             }
           });
 
-          informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Intimación\n\n`;
-          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Nota de Intimación.\n\n`;
+          informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Nota de Solicitud de Documentación Faltante\n\n`;
+          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Nota de Solicitud de Documentación Faltante u Observada Formalmente.\n\n`;
           informe += `> **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
