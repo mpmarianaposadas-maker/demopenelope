@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays, Info, User } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -33,7 +32,7 @@ const stepsExternos = [
 
 export function PanelEstadoExpediente() {
   const { t } = useLanguage();
-  const { tipoTramite } = useTipoTramite();
+  const tipoTramite = 'Licencia TIC - Alta nueva';
 
   const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
 

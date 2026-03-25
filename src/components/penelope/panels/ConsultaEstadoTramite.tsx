@@ -142,12 +142,14 @@ export function ConsultaEstadoTramite() {
   const [isSearching, setIsSearching] = useState(false);
   const [tramite, setTramite] = useState<TramiteInfo | null>(null);
   const [noEncontrado, setNoEncontrado] = useState(false);
+  const [errorValidacion, setErrorValidacion] = useState('');
 
   const handleBuscar = async () => {
     if (!idBusqueda.trim()) {
-      toast.error(t('trazabilidad.ciudadana.errorVacio'));
+      setErrorValidacion('Ingrese un número de expediente o ID de seguimiento');
       return;
     }
+    setErrorValidacion('');
 
     setIsSearching(true);
     setNoEncontrado(false);
@@ -160,7 +162,7 @@ export function ConsultaEstadoTramite() {
     if (resultado) {
       setTramite(resultado);
     } else {
-      setNoEncontrado(true);
+      setErrorValidacion('No se encontró el expediente. Pruebe con: EX-2026-12345678, SEG-ABC123 o TRA-987654');
     }
 
     setIsSearching(false);
@@ -262,13 +264,17 @@ export function ConsultaEstadoTramite() {
               <Input
                 placeholder={t('trazabilidad.ciudadana.placeholder')}
                 value={idBusqueda}
-                onChange={(e) => setIdBusqueda(e.target.value)}
+                onChange={(e) => { setIdBusqueda(e.target.value); setErrorValidacion(''); }}
                 onKeyDown={(e) => e.key === 'Enter' && handleBuscar()}
                 className="bg-background"
               />
-              <p className="text-xs text-muted-foreground mt-1">
-                {t('trazabilidad.ciudadana.formato')}
-              </p>
+              {errorValidacion ? (
+                <p className="text-sm text-red-500 mt-1">{errorValidacion}</p>
+              ) : (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('trazabilidad.ciudadana.formato')}
+                </p>
+              )}
             </div>
             <Button 
               onClick={handleBuscar} 
