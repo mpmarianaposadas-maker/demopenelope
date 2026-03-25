@@ -131,18 +131,16 @@ export function PanelBorradores() {
         </div>
         
         <div className="border-l-4 border-accent pl-4 space-y-3 text-sm md:text-base">
-          <p className="font-semibold">{t('borr.co.docFaltante')}</p>
           <p className="leading-relaxed">
-            {t('borr.alt.texto1')}{' '}
-            <strong>{t('borr.co.intima')}</strong>{' '}
-            <span className="italic text-muted-foreground text-sm">(denominación según corresponda — reiteración del encabezado)</span>{' '}
-            a subsanar el defecto formal detectado dentro del plazo de{' '}
-            <strong>{t('borr.alt.plazo')}</strong>{' '}
-            {t('borr.alt.texto3')}
+            En virtud de lo establecido en el artículo 5°, inciso d) del Reglamento de Procedimientos Administrativos, aprobado por Decreto N° 1759/72 – T.O. 2017 (Decreto N° 894/2017), se <strong>INTIMA</strong> a subsanar el defecto formal detectado en el plazo de <strong>DIEZ (10) días hábiles administrativos</strong>, contados desde el día siguiente a la notificación de la presente.
           </p>
-          <p className="leading-relaxed">{t('borr.alt.texto4')}</p>
-          <p className="leading-relaxed">{t('borr.alt.texto5')}</p>
-          <p>{t('borr.alt.cierre')}</p>
+          <p className="leading-relaxed">
+            La documentación requerida deberá ser ingresada a través del sistema de Trámites a Distancia (TAD), en el expediente electrónico individualizado en el encabezamiento de esta comunicación. Ante cualquier inconveniente para la carga documental, podrá requerir asistencia técnica dirigiéndose a la Mesa de Ayuda al correo electrónico: <a href="mailto:mesadeayuda@enacom.gob.ar" className="text-primary underline">mesadeayuda@enacom.gob.ar</a>
+          </p>
+          <p className="leading-relaxed">
+            Se advierte que el incumplimiento dentro del plazo fijado importará la declaración de caducidad de las actuaciones y su archivo sin más trámite, de conformidad con lo previsto en el artículo 1°, inciso e), apartado 9) de la Ley N° 19.549.
+          </p>
+          <p>Sin otro particular, saludo a usted atentamente.</p>
           <hr className="border-border mt-4 mb-0" />
           <div className="bg-gray-100 dark:bg-gray-800/40 border-l-4 border-amber-400 pl-3 pr-3 py-2 mt-2 rounded-r">
             <span className="block text-[10px] text-gray-500 dark:text-gray-400 mb-1 font-medium">Marca de sistema — no forma parte del instrumento</span>
