@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
-import { FolderOpen, Wrench } from 'lucide-react';
+import { FolderOpen, Wrench, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -10,6 +11,7 @@ import { useTabNavigation } from '@/contexts/TabNavigationContext';
 export function PanelDemoInteractiva() {
   const { t } = useLanguage();
   const { goToTab } = useTabNavigation();
+  const [expedienteAprobado, setExpedienteAprobado] = useState(false);
 
   return (
     <div className="space-y-6">
