@@ -90,14 +90,13 @@ ${tablaDocumentos}
 
 ══════════════════════════════════════════════════════════════════
 
-En virtud de lo expuesto, y de conformidad con lo establecido en los
-artículos 1° inciso f) y 3° de la Ley Nacional de Procedimientos
-Administrativos N° 19.549, se INTIMA a subsanar dentro de DIEZ (10)
-DÍAS HÁBILES ADMINISTRATIVOS desde la notificación de la presente,
-bajo apercibimiento de archivo (Art. 5°, Decreto N° 1759/72 T.O. 2017).
+⚑ Campo a completar por el agente una vez comprobados que son recaudos ausentes o carentes de algún aspecto formal exigido por el Reglamento de aplicación.
 
 La documentación requerida deberá ser presentada a través del sistema
 de Trámites a Distancia (TAD), citando el número de expediente.
+
+La presentación oportuna de la documentación solicitada posibilitará
+la continuación de su pedido en tiempo y forma.
 
 Sin otro particular, saludo a Ud. atentamente.
 

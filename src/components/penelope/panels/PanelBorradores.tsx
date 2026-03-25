@@ -75,21 +75,11 @@ export function PanelBorradores() {
           <p className="leading-relaxed">{t('borr.nota.texto1')}</p>
           <p className="leading-relaxed">{t('borr.nota.texto2')}</p>
           <p className="font-semibold">{t('borr.co.docFaltante')}</p>
-          <p className="leading-relaxed">
-            {t('borr.nota.texto3')}{' '}
-            <strong>{t('borr.co.intima')}</strong>{' '}
-            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
-              [el/la peticionante — completar según corresponda: persona humana o jurídica]
-            </span>{' '}
-            {t('borr.nota.texto4')}{' '}
-            <strong>{t('borr.co.plazo')}</strong>{' '}
-            {t('borr.nota.texto5')}
-          </p>
           <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
-            ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
+            ⚑ Campo a completar por el agente una vez comprobados que son recaudos ausentes o carentes de algún aspecto formal exigido por el Reglamento de aplicación.
           </p>
           <p className="leading-relaxed">{t('borr.nota.texto6')}</p>
-          <p className="leading-relaxed">{t('borr.nota.texto7')}</p>
+          <p className="leading-relaxed">La presentación oportuna de la documentación solicitada posibilitará la continuación de su pedido en tiempo y forma.</p>
           <p>{t('borr.nota.cierre')}</p>
           
           <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
@@ -132,15 +122,10 @@ export function PanelBorradores() {
           <p className="leading-relaxed">
             {t('borr.alt.texto1')}{' '}
             <strong>{t('borr.co.intima')}</strong>{' '}
-            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
-              [el/la peticionante — completar según corresponda: persona humana o jurídica]
-            </span>{' '}
+            <span className="italic text-muted-foreground text-sm">(denominación según corresponda — reiteración del encabezado)</span>{' '}
             a subsanar el defecto formal detectado dentro del plazo de{' '}
             <strong>{t('borr.alt.plazo')}</strong>{' '}
             {t('borr.alt.texto3')}
-          </p>
-          <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
-            ⚑ Campo a completar por el agente: verificar si el destinatario es persona humana o jurídica y adecuar la denominación antes de cargar en GDE.
           </p>
           <p className="leading-relaxed">{t('borr.alt.texto4')}</p>
           <p className="leading-relaxed">{t('borr.alt.texto5')}</p>
