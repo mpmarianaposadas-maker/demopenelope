@@ -875,7 +875,7 @@ export const translations: Record<Language, Translations> = {
     'borr.nota.domicilio': 'Registered Address: [Address registered in TAD]',
     'borr.nota.presente': '',
     'borr.nota.refIntimacion': 'Re: Documentation request EX',
-    'borr.nota.texto1': 'I address you regarding the reference case file, processed before this National Communications Entity in accordance with current regulations on Information and Communication Technology Services (Law No. 27.078 and amendments).',
+    'borr.nota.texto1': 'I address you regarding the reference case file, processed before this National Communications Entity in which',
     'borr.nota.texto2': 'From the formal analysis of the documentation provided through Remote Procedures (TAD), the lack of mandatory documentation has been detected pursuant to Res. ENACOM No. 3731/2019 (RUPECO).',
     'borr.nota.texto3': 'By virtue of the foregoing, and in accordance with articles 1, paragraph f) and 3 of the National Administrative Procedures Law No. 19.549,',
     'borr.nota.texto4': 'the requesting entity to, within',

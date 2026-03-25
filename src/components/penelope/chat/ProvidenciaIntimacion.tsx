@@ -72,9 +72,7 @@ Ref.: Solicitud de documentación EX [ Completar con el número otorgado por el 
 De mi consideración:
 
 Me dirijo a Ud. en relación al expediente de referencia, tramitado ante
-este Ente Nacional de Comunicaciones conforme la normativa vigente en
-materia de Servicios de Tecnologías de la Información y las Comunicaciones
-(Ley N° 27.078 y modificatorias).
+este Ente Nacional de Comunicaciones en el cual [ Completar con motivo de solicitud ].
 
 Del análisis formal de la documentación aportada mediante Trámites a
 Distancia (TAD), se ha detectado la falta de documentación obligatoria
