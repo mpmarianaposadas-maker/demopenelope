@@ -76,9 +76,18 @@ export function PanelBorradores() {
             </span>
           </p>
           
-          <p className="leading-relaxed">{t('borr.nota.texto1')}</p>
+          <p className="leading-relaxed">
+            {t('borr.nota.texto1')}{' '}
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
+              [Completar con motivo de solicitud]
+            </span>
+          </p>
           <p className="leading-relaxed">{t('borr.nota.texto2')}</p>
-          <p className="font-semibold">{t('borr.co.docFaltante')}</p>
+          <p className="font-semibold">
+            <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 dark:bg-yellow-900/30 dark:border-yellow-600">
+              {t('borr.co.docFaltante')}
+            </span>
+          </p>
           <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
             ⚑ Campo a completar por el agente una vez comprobados que son recaudos ausentes o carentes de algún aspecto formal exigido por el Reglamento de aplicación.
           </p>
