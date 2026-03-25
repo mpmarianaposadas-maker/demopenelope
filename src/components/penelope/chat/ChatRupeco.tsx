@@ -73,6 +73,7 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
+    scrollToTopCounter,
   } = useChatRupecoSimulado();
 
   // Scroll to top on mount and reset (messages.length === 1 means initial state)
