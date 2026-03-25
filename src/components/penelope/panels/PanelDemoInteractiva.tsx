@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { Card, CardTitle, CardText } from '../Card';
-import { FolderOpen, Wrench } from 'lucide-react';
+import { FolderOpen, Wrench, FileText } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { ChatRupeco, AsistenteRupecoTAD } from '../chat';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -10,6 +11,7 @@ import { useTabNavigation } from '@/contexts/TabNavigationContext';
 export function PanelDemoInteractiva() {
   const { t } = useLanguage();
   const { goToTab } = useTabNavigation();
+  const [expedienteAprobado, setExpedienteAprobado] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -42,7 +44,7 @@ export function PanelDemoInteractiva() {
         </TabsList>
         
         <TabsContent value="verificacion" className="mt-4">
-          <ChatRupeco />
+          <ChatRupeco onAprobacionChange={(aprobado) => setExpedienteAprobado(aprobado)} />
         </TabsContent>
         
         <TabsContent value="asistente" className="mt-4">
@@ -50,11 +52,20 @@ export function PanelDemoInteractiva() {
         </TabsContent>
       </Tabs>
 
-      <SiguientePaso
-        label="Arquitectura"
-        description="Explore los diagramas de flujo del sistema"
-        onNavigate={() => goToTab('arquitectura')}
-      />
+      {expedienteAprobado ? (
+        <SiguientePaso
+          label="Borradores Generados"
+          description="Revisar y completar el Borrador de Nota de Intimación generado"
+          onNavigate={() => goToTab('borradores')}
+          icon={<FileText size={14} className="ml-1.5" />}
+        />
+      ) : (
+        <SiguientePaso
+          label="Arquitectura"
+          description="Explore los diagramas de flujo del sistema"
+          onNavigate={() => goToTab('arquitectura')}
+        />
+      )}
     </div>
   );
 }

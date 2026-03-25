@@ -31,7 +31,11 @@ const QUICK_ACTIONS = [
   { label: 'Actualización RUPECO', message: 'Actualización de datos RUPECO persona jurídica' },
 ];
 
-export function ChatRupeco() {
+interface ChatRupecoProps {
+  onAprobacionChange?: (aprobado: boolean) => void;
+}
+
+export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
   const { t } = useLanguage();
   const isMobile = useIsMobile();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -81,12 +85,24 @@ export function ChatRupeco() {
     cancelarClasificacion,
   } = useChatRupecoSimulado();
 
-  // Auto-scroll to bottom on new content
+  // Scroll to top on mount and reset (messages.length === 1 means initial state)
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current && messages.length === 1) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [messages.length]);
+
+  // Auto-scroll to bottom on new message from assistant
+  useEffect(() => {
+    if (scrollRef.current && messages.length > 1) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Notify parent about approval state changes
+  useEffect(() => {
+    onAprobacionChange?.(aprobacion?.aprobado === true);
+  }, [aprobacion, onAprobacionChange]);
 
   // Smooth scroll to requisitos section when it first appears (post-classification)
   useEffect(() => {
