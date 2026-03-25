@@ -146,7 +146,11 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={resetChat}
+            onClick={() => {
+              if (window.confirm('¿Reiniciar la verificación? Se perderá el progreso actual del expediente.')) {
+                resetChat();
+              }
+            }}
             className="text-muted-foreground hover:text-foreground"
           >
             <RotateCcw className="h-4 w-4 mr-1" />

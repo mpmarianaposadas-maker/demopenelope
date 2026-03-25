@@ -37,7 +37,7 @@ export function PanelMetricasPrompts() {
       </p>
       </div>
 
-      {/* Entries */}
+      {/* Entries - closing div moved above */}
       <div className="space-y-3">
         {entries.slice(-3).map((entry) => (
           <div key={entry.id} className="p-2.5 rounded-lg bg-secondary/40 border border-border/40 space-y-1.5 text-xs">

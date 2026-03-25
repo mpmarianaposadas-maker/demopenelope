@@ -71,7 +71,7 @@ export function PanelEstadoExpediente() {
         <div className="text-xs text-muted-foreground mb-1">{t('aside.estado.expediente')}</div>
         <div className="font-mono text-sm font-medium text-foreground">EX-2026-89717554-APN-ENACOM</div>
         <div className="text-xs text-muted-foreground mt-2">{t('aside.estado.tramite')}</div>
-        <div className="text-sm text-foreground font-medium transition-all duration-300">{tipoTramite}</div>
+        <div className="text-sm text-foreground font-medium transition-all duration-300">Licencia TIC — Alta nueva</div>
       </div>
 
       {/* Control de Plazo */}

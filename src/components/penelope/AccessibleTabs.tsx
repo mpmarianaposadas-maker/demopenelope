@@ -3,6 +3,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { TabNavigationContext } from '@/contexts/TabNavigationContext';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { Check, ChevronRight } from 'lucide-react';
 
 interface Tab {
