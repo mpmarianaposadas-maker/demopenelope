@@ -963,5 +963,6 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
     clasificacionPendiente,
     confirmarClasificacion,
     cancelarClasificacion,
+    scrollToTopCounter,
   };
 }

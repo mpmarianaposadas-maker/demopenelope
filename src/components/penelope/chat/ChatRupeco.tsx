@@ -90,6 +90,17 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
     }
   }, [messages]);
 
+  // Scroll to top when triggered by actions (confirmar, aprobar, rechazar, etc.)
+  useEffect(() => {
+    if (scrollToTopCounter > 0 && scrollRef.current) {
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = 0;
+        }
+      }, 150);
+    }
+  }, [scrollToTopCounter]);
+
   // Notify parent about approval state changes
   useEffect(() => {
     onAprobacionChange?.(aprobacion?.aprobado === true);
