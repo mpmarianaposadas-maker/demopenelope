@@ -143,12 +143,15 @@ export function ConsultaEstadoTramite() {
   const [tramite, setTramite] = useState<TramiteInfo | null>(null);
   const [noEncontrado, setNoEncontrado] = useState(false);
 
+  const [errorBusqueda, setErrorBusqueda] = useState('');
+
   const handleBuscar = async () => {
     if (!idBusqueda.trim()) {
-      toast.error(t('trazabilidad.ciudadana.errorVacio'));
+      setErrorBusqueda('Ingrese un número de expediente o ID de seguimiento');
       return;
     }
 
+    setErrorBusqueda('');
     setIsSearching(true);
     setNoEncontrado(false);
     setTramite(null);
@@ -161,6 +164,7 @@ export function ConsultaEstadoTramite() {
       setTramite(resultado);
     } else {
       setNoEncontrado(true);
+      setErrorBusqueda('No se encontró el expediente. Pruebe con los ejemplos: EX-2026-12345678, SEG-ABC123 o TRA-987654');
     }
 
     setIsSearching(false);
@@ -262,10 +266,16 @@ export function ConsultaEstadoTramite() {
               <Input
                 placeholder={t('trazabilidad.ciudadana.placeholder')}
                 value={idBusqueda}
-                onChange={(e) => setIdBusqueda(e.target.value)}
+                onChange={(e) => {
+                  setIdBusqueda(e.target.value);
+                  if (errorBusqueda) setErrorBusqueda('');
+                }}
                 onKeyDown={(e) => e.key === 'Enter' && handleBuscar()}
                 className="bg-background"
               />
+              {errorBusqueda && (
+                <p className="text-xs text-destructive mt-1">{errorBusqueda}</p>
+              )}
               <p className="text-xs text-muted-foreground mt-1">
                 {t('trazabilidad.ciudadana.formato')}
               </p>
