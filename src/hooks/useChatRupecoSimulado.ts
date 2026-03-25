@@ -619,9 +619,10 @@ export function useChatRupecoSimulado() {
 
         setCurrentStep('evaluacion');
         setIsLoading(false);
+        triggerScrollToTop();
       }, 600);
     }, 600);
-  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger]);
+  }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Cancelar la clasificación
   const cancelarClasificacion = useCallback(() => {
