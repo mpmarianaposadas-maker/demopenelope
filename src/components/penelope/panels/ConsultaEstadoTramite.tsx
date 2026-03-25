@@ -142,12 +142,14 @@ export function ConsultaEstadoTramite() {
   const [isSearching, setIsSearching] = useState(false);
   const [tramite, setTramite] = useState<TramiteInfo | null>(null);
   const [noEncontrado, setNoEncontrado] = useState(false);
+  const [errorValidacion, setErrorValidacion] = useState('');
 
   const handleBuscar = async () => {
     if (!idBusqueda.trim()) {
-      toast.error(t('trazabilidad.ciudadana.errorVacio'));
+      setErrorValidacion('Ingrese un número de expediente o ID de seguimiento');
       return;
     }
+    setErrorValidacion('');
 
     setIsSearching(true);
     setNoEncontrado(false);
