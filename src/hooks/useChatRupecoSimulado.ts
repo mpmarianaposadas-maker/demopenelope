@@ -732,7 +732,8 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
         timestamp: new Date(),
       },
     ]);
-  }, [expediente, agregarAccion, registrarLedger]);
+    triggerScrollToTop();
+  }, [expediente, agregarAccion, registrarLedger, triggerScrollToTop]);
 
   // Función para rechazar el expediente completo
   const rechazarExpediente = useCallback((agenteNombre: string, motivoRechazo: string) => {
