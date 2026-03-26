@@ -822,7 +822,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       expediente.numero,
       'CONTROL_PLAZOS',
       `Expediente rechazado por ${agenteNombre}. Motivo: ${motivoRechazo}.`,
-      'corregido',
+      'rechazado',
     );
     
     setAprobacion(nuevoRechazo);
