@@ -148,7 +148,7 @@ export function useChatRupecoSimulado() {
       timestamp: new Date(),
       estado,
     });
-  }, [agregarEntrada]);
+  }, [agregarEntrada, agenteNombre]);
 
   // Función para agregar una acción al historial
   const agregarAccion = useCallback((
