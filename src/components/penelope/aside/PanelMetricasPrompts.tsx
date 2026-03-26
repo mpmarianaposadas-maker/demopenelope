@@ -77,7 +77,7 @@ export function PanelMetricasPrompts() {
             {/* Validación */}
             <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
               <User className="w-3 h-3 shrink-0" />
-              <span>{entry.validadorId} — {entry.estado === 'convalidado' ? 'Convalidado' : 'Corregido'}</span>
+              <span>{entry.validadorId} — {entry.estado === 'convalidado' ? 'Convalidado' : entry.estado === 'rechazado' ? 'Rechazado' : entry.estado === 'sistema' ? 'Sistema' : 'Corregido'}</span>
             </div>
 
             {/* Timestamp */}

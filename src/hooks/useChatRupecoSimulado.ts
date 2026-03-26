@@ -870,7 +870,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       expediente.numero,
       'CONTROL_PLAZOS',
       `Decisión de ${decisionOriginal.toLowerCase()} revertida por ${agenteNombre}. Justificación: ${justificacion}.`,
-      'corregido',
+      'rechazado',
     );
     
     setAprobacion(prev => prev ? {
