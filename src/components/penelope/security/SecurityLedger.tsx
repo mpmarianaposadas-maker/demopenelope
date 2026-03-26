@@ -16,7 +16,7 @@ export interface LedgerEntry {
   outputIA: string;
   validadorId: string;
   timestamp: Date;
-  estado: 'convalidado' | 'corregido';
+  estado: 'convalidado' | 'corregido' | 'rechazado' | 'sistema';
 }
 
 interface SecurityLedgerProps {
@@ -36,6 +36,8 @@ const TASK_LABELS: Record<LedgerEntry['taskType'], string> = {
 const ESTADO_LABELS: Record<string, { label: string; className: string }> = {
   convalidado: { label: 'Sugerencia validada', className: 'border-green-400 text-green-700 bg-green-50' },
   corregido: { label: 'Sugerencia ajustada por agente', className: 'border-amber-400 text-amber-700 bg-amber-50' },
+  rechazado: { label: 'Rechazado', className: 'border-red-400 text-red-700 bg-red-50' },
+  sistema: { label: 'Sistema', className: 'border-gray-400 text-gray-600 bg-gray-50' },
 };
 
 export function SecurityLedger({ entries, maxVisible = 5, onViewExpediente }: SecurityLedgerProps) {

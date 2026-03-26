@@ -136,7 +136,7 @@ export function useChatRupecoSimulado() {
     caseId: string,
     taskType: 'VERIFICACION_VIGENCIA' | 'CLASIFICACION_PRELIMINAR' | 'GENERACION_PROVIDENCIA' | 'DETECCION_FALTANTES' | 'CONTROL_PLAZOS',
     outputIA: string,
-    estado: 'convalidado' | 'corregido' = 'convalidado',
+    estado: 'convalidado' | 'corregido' | 'rechazado' | 'sistema' = 'convalidado',
   ) => {
     agregarEntrada({
       caseId,
@@ -391,6 +391,7 @@ export function useChatRupecoSimulado() {
       numExp,
       'CLASIFICACION_PRELIMINAR',
       `Trámite seleccionado: ${tramite.nombre} (${tramite.codigo}). Tipo persona: ${tipoPersona === 'humana' ? 'Humana' : 'Jurídica'}.`,
+      'sistema',
     );
 
     // Simular procesamiento en etapas
@@ -514,6 +515,7 @@ export function useChatRupecoSimulado() {
         expediente.numero,
         'VERIFICACION_VIGENCIA',
         `Verificación documental: ${detectados.length}/${documentosDetectados.length} documentos detectados. Confianza global: ${nivelConfianzaGlobal}%.`,
+        'sistema',
       );
 
       if (faltantes.length > 0) {
@@ -521,6 +523,7 @@ export function useChatRupecoSimulado() {
           expediente.numero,
           'DETECCION_FALTANTES',
           `Faltantes detectados: ${faltantes.map(f => f.nombre).join(', ')}.`,
+          'sistema',
         );
       }
 
@@ -637,7 +640,7 @@ la continuación de su pedido en tiempo y forma.
 
 Sin otro particular, saludo a Ud. atentamente.
 
-[ Firma del agente — Cargo y dependencia ]
+${agenteNombre ? `[ Firma: ${agenteNombre} — Cargo y dependencia ]` : '[ Firma del agente — Cargo y dependencia ]'}
 [ conforme registro del Sistema GDE, de la persona con facultades
   para suscribir el requerimiento ]
 \`\`\`
@@ -655,6 +658,7 @@ Sin otro particular, saludo a Ud. atentamente.
             expediente.numero,
             'GENERACION_PROVIDENCIA',
             `Borrador de intimación generado. ${faltantes.length} documento(s) faltante(s). Plazo: ${diasRestantes} días hábiles.`,
+            'sistema',
           );
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
@@ -818,7 +822,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       expediente.numero,
       'CONTROL_PLAZOS',
       `Expediente rechazado por ${agenteNombre}. Motivo: ${motivoRechazo}.`,
-      'corregido',
+      'rechazado',
     );
     
     setAprobacion(nuevoRechazo);
@@ -866,7 +870,7 @@ ${observaciones ? `| **Observaciones** | ${observaciones} |` : ''}
       expediente.numero,
       'CONTROL_PLAZOS',
       `Decisión de ${decisionOriginal.toLowerCase()} revertida por ${agenteNombre}. Justificación: ${justificacion}.`,
-      'corregido',
+      'rechazado',
     );
     
     setAprobacion(prev => prev ? {
