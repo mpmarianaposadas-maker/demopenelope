@@ -7,6 +7,7 @@ import { TipoTramiteProvider } from "@/contexts/TipoTramiteContext";
 import { KillSwitchProvider } from "@/contexts/KillSwitchContext";
 import { HistorialAccionesProvider } from "@/contexts/HistorialAccionesContext";
 import { LedgerProvider } from "@/contexts/LedgerContext";
+import { AgenteProvider } from "@/contexts/AgenteContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -15,10 +16,11 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <KillSwitchProvider>
-        <TipoTramiteProvider>
-          <HistorialAccionesProvider>
-            <LedgerProvider>
+      <AgenteProvider>
+        <KillSwitchProvider>
+          <TipoTramiteProvider>
+            <HistorialAccionesProvider>
+              <LedgerProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
@@ -28,10 +30,11 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </LedgerProvider>
-          </HistorialAccionesProvider>
-        </TipoTramiteProvider>
-      </KillSwitchProvider>
+              </LedgerProvider>
+            </HistorialAccionesProvider>
+          </TipoTramiteProvider>
+        </KillSwitchProvider>
+      </AgenteProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
