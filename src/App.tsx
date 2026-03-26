@@ -30,10 +30,11 @@ const App = () => (
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </LedgerProvider>
-          </HistorialAccionesProvider>
-        </TipoTramiteProvider>
-      </KillSwitchProvider>
+              </LedgerProvider>
+            </HistorialAccionesProvider>
+          </TipoTramiteProvider>
+        </KillSwitchProvider>
+      </AgenteProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

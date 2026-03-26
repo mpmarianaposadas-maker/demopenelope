@@ -144,7 +144,7 @@ export function useChatRupecoSimulado() {
       taskType,
       inputHash: `${Math.random().toString(36).substring(2, 10)}...${Math.random().toString(36).substring(2, 6)}`,
       outputIA,
-      validadorId: 'AGT-López, M.',
+      validadorId: agenteNombre ? `AGT-${agenteNombre}` : 'AGT-Pendiente validación',
       timestamp: new Date(),
       estado,
     });
