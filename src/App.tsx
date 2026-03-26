@@ -7,6 +7,7 @@ import { TipoTramiteProvider } from "@/contexts/TipoTramiteContext";
 import { KillSwitchProvider } from "@/contexts/KillSwitchContext";
 import { HistorialAccionesProvider } from "@/contexts/HistorialAccionesContext";
 import { LedgerProvider } from "@/contexts/LedgerContext";
+import { AgenteProvider } from "@/contexts/AgenteContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
