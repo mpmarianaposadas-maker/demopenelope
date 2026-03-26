@@ -3,9 +3,25 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Send, Info, ClipboardList } from 'lucide-react';
 import { ActorLabels } from '../ActorLabel';
+import { useAgente } from '@/contexts/AgenteContext';
+
+const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function fechaDinamica(): string {
+  const now = new Date();
+  return `Buenos Aires, ${now.getDate()} de ${MESES_ES[now.getMonth()]} de ${now.getFullYear()}`;
+}
 
 export function PanelBorradores() {
   const { t } = useLanguage();
+  const { agenteNombre } = useAgente();
+  const fechaHoy = fechaDinamica();
+  const generadorNota = agenteNombre
+    ? `Sistema Penélope - Módulo "Redactor Nota" (Prompt estructurado, Temp: 0.0) · Agente: ${agenteNombre}`
+    : t('borr.nota.generador');
+  const generadorPV = agenteNombre
+    ? `Sistema Penélope - Módulo "Redactor PV" (Prompt estructurado, Temp: 0.0) · Agente: ${agenteNombre}`
+    : t('borr.pv.generador');
 
   return (
     <>
@@ -48,7 +64,7 @@ export function PanelBorradores() {
             <span className="status-pending">{t('borr.estadoPendiente')}</span>
           </CardText>
           <CardText>
-            <strong>{t('borr.generadoPor')}</strong> {t('borr.nota.generador')}
+            <strong>{t('borr.generadoPor')}</strong> {generadorNota}
           </CardText>
           <CardText>
             <strong>Ref. RUPECO:</strong> RUPECO-2024-00892 (vigente)
@@ -58,7 +74,7 @@ export function PanelBorradores() {
         <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
           <p className="font-semibold">NO-2026-XXXXX-APN-ENACOM</p>
           <p>{t('borr.nota.ref')} EX-2026-00123456-APN-ENACOM</p>
-          <p>{t('borr.nota.fecha')}</p>
+          <p>{fechaHoy}</p>
           <p>{t('borr.nota.destinatario')}</p>
           <p>
             <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
@@ -184,7 +200,7 @@ export function PanelBorradores() {
             <span className="status-pending">{t('borr.estadoPendiente')}</span>
           </CardText>
           <CardText>
-            <strong>{t('borr.generadoPor')}</strong> {t('borr.pv.generador')}
+            <strong>{t('borr.generadoPor')}</strong> {generadorPV}
           </CardText>
           <CardText>
             <strong>Ref. RUPECO:</strong> RUPECO-2024-00892 (vigente)
@@ -203,7 +219,7 @@ export function PanelBorradores() {
         
         <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
           <p className="font-semibold">EX-2026-00123456-APN-ENACOM</p>
-          <p>{t('borr.pv.fecha')}</p>
+          <p>{fechaHoy}</p>
           <p className="leading-relaxed">{t('borr.pv.texto1')}</p>
           <p className="leading-relaxed">
             {t('borr.pv.texto2')}{' '}
