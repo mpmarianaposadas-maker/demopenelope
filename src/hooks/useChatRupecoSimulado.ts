@@ -111,6 +111,7 @@ export function useChatRupecoSimulado() {
   const { isSystemActive } = useKillSwitch();
   const { validateInput } = useSecurityValidation();
   const { agregarEntrada } = useLedger();
+  const { agenteNombre } = useAgente();
   
   const [messages, setMessages] = useState<Message[]>([
     {
