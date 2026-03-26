@@ -658,6 +658,7 @@ Sin otro particular, saludo a Ud. atentamente.
             expediente.numero,
             'GENERACION_PROVIDENCIA',
             `Borrador de intimación generado. ${faltantes.length} documento(s) faltante(s). Plazo: ${diasRestantes} días hábiles.`,
+            'sistema',
           );
         } else {
           informe += `*Todos los documentos requeridos han sido detectados*\n\n`;
