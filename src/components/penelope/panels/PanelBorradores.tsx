@@ -219,7 +219,7 @@ export function PanelBorradores() {
         
         <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
           <p className="font-semibold">EX-2026-00123456-APN-ENACOM</p>
-          <p>{t('borr.pv.fecha')}</p>
+          <p>{fechaHoy}</p>
           <p className="leading-relaxed">{t('borr.pv.texto1')}</p>
           <p className="leading-relaxed">
             {t('borr.pv.texto2')}{' '}
