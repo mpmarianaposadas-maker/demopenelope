@@ -43,6 +43,7 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
   const requisitosRef = useRef<HTMLDivElement>(null);
   const clasificacionRef = useRef<HTMLDivElement>(null);
   const [showFade, setShowFade] = useState(true);
+  const [showRechazoPanel, setShowRechazoPanel] = useState(false);
   const historialRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
