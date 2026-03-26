@@ -689,6 +689,16 @@ ${agenteNombre ? `[ Firma: ${agenteNombre} — Cargo y dependencia ]` : '[ Firma
 
   // Cancelar la clasificación
   const cancelarClasificacion = useCallback(() => {
+    // Ledger: registrar cancelación con estado rechazado
+    if (expediente) {
+      registrarLedger(
+        expediente.numero,
+        'CLASIFICACION_PRELIMINAR',
+        `Verificación cancelada por el operador. Clasificación descartada.`,
+        'rechazado',
+      );
+    }
+
     setClasificacionPendiente(null);
     setExpediente(null);
     setCurrentStep('inicio');
@@ -704,7 +714,7 @@ ${agenteNombre ? `[ Firma: ${agenteNombre} — Cargo y dependencia ]` : '[ Firma
       },
     ]);
     triggerScrollToTop();
-  }, [triggerScrollToTop]);
+  }, [triggerScrollToTop, expediente, registrarLedger]);
 
   const sendMessage = useCallback((content: string) => {
     if (!isSystemActive) {

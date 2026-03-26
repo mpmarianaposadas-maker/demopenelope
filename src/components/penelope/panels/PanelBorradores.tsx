@@ -3,9 +3,25 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Badge } from '@/components/ui/badge';
 import { FileText, Send, Info, ClipboardList } from 'lucide-react';
 import { ActorLabels } from '../ActorLabel';
+import { useAgente } from '@/contexts/AgenteContext';
+
+const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function fechaDinamica(): string {
+  const now = new Date();
+  return `Buenos Aires, ${now.getDate()} de ${MESES_ES[now.getMonth()]} de ${now.getFullYear()}`;
+}
 
 export function PanelBorradores() {
   const { t } = useLanguage();
+  const { agenteNombre } = useAgente();
+  const fechaHoy = fechaDinamica();
+  const generadorNota = agenteNombre
+    ? `Sistema Penélope - Módulo "Redactor Nota" (Prompt estructurado, Temp: 0.0) · Agente: ${agenteNombre}`
+    : t('borr.nota.generador');
+  const generadorPV = agenteNombre
+    ? `Sistema Penélope - Módulo "Redactor PV" (Prompt estructurado, Temp: 0.0) · Agente: ${agenteNombre}`
+    : t('borr.pv.generador');
 
   return (
     <>
