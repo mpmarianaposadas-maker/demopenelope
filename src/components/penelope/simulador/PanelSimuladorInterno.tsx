@@ -59,9 +59,9 @@ export function PanelSimuladorInterno() {
             taskType,
             inputHash: `${Math.random().toString(36).substring(2, 10)}...${Math.random().toString(36).substring(2, 6)}`,
             outputIA: STEP_OUTPUTS[id] || 'Paso completado.',
-            validadorId: 'AGT-López, M.',
+            validadorId: 'AGT-Sistema',
             timestamp: new Date(),
-            estado: 'convalidado',
+            estado: 'sistema' as const,
           });
         }
       }

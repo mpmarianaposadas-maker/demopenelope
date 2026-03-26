@@ -640,7 +640,7 @@ la continuación de su pedido en tiempo y forma.
 
 Sin otro particular, saludo a Ud. atentamente.
 
-[ Firma del agente — Cargo y dependencia ]
+${agenteNombre ? `[ Firma: ${agenteNombre} — Cargo y dependencia ]` : '[ Firma del agente — Cargo y dependencia ]'}
 [ conforme registro del Sistema GDE, de la persona con facultades
   para suscribir el requerimiento ]
 \`\`\`
