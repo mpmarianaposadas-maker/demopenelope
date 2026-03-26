@@ -64,7 +64,7 @@ export function PanelBorradores() {
             <span className="status-pending">{t('borr.estadoPendiente')}</span>
           </CardText>
           <CardText>
-            <strong>{t('borr.generadoPor')}</strong> {t('borr.nota.generador')}
+            <strong>{t('borr.generadoPor')}</strong> {generadorNota}
           </CardText>
           <CardText>
             <strong>Ref. RUPECO:</strong> RUPECO-2024-00892 (vigente)
