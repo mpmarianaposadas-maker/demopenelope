@@ -9,3 +9,4 @@ export { PanelPropuestaNormativa } from './PanelPropuestaNormativa';
 export { SecurityDemoPanel } from './SecurityDemoPanel';
 export { PanelMetricasOperador } from './PanelMetricasOperador';
 export { ConsultaEstadoTramite } from './ConsultaEstadoTramite';
+export { PanelLimitaciones } from './PanelLimitaciones';

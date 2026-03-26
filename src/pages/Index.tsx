@@ -14,6 +14,7 @@ import {
   SecurityDemoPanel,
   PanelMetricasOperador,
   ConsultaEstadoTramite,
+  PanelLimitaciones,
 } from '@/components/penelope/panels';
 import { PanelSimuladorInterno } from '@/components/penelope/simulador';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
