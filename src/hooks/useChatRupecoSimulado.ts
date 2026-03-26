@@ -577,12 +577,76 @@ export function useChatRupecoSimulado() {
             }
           });
 
-          informe += `\n---\n\n### ACCIÓN AUTOMÁTICA: Generación de Borrador de Nota de Solicitud de Documentación Faltante\n\n`;
-          informe += `El sistema ha detectado **${faltantes.length} documento(s) faltante(s)** y ha generado automáticamente un borrador de Nota de Solicitud de Documentación Faltante u Observada Formalmente.\n\n`;
-          informe += `> **El borrador requiere validación y firma del agente** antes de su notificación al administrado.\n\n`;
+          const fechaHoy = new Date().toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' });
+          const nombreTitular = expedienteActualizado.tipoPersona === 'juridica' ? 'EMPRESA DEMO S.A.' : 'PERSONA FÍSICA DEMO';
+          const filasFaltantes = faltantes.map((doc, i) => {
+            const base = doc.articuloEspecifico ? `${doc.normativa} - ${doc.articuloEspecifico}` : doc.normativa;
+            return `| ${i + 1} | ${doc.nombre} | ${base} |`;
+          }).join('\n');
+
+          informe += `
+
+***
+
+### 📄 BORRADOR — NOTA DE SOLICITUD DE DOCUMENTACIÓN FALTANTE U OBSERVADA FORMALMENTE
+
+\`\`\`
+═══════════════════════════════════════════════════════════════════
+          ENTE NACIONAL DE COMUNICACIONES - ENACOM
+          NOTA DE SOLICITUD DE DOCUMENTACIÓN FALTANTE U OBSERVADA FORMALMENTE
+═══════════════════════════════════════════════════════════════════
+
+Número de Nota: [ Campo a completar por el agente ]
+Expediente: ${expedienteActualizado.numero}
+Fecha: ${fechaHoy}
+
+Destinatario: ${nombreTitular}
+Domicilio constituido: [ Campo a completar por el agente ]
+
+Ref.: Solicitud de documentación EX [ Completar con el número otorgado por el Sistema TAD ]
+
+De mi consideración:
+
+Me dirijo a Ud. en relación al expediente de referencia, tramitado ante
+este Ente Nacional de Comunicaciones en el cual solicita
+[ Completar con motivo de solicitud: ${tramiteConfirmado.nombre} ].
+
+Del análisis formal de la documentación aportada mediante Trámites a
+Distancia (TAD), se ha detectado la falta de documentación necesaria
+para la continuidad de su petición.
+
+══════════════════════════════════════════════════════════════════
+                    DOCUMENTACIÓN FALTANTE
+══════════════════════════════════════════════════════════════════
+
+| N° | Documento Requerido                      | Base Normativa          |
+|----|------------------------------------------|-------------------------|
+${filasFaltantes}
+
+══════════════════════════════════════════════════════════════════
+
+⚑ Campo a completar por el agente una vez comprobados que son recaudos
+ausentes o carentes de algún aspecto formal exigido por el Reglamento
+de aplicación.
+
+La documentación requerida deberá ser presentada a través del sistema
+de Trámites a Distancia (TAD), citando el número de expediente.
+
+La presentación oportuna de la documentación solicitada posibilitará
+la continuación de su pedido en tiempo y forma.
+
+Sin otro particular, saludo a Ud. atentamente.
+
+[ Firma del agente — Cargo y dependencia ]
+[ conforme registro del Sistema GDE, de la persona con facultades
+  para suscribir el requerimiento ]
+\`\`\`
+
+> ⚠️ **El borrador requiere validación y firma del agente** antes de su notificación al administrado. Para carga en GDE.
+`;
           
           const diasRestantes = tramiteConfirmado.plazoSilencioPositivo;
-          informe += `**Control de plazos (Decreto N° 971/2024 — PEHAR)**\n`;
+          informe += `\n**Control de plazos (Decreto N° 971/2024 — PEHAR)**\n`;
           informe += `- Plazo silencio positivo: ${diasRestantes} días hábiles\n`;
           informe += `- Fecha límite estimada: ${new Date(Date.now() + diasRestantes * 24 * 60 * 60 * 1000).toLocaleDateString('es-AR')}\n`;
 
