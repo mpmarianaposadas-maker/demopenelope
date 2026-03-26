@@ -16,10 +16,11 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <KillSwitchProvider>
-        <TipoTramiteProvider>
-          <HistorialAccionesProvider>
-            <LedgerProvider>
+      <AgenteProvider>
+        <KillSwitchProvider>
+          <TipoTramiteProvider>
+            <HistorialAccionesProvider>
+              <LedgerProvider>
               <Toaster />
               <Sonner />
               <BrowserRouter>
