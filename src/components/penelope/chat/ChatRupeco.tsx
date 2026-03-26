@@ -12,6 +12,7 @@ import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { HistorialAcciones } from './HistorialAcciones';
 import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
+import { RechazoClasificacionPanel, type DatosRechazo } from './RechazoClasificacionPanel';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
