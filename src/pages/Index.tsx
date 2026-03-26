@@ -24,7 +24,7 @@ const tabs = [
   { id: 'acerca-de', label: 'Acerca de', i18nKey: 'tabs.acercaDe' },
   { id: 'arquitectura', label: 'Arquitectura', i18nKey: 'tabs.arquitectura' },
   { id: 'brecha-rupeco', label: 'Brecha RUPECO', i18nKey: 'tabs.brechaRupeco' },
-  { id: 'limitaciones', label: 'Limitaciones', i18nKey: 'tabs.limitaciones' },
+  { id: 'limitaciones', label: 'Limitaciones' },
   // Operativo
   { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
   { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
