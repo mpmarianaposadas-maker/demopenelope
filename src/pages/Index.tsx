@@ -50,6 +50,7 @@ const tooltips: Record<string, string> = {
   'acerca-de': 'Marco conceptual, pregunta de investigación y alcance',
   'arquitectura': 'Diagramas de flujo y modelo de fiabilidad por diseño',
   'brecha-rupeco': 'Hallazgo central: cobertura del 57% y principio Once-Only',
+  'limitaciones': 'Reconocimiento explícito de limitaciones del sistema (IA responsable)',
   'demo-interactiva': 'Simule un trámite completo con verificación RUPECO',
   'borradores': 'Borradores de providencia de pase y nota de intimación, sin efectos hasta su aprobación humana',
   'simulador': 'Simulación del flujo interno paso a paso',
