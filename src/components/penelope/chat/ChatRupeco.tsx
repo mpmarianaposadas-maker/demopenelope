@@ -211,13 +211,29 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
             </div>
           )}
 
-          {/* Panel de confirmación de clasificación */}
-          {clasificacionPendiente && (
+          {/* Panel de confirmación de clasificación o rechazo con causales */}
+          {clasificacionPendiente && !showRechazoPanel && (
             <div className="mt-4" ref={clasificacionRef}>
               <ClasificacionConfirmacion
                 clasificacion={clasificacionPendiente}
                 onConfirmar={confirmarClasificacion}
-                onRechazar={cancelarClasificacion}
+                onRechazar={() => setShowRechazoPanel(true)}
+              />
+            </div>
+          )}
+
+          {showRechazoPanel && clasificacionPendiente && (
+            <div className="mt-4" ref={clasificacionRef}>
+              <RechazoClasificacionPanel
+                onConfirmarRechazo={(datos: DatosRechazo) => {
+                  setShowRechazoPanel(false);
+                  cancelarClasificacion(
+                    datos.causal.label + ' — ' + datos.causal.descripcion,
+                    datos.detalleAdicional,
+                    datos.causal.tipo === 'informalismo',
+                  );
+                }}
+                onVolver={() => setShowRechazoPanel(false)}
               />
             </div>
           )}
