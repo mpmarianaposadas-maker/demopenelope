@@ -40,7 +40,7 @@ const tabs = [
 ];
 
 const groups = [
-  { label: 'Conceptual', tabIds: ['acerca-de', 'arquitectura', 'brecha-rupeco'] },
+  { label: 'Conceptual', tabIds: ['acerca-de', 'arquitectura', 'brecha-rupeco', 'limitaciones'] },
   { label: 'Operativo', tabIds: ['demo-interactiva', 'borradores', 'simulador'] },
   { label: 'Gobernanza', tabIds: ['trazabilidad', 'propuesta-normativa', 'seguridad'] },
   { label: 'Monitoreo', tabIds: ['metricas', 'metricas-operador', 'trazabilidad-ciudadana'] },
