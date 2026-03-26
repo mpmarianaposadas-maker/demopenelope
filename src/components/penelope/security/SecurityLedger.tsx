@@ -16,7 +16,7 @@ export interface LedgerEntry {
   outputIA: string;
   validadorId: string;
   timestamp: Date;
-  estado: 'convalidado' | 'corregido';
+  estado: 'convalidado' | 'corregido' | 'rechazado' | 'sistema';
 }
 
 interface SecurityLedgerProps {
