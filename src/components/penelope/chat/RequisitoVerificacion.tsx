@@ -277,7 +277,7 @@ export function RequisitoVerificacion({
                     <TableHead className="w-12 text-center font-semibold">Nº</TableHead>
                     <TableHead className="font-semibold">Requisito</TableHead>
                     <TableHead className="w-24 text-center font-semibold">Estado IA</TableHead>
-                    <TableHead className="font-semibold">Orden en el expediente</TableHead>
+                    <TableHead className="font-semibold">N° Orden / IF</TableHead>
                     <TableHead className="font-semibold">Comentario breve</TableHead>
                     <TableHead className="w-24 text-center font-semibold">Acción</TableHead>
                   </TableRow>

@@ -268,15 +268,8 @@ export function useChatRupecoSimulado() {
     const generarOrdenExpediente = (index: number, detectado: boolean): string => {
       if (!detectado) return 'No localizado';
       const ordenNum = index + 1;
-      const anio = 2026;
-      const numDoc = String(Math.floor(Math.random() * 90000) + 10000).padStart(8, '0');
-      const ubicaciones = [
-        `Orden N° ${ordenNum}`,
-        `IF-${anio}-${numDoc}-APN-ENACOM#JGM`,
-        `Orden N° ${ordenNum} (IF-${anio}-${numDoc}-APN-ENACOM#JGM)`,
-        `Anexo ${ordenNum}`,
-      ];
-      return ubicaciones[Math.floor(Math.random() * ubicaciones.length)];
+      const numIF = String(ordenNum).padStart(5, '0');
+      return `Orden N° ${ordenNum} · IF-2026-${numIF}-APN-ENACOM`;
     };
 
     const generarComentarioBrief = (estadoIA: EstadoDeteccion, problemaOCR: boolean): string => {
