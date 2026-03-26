@@ -12,6 +12,7 @@ const AgenteContext = createContext<AgenteContextType>({
 
 export const AgenteProvider = ({ children }: { children: React.ReactNode }) => {
   const [agenteNombre, setAgenteNombre] = useState('');
+
   return (
     <AgenteContext.Provider value={{ agenteNombre, setAgenteNombre }}>
       {children}
