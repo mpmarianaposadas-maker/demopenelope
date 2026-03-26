@@ -74,7 +74,7 @@ export function PanelBorradores() {
         <div className="border-l-4 border-primary pl-4 space-y-3 text-sm md:text-base">
           <p className="font-semibold">NO-2026-XXXXX-APN-ENACOM</p>
           <p>{t('borr.nota.ref')} EX-2026-00123456-APN-ENACOM</p>
-          <p>{t('borr.nota.fecha')}</p>
+          <p>{fechaHoy}</p>
           <p>{t('borr.nota.destinatario')}</p>
           <p>
             <span className="bg-yellow-100 border-l-2 border-yellow-400 px-2 py-0.5 font-bold dark:bg-yellow-900/30 dark:border-yellow-600">
