@@ -687,32 +687,49 @@ ${agenteNombre ? `[ Firma: ${agenteNombre} — Cargo y dependencia ]` : '[ Firma
     }, 600);
   }, [expediente, clasificacionPendiente, setTipoTramite, simularExtraccionDocumental, generarEvaluacionJSON, agregarAccion, registrarLedger, triggerScrollToTop]);
 
-  // Cancelar la clasificación
-  const cancelarClasificacion = useCallback(() => {
-    // Ledger: registrar cancelación con estado rechazado
+  // Cancelar la clasificación con causal obligatoria
+  const cancelarClasificacion = useCallback((causalRechazo?: string, detalleAdicional?: string, esInformalismo?: boolean) => {
+    const textoLedger = causalRechazo
+      ? `Verificación cancelada por el operador. Clasificación descartada. Causal: ${causalRechazo}.${detalleAdicional ? ' Detalle: ' + detalleAdicional : ''}`
+      : `Verificación cancelada por el operador. Clasificación descartada.`;
+
     if (expediente) {
       registrarLedger(
         expediente.numero,
         'CLASIFICACION_PRELIMINAR',
-        `Verificación cancelada por el operador. Clasificación descartada.`,
+        textoLedger,
         'rechazado',
       );
     }
 
     setClasificacionPendiente(null);
-    setExpediente(null);
-    setCurrentStep('inicio');
     setIsLoading(false);
-    
-    setMessages(prev => [
-      ...prev,
-      {
-        id: generateId(),
-        role: 'assistant',
-        content: `## Verificación Cancelada\n\nLa clasificación ha sido cancelada. Puede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
-        timestamp: new Date(),
-      },
-    ]);
+
+    if (esInformalismo && expediente) {
+      // Informalismo: mantener expediente, volver a selección de trámite
+      setCurrentStep('inicio');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: generateId(),
+          role: 'assistant',
+          content: `## Reclasificación por Informalismo\n\n**Principio de informalismo a favor del administrado** (art. 1 inc. c, LNPA).\n\nLa clasificación anterior fue descartada. El expediente **${expediente.numero}** se mantiene abierto.\n\nSeleccione el nuevo tipo de trámite para reclasificar:`,
+          timestamp: new Date(),
+        },
+      ]);
+    } else {
+      setExpediente(null);
+      setCurrentStep('inicio');
+      setMessages(prev => [
+        ...prev,
+        {
+          id: generateId(),
+          role: 'assistant',
+          content: `## Verificación Cancelada\n\nLa clasificación ha sido cancelada. **Causal:** ${causalRechazo || 'No especificada'}.\n\nPuede iniciar una nueva verificación seleccionando otro tipo de trámite.`,
+          timestamp: new Date(),
+        },
+      ]);
+    }
     triggerScrollToTop();
   }, [triggerScrollToTop, expediente, registrarLedger]);
 

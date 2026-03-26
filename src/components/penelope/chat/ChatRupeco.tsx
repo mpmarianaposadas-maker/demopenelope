@@ -12,6 +12,7 @@ import { ProvidenciaIntimacion } from './ProvidenciaIntimacion';
 import { RequisitoVerificacion } from './RequisitoVerificacion';
 import { HistorialAcciones } from './HistorialAcciones';
 import { ClasificacionConfirmacion } from './ClasificacionConfirmacion';
+import { RechazoClasificacionPanel, type DatosRechazo } from './RechazoClasificacionPanel';
 import { useChatRupecoSimulado } from '@/hooks/useChatRupecoSimulado';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -42,6 +43,7 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
   const requisitosRef = useRef<HTMLDivElement>(null);
   const clasificacionRef = useRef<HTMLDivElement>(null);
   const [showFade, setShowFade] = useState(true);
+  const [showRechazoPanel, setShowRechazoPanel] = useState(false);
   const historialRef = useRef<HTMLDivElement>(null);
 
   const handleScroll = useCallback(() => {
@@ -209,13 +211,29 @@ export function ChatRupeco({ onAprobacionChange }: ChatRupecoProps) {
             </div>
           )}
 
-          {/* Panel de confirmación de clasificación */}
-          {clasificacionPendiente && (
+          {/* Panel de confirmación de clasificación o rechazo con causales */}
+          {clasificacionPendiente && !showRechazoPanel && (
             <div className="mt-4" ref={clasificacionRef}>
               <ClasificacionConfirmacion
                 clasificacion={clasificacionPendiente}
                 onConfirmar={confirmarClasificacion}
-                onRechazar={cancelarClasificacion}
+                onRechazar={() => setShowRechazoPanel(true)}
+              />
+            </div>
+          )}
+
+          {showRechazoPanel && clasificacionPendiente && (
+            <div className="mt-4" ref={clasificacionRef}>
+              <RechazoClasificacionPanel
+                onConfirmarRechazo={(datos: DatosRechazo) => {
+                  setShowRechazoPanel(false);
+                  cancelarClasificacion(
+                    datos.causal.label + ' — ' + datos.causal.descripcion,
+                    datos.detalleAdicional,
+                    datos.causal.tipo === 'informalismo',
+                  );
+                }}
+                onVolver={() => setShowRechazoPanel(false)}
               />
             </div>
           )}
