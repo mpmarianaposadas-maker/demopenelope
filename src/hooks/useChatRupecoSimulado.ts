@@ -391,6 +391,7 @@ export function useChatRupecoSimulado() {
       numExp,
       'CLASIFICACION_PRELIMINAR',
       `Trámite seleccionado: ${tramite.nombre} (${tramite.codigo}). Tipo persona: ${tipoPersona === 'humana' ? 'Humana' : 'Jurídica'}.`,
+      'sistema',
     );
 
     // Simular procesamiento en etapas
