@@ -136,7 +136,7 @@ export function useChatRupecoSimulado() {
     caseId: string,
     taskType: 'VERIFICACION_VIGENCIA' | 'CLASIFICACION_PRELIMINAR' | 'GENERACION_PROVIDENCIA' | 'DETECCION_FALTANTES' | 'CONTROL_PLAZOS',
     outputIA: string,
-    estado: 'convalidado' | 'corregido' = 'convalidado',
+    estado: 'convalidado' | 'corregido' | 'rechazado' | 'sistema' = 'convalidado',
   ) => {
     agregarEntrada({
       caseId,
