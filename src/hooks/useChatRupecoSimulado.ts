@@ -6,6 +6,7 @@ import { useTipoTramite } from '@/contexts/TipoTramiteContext';
 import { useKillSwitch } from '@/contexts/KillSwitchContext';
 import { useSecurityValidation } from '@/hooks/useSecurityValidation';
 import { useLedger } from '@/contexts/LedgerContext';
+import { useAgente } from '@/contexts/AgenteContext';
 import { 
   TRAMITES_ENAC, 
   NUCLEO_RUPECO, 
