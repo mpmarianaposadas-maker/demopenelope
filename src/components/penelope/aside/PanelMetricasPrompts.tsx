@@ -46,10 +46,14 @@ export function PanelMetricasPrompts() {
                 className={
                   entry.estado === 'convalidado'
                     ? 'text-[8px] bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-300'
+                    : entry.estado === 'rechazado'
+                    ? 'text-[8px] bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-300'
+                    : entry.estado === 'sistema'
+                    ? 'text-[8px] bg-gray-50 text-gray-600 border-gray-200 dark:bg-gray-950/30 dark:text-gray-300'
                     : 'text-[8px] bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300'
                 }
               >
-                {entry.estado === 'convalidado' ? 'Convalidado' : 'Corregido'}
+                {entry.estado === 'convalidado' ? 'Convalidado' : entry.estado === 'rechazado' ? 'Rechazado' : entry.estado === 'sistema' ? 'Sistema' : 'Corregido'}
               </Badge>
             </div>
 
