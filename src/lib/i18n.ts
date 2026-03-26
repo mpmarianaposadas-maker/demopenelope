@@ -24,6 +24,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.simulador': 'Simulador Interno',
     'tabs.acercaDe': 'Acerca de',
     'tabs.brechaRupeco': 'Brecha RUPECO',
+    'tabs.limitaciones': 'Limitaciones',
     'tabs.propuestaNormativa': 'Propuesta Normativa',
     
     // Language toggle
@@ -497,6 +498,7 @@ export const translations: Record<Language, Translations> = {
     'tabs.simulador': 'Internal Simulator',
     'tabs.acercaDe': 'About',
     'tabs.brechaRupeco': 'RUPECO Gap',
+    'tabs.limitaciones': 'Limitations',
     'tabs.propuestaNormativa': 'Regulatory Proposal',
     // Language toggle
     'lang.toggle': 'ES',
