@@ -34,6 +34,42 @@ export function PanelMetricas() {
         </span>
       </div>
 
+      {/* Tabla 5 — Indicadores de impacto proyectado */}
+      <Card>
+        <CardTitle as="h3">Tabla 5 — Indicadores de impacto proyectado del Sistema Penélope</CardTitle>
+        <p className="text-xs text-muted-foreground mb-3">Proyecciones sobre benchmarking internacional. No reflejan datos empíricos del ENACOM.</p>
+        <Table
+          columns={[
+            { key: 'indicador', header: 'Indicador' },
+            { key: 'actual', header: 'Situación actual' },
+            { key: 'penelope', header: 'Con Penélope' },
+            { key: 'mejora', header: 'Mejora estimada' },
+            { key: 'fuente', header: 'Fuente de referencia' },
+          ]}
+        >
+          {[
+            { indicador: 'Tiempo de admisibilidad formal', actual: '6–10 días hábiles', penelope: '1–2 días hábiles', mejora: '-70 a -80%', fuente: 'ANATEL; BID 2020' },
+            { indicador: 'Detección de errores formales', actual: 'Manual / reactiva', penelope: 'Automática asistida', mejora: '-60 a -75%', fuente: 'OCDE 2019; Colombia SUIT' },
+            { indicador: 'Control de vencimientos de plazos', actual: 'Reactivo', penelope: 'Preventivo / escalonado', mejora: 'Cobertura 100%', fuente: 'Diseño del sistema (Dec. 971/2024)' },
+            { indicador: 'Ciclos de subsanación por expediente', actual: '2–3 promedio', penelope: '1 (meta piloto)', mejora: '-50 a -66%', fuente: 'Colombia SUIT 2018' },
+            { indicador: 'Reutilización datos RUPECO (Once-Only)', actual: '0%', penelope: '70–100%', mejora: '+70–100 pp', fuente: 'Tabla 3 del trabajo' },
+            { indicador: 'Carga administrativa etapa preliminar', actual: 'Alta', penelope: 'Reducida', mejora: '-35 a -40%', fuente: 'Proyección propia (pipeline)' },
+          ].map((row, i) => (
+            <TableRow key={i}>
+              <TableCell className="font-medium">{row.indicador}</TableCell>
+              <TableCell>{row.actual}</TableCell>
+              <TableCell>{row.penelope}</TableCell>
+              <TableCell highlight>{row.mejora}</TableCell>
+              <TableCell className="text-xs text-muted-foreground">{row.fuente}</TableCell>
+            </TableRow>
+          ))}
+        </Table>
+        <div className="mt-3 flex items-start gap-2 text-xs text-muted-foreground">
+          <AlertTriangle size={13} className="flex-shrink-0 mt-0.5 text-amber-600" />
+          <span>Nota metodológica: valores proyectados sobre la base de benchmarking internacional (ANATEL, OFCOM, BID, OCDE). No reflejan datos empíricos del ENACOM. El indicador de cobertura de vencimientos es una afirmación de diseño estructural.</span>
+        </div>
+      </Card>
+
       <Card>
         <CardTitle>{t('metr.title')}</CardTitle>
         <CardText>
