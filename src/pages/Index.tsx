@@ -93,6 +93,7 @@ const Index = () => {
               <PanelAcercaDe />
               <PanelArquitectura />
               <PanelBrechaRupeco />
+              <PanelLimitaciones />
               {/* Operativo */}
               <PanelDemoInteractiva />
               <PanelBorradores />
