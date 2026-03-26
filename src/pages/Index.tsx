@@ -14,6 +14,7 @@ import {
   SecurityDemoPanel,
   PanelMetricasOperador,
   ConsultaEstadoTramite,
+  PanelLimitaciones,
 } from '@/components/penelope/panels';
 import { PanelSimuladorInterno } from '@/components/penelope/simulador';
 import { PanelEstadoExpediente, PanelMetricasPrompts, MobileAsideDrawer } from '@/components/penelope/aside';
@@ -23,6 +24,7 @@ const tabs = [
   { id: 'acerca-de', label: 'Acerca de', i18nKey: 'tabs.acercaDe' },
   { id: 'arquitectura', label: 'Arquitectura', i18nKey: 'tabs.arquitectura' },
   { id: 'brecha-rupeco', label: 'Brecha RUPECO', i18nKey: 'tabs.brechaRupeco' },
+  { id: 'limitaciones', label: 'Limitaciones', i18nKey: 'tabs.limitaciones' },
   // Operativo
   { id: 'demo-interactiva', label: 'Demo Interactiva', i18nKey: 'tabs.demoInteractiva' },
   { id: 'borradores', label: 'Borradores Generados', i18nKey: 'tabs.borradores' },
@@ -38,7 +40,7 @@ const tabs = [
 ];
 
 const groups = [
-  { label: 'Conceptual', tabIds: ['acerca-de', 'arquitectura', 'brecha-rupeco'] },
+  { label: 'Conceptual', tabIds: ['acerca-de', 'arquitectura', 'brecha-rupeco', 'limitaciones'] },
   { label: 'Operativo', tabIds: ['demo-interactiva', 'borradores', 'simulador'] },
   { label: 'Gobernanza', tabIds: ['trazabilidad', 'propuesta-normativa', 'seguridad'] },
   { label: 'Monitoreo', tabIds: ['metricas', 'metricas-operador', 'trazabilidad-ciudadana'] },
@@ -48,6 +50,7 @@ const tooltips: Record<string, string> = {
   'acerca-de': 'Marco conceptual, pregunta de investigación y alcance',
   'arquitectura': 'Diagramas de flujo y modelo de fiabilidad por diseño',
   'brecha-rupeco': 'Hallazgo central: cobertura del 57% y principio Once-Only',
+  'limitaciones': 'Reconocimiento explícito de limitaciones del sistema (IA responsable)',
   'demo-interactiva': 'Simule un trámite completo con verificación RUPECO',
   'borradores': 'Borradores de providencia de pase y nota de intimación, sin efectos hasta su aprobación humana',
   'simulador': 'Simulación del flujo interno paso a paso',
@@ -90,6 +93,7 @@ const Index = () => {
               <PanelAcercaDe />
               <PanelArquitectura />
               <PanelBrechaRupeco />
+              <PanelLimitaciones />
               {/* Operativo */}
               <PanelDemoInteractiva />
               <PanelBorradores />
