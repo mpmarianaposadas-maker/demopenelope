@@ -515,6 +515,7 @@ export function useChatRupecoSimulado() {
         expediente.numero,
         'VERIFICACION_VIGENCIA',
         `Verificación documental: ${detectados.length}/${documentosDetectados.length} documentos detectados. Confianza global: ${nivelConfianzaGlobal}%.`,
+        'sistema',
       );
 
       if (faltantes.length > 0) {
@@ -522,6 +523,7 @@ export function useChatRupecoSimulado() {
           expediente.numero,
           'DETECCION_FALTANTES',
           `Faltantes detectados: ${faltantes.map(f => f.nombre).join(', ')}.`,
+          'sistema',
         );
       }
 
