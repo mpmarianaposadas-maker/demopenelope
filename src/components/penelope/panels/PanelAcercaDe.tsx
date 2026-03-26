@@ -284,6 +284,19 @@ export function PanelAcercaDe() {
         </div>
       </Card>
 
+      {/* Principio rector */}
+      <div className="bg-primary/5 border-l-4 border-l-primary border border-primary/20 rounded-r-lg p-5">
+        <h3 className="text-base font-semibold text-foreground mb-2 tracking-tight" style={{ fontFamily: "'Source Serif 4', Georgia, serif" }}>
+          ⚖️ Principio rector del sistema
+        </h3>
+        <p className="text-[15px] font-semibold text-foreground leading-relaxed mb-2">
+          Penélope no decide, no interpreta normas y no sustituye al funcionario. Organiza, asiste y registra. La decisión administrativa permanece, en todo momento y por diseño, en manos humanas.
+        </p>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          Este principio es el núcleo jurídico de la propuesta y la base de su compatibilidad con la Ley N° 19.549, el régimen de procedimientos administrativos y los principios de legalidad y debido proceso.
+        </p>
+      </div>
+
       {/* Navegación al siguiente paso */}
       <SiguientePaso
         label="Demo Interactiva"
