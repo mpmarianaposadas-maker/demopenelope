@@ -105,7 +105,7 @@ export function PanelBorradores() {
             </span>
           </p>
           <p className="text-xs text-amber-700 dark:text-amber-400 italic mt-1">
-            ⚑ Campo a completar por el agente una vez comprobados que son recaudos ausentes o carentes de algún aspecto formal exigido por el Reglamento de aplicación.
+            ⚑ Campo a completar una vez comprobados por el agente de que son recaudos ausentes o carentes de algún aspecto formal exigido por el Reglamento de aplicación.
           </p>
           <p className="leading-relaxed">{t('borr.nota.texto6')}</p>
           <p className="leading-relaxed">La presentación oportuna de la documentación solicitada posibilitará la continuación de su pedido en tiempo y forma.</p>
