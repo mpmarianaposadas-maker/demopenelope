@@ -23,7 +23,7 @@ export function PanelEstadoExpediente() {
   const { t } = useLanguage();
   const tipoTramite = 'Licencia TIC - Alta nueva';
 
-  const diasRestantes = useMemo(() => calcularDiasHabilesRestantes(), []);
+  const diasRestantes = useMemo(() => diasHabilesRestantesAR(FECHA_LIMITE_EXPEDIENTE), []);
 
   const semaforoClasses = diasRestantes > 10
     ? { bg: 'bg-green-100', text: 'text-green-800', border: 'border-l-green-500' }
