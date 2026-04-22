@@ -2,20 +2,9 @@ import { useMemo } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { FileInput, FolderSearch, Tag, Clock, UserCheck, Scale, Send, AlertTriangle, CalendarDays, Info, User } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { diasHabilesRestantesAR } from '@/lib/diasHabilesAR';
 
-function calcularDiasHabilesRestantes(): number {
-  const hoy = new Date();
-  const limite = new Date(2026, 3, 4); // 04/04/2026
-  let dias = 0;
-  const current = new Date(hoy);
-  current.setHours(0, 0, 0, 0);
-  while (current < limite) {
-    current.setDate(current.getDate() + 1);
-    const dow = current.getDay();
-    if (dow !== 0 && dow !== 6) dias++;
-  }
-  return Math.max(0, dias);
-}
+const FECHA_LIMITE_EXPEDIENTE = new Date(2026, 3, 4); // 04/04/2026
 
 const steps = [
   { id: 'ingreso', label: 'Ingreso y caratulación', icon: FileInput, status: 'completed' as const },
