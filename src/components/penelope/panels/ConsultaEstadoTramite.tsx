@@ -23,20 +23,9 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toast } from 'sonner';
+import { calcularDiasHabilesAR } from '@/lib/diasHabilesAR';
 
-function calcularDiasHabiles(desde: Date, hasta: Date): number {
-  let count = 0;
-  const current = new Date(desde);
-  current.setHours(0, 0, 0, 0);
-  const end = new Date(hasta);
-  end.setHours(0, 0, 0, 0);
-  while (current < end) {
-    current.setDate(current.getDate() + 1);
-    const day = current.getDay();
-    if (day !== 0 && day !== 6) count++;
-  }
-  return count;
-}
+const calcularDiasHabiles = calcularDiasHabilesAR;
 
 type EstadoTramite = 'verificado' | 'enRevision' | 'enEspera' | 'completado';
 
